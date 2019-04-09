@@ -5,10 +5,14 @@ info:
   contact:
     name: VolkerWessels Telecom - Digital Ambition Team
     email: opensource@vwt.digital
+    url: https://vwt-digital.github.io/
   license:
     name: GNU GPLv3
     url: https://www.gnu.org/licenses/gpl.txt
   version: 1.0.0
+  x-audience: company-internal
+  x-api-id: e2a63575-f436-4e31-8f34-fadbad0d9693
+host: PROJECT_ID.appspot.com
 produces:
 - application/json
 paths:
@@ -16,14 +20,9 @@ paths:
     get:
       summary: Get car locations
       description: Get a list of all car geolocations
+      security:
+        - oauth2:
+          - uid
       responses:
         200:
           description: Successful response - returns an array of locations
-          schema:
-            type: array
-            items:
-              type: string
-          examples:
-            application/json:
-            - id: abc
-              type: car
