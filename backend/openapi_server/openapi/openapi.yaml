@@ -1,0 +1,32 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: opensource@vwt.digital
+    name: VolkerWessels Telecom - Digital Ambition Team
+    url: https://vwt-digital.github.io/
+  description: Endpoint to retreive the latest car locations
+  license:
+    name: GNU GPLv3
+    url: https://www.gnu.org/licenses/gpl.txt
+  title: snbplanningtool
+  version: 1.0.0
+  x-audience: company-internal
+  x-api-id: e2a63575-f436-4e31-8f34-fadbad0d9693
+servers:
+- url: //PROJECT_ID.appspot.com/
+paths:
+  /cars:
+    get:
+      description: Get a list of all car geolocations
+      operationId: cars_get
+      responses:
+        200:
+          content: {}
+          description: Successful response - returns an array of locations
+      security:
+      - oauth2:
+        - uid
+      summary: Get car locations
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas: {}
