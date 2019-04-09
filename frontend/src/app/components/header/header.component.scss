@@ -1,0 +1,38 @@
+.header{
+  width: 100%;
+  background: #008BB8;
+  color: #FFF;
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+  .brand{
+    float: left;
+    display: table;
+
+    a{
+      float: left;
+      display: table;
+      padding: 12.5px 0;
+    }
+    .logo{
+      display: table;
+      background-image: url('/assets/images/volkerwesselstelecom_white.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      width: 100px;
+      height: 25px;
+    }
+    span{
+      font-size: 15px;
+      line-height: 15px;
+      font-weight: 600;
+      padding: 17.5px 10px;
+      float: left;
+      text-transform: uppercase;
+    }
+  }
+}
