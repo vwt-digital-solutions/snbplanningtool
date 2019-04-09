@@ -1,0 +1,29 @@
+swagger: "2.0"
+info:
+  title: snbplanningtool
+  description: Endpoint to retreive the latest car locations
+  contact:
+    name: VolkerWessels Telecom - Digital Ambition Team
+    email: opensource@vwt.digital
+  license:
+    name: GNU GPLv3
+    url: https://www.gnu.org/licenses/gpl.txt
+  version: 1.0.0
+produces:
+- application/json
+paths:
+  /cars:
+    get:
+      summary: Get car locations
+      description: Get a list of all car geolocations
+      responses:
+        200:
+          description: Successful response - returns an array of locations
+          schema:
+            type: array
+            items:
+              type: string
+          examples:
+            application/json:
+            - id: abc
+              type: car
