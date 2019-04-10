@@ -5,6 +5,7 @@ import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
+import { EnvServiceProvider } from './services/env.service.provider';
 
 @NgModule({
   declarations: [
@@ -13,11 +14,9 @@ import { HeaderComponent } from './components/header/header.component';
   ],
   imports: [
     BrowserModule,
-    AgmCoreModule.forRoot({
-      apiKey: ''
-    })
+    AgmCoreModule.forRoot()
   ],
-  providers: [],
+  providers: [EnvServiceProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
