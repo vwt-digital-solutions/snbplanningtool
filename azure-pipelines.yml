@@ -6,7 +6,7 @@ pool:
 
 steps:
 - script: |
-    zip -r ./deploy.zip ./backend ./frontend
+    zip -r ./deploy.zip ./frontend
   displayName: 'Create deployment artifact'
 
 - task: PublishPipelineArtifact@0
