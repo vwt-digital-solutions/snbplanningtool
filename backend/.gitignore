@@ -1,3 +1,7 @@
+cov-nosetests-html/
+cov-*.xml
+test-*.xml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -21,12 +21,79 @@ paths:
       operationId: cars_get
       responses:
         200:
-          content: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cars'
           description: Successful response - returns an array of locations
-      security:
-      - oauth2:
-        - uid
       summary: Get car locations
       x-openapi-router-controller: openapi_server.controllers.default_controller
 components:
-  schemas: {}
+  schemas:
+    Cars:
+      description: Set of Cars
+      example:
+        data:
+        - type: Feature
+          geometry:
+            type: Point
+            coordinates:
+            - 5.3
+            - 52.6
+          properties:
+            license_plate: AA-BB-11
+        - type: Feature
+          geometry:
+            type: Point
+            coordinates:
+            - 5.4
+            - 52.5
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Car'
+          type: array
+      required:
+      - data
+      title: Root Type for Cars
+      type: object
+    Car:
+      description: Information about a car
+      example:
+        type: Feature
+        geometry:
+          type: Point
+          coordinates:
+          - 5.3
+          - 52.6
+        properties:
+          license_plate: AA-BB-11
+      properties:
+        geometry:
+          $ref: '#/components/schemas/Geometry'
+        type:
+          type: string
+      required:
+      - geometry
+      - type
+      type: object
+    Geometry:
+      description: Geometry element
+      example: |-
+        type: "Point",
+        coordinates:
+          - 5.2,
+          - 52.4
+      properties:
+        type:
+          enum:
+          - Point
+          type: string
+        coordinates:
+          items:
+            type: number
+          type: array
+      required:
+      - coordinates
+      - type
+      type: object
