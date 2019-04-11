@@ -1,21 +1,11 @@
-import { Component } from '@angular/core';
-import { LAZY_MAPS_API_CONFIG , LazyMapsAPILoaderConfigLiteral} from '@agm/core';
-import { EnvService } from './services/env.service';
-
-class GoogleMapsConfig implements LazyMapsAPILoaderConfigLiteral {
-  public apiKey: string;
-  constructor(env: EnvService) {
-    this.apiKey = env.googleMapsKey;
-  }
-}
+import { Component, Injectable } from '@angular/core';
+import { LazyMapsAPILoaderConfigLiteral } from "@agm/core";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [{provide: LAZY_MAPS_API_CONFIG, useClass: GoogleMapsConfig}]
+  styleUrls: ['./app.component.scss']
 })
-
 export class AppComponent {
   lat: number = 52.155285;
   lng: number = 5.387219;
