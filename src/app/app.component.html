@@ -2,6 +2,6 @@
 
 <div class="container">
   <agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false">
-    <agm-data-layer [geoJson]="geoJsonObject"></agm-data-layer>
+    <agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc"></agm-data-layer>
   </agm-map>
 </div>

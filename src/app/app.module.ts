@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injectable } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AgmCoreModule, LAZY_MAPS_API_CONFIG, LazyMapsAPILoaderConfigLiteral } from '@agm/core';
+import { AgmCoreModule, LAZY_MAPS_API_CONFIG, LazyMapsAPILoaderConfigLiteral, AgmDataLayer } from '@agm/core';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
