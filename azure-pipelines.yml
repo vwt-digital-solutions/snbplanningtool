@@ -12,3 +12,8 @@ steps:
 - task: PublishPipelineArtifact@0
   inputs:
     targetPath: deploy.zip
+
+- task: benjhuser.tfs-extensions-build-tasks.trigger-build-task.TriggerBuild@3
+  displayName: 'Triggers ado-snbplanningtool-frontend'
+  inputs:
+    buildDefinition: 'ado-snbplanningtool-frontend'
