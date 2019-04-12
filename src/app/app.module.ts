@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injectable } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AgmCoreModule, LAZY_MAPS_API_CONFIG, LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 
@@ -23,6 +24,7 @@ export class MapsConfig implements LazyMapsAPILoaderConfigLiteral{
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AgmCoreModule.forRoot()
   ],
   providers: [
