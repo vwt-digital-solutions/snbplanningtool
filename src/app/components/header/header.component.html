@@ -1,8 +1,14 @@
-<div class="header">
-  <div class="brand">
-    <a href="/">
-      <div class="logo"></div>
-    </a>
-    <span>{{title}}</span>
+<div class="header container-fluid">
+  <div class="row">
+    <div class="brand col-6">
+      <a href="/">
+        <div class="logo"></div>
+      </a>
+      <span>{{title}}</span>
+    </div>
+
+    <div class="navbar col-6">
+      <a (onclick)="logout()">Logout</a>
+    </div>
   </div>
 </div>

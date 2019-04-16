@@ -1,7 +1,3 @@
-agm-map {
-  height: 100vh;
-}
-
 .overlay{
   top: 60px;
   right: 10px;
@@ -31,4 +27,9 @@ agm-map {
       color: #c0392b;
     }
   }
+}
+
+agm-map{
+  height: 100vh;
+  padding: 0;
 }

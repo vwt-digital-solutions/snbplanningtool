@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
   title = 'Planning tool';
+  username: string = 'd.vanrhenen@vwtelecom.com';
 }

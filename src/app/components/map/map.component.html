@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="overlay">
+      <span>Last update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
+      <span [ngClass]="refreshStatusClasses()">{{this.mapService.refreshStatus}}</span>
+    </div>
+
+    <agm-map [ngClass]="['col-12']" [latitude]="this.mapService.lat" [longitude]="this.mapService.lng" [styles]="this.mapService.styles" [streetViewControl]="false">
+      <agm-data-layer [geoJson]="this.mapService.geoJsonObject" [style]="styleFunc"></agm-data-layer>
+    </agm-map>
+  </div>
+</div>
