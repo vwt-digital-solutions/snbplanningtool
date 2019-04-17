@@ -10,7 +10,7 @@ import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 })
 
 export class MapComponent {
-  constructor(private mapService: MapService){}
+  constructor(public mapService: MapService){}
 
   refreshStatusClasses() {
     return {
