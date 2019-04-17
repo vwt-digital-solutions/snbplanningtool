@@ -1,14 +1,13 @@
 <div class="header container-fluid">
   <div class="row">
     <div class="brand col-6">
-      <a href="/">
-        <div class="logo"></div>
-      </a>
+      <div class="logo"></div>
       <span>{{title}}</span>
     </div>
 
-    <div class="navbar col-6">
-      <a (onclick)="logout()">Logout</a>
+    <div *ngIf="email" class="navbar col-6">
+      <a (click)="logout()">Logout</a>
+      <span>{{email}}</span>
     </div>
   </div>
 </div>

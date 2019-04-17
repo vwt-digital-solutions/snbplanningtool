@@ -1,42 +1,33 @@
 import { Component } from '@angular/core';
-import { ApiService } from './services/api.service';
-import { MapService } from './services/map.service';
-import { throwError } from 'rxjs';
+
+import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
+import { EnvService } from './services/env.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  constructor(private apiService: ApiService, private mapService: MapService){}
+  constructor(
+    private env: EnvService,
+    private oauthService: OAuthService
+  ) {
+    const config = new AuthConfig();
+    config.loginUrl = env.loginUrl;
+    config.redirectUri = window.location.origin + "/index.html";
+    config.logoutUrl = env.logoutUrl;
+    config.clientId = env.clientId;
+    config.scope = env.scope;
+    config.issuer = env.issuer;
 
-  ngOnInit(){
-    this.apiService.getCars().subscribe(
-      result => {
-        this.handleResult(result);
-        setInterval(() => {
-          this.refreshData()
-        }, (5 * 60 * 1000));
-      },
-      error => this.handleError(error)
-    );
+    this.oauthService.configure(config);
+    this.oauthService.tryLogin({});
   }
 
-  refreshData(){
-    this.apiService.updateData().subscribe(
-      result => this.handleResult(result),
-      error => this.handleError(error)
-    );
+  get authenticationToken() {
+    if (this.oauthService.hasValidIdToken()) {
+      return true;
+    }
+    return false;
   }
-
-  private handleResult(result) {
-    this.mapService.geoJsonObject = result;
-    this.mapService.refreshUpdate = Date.now();
-  };
-
-  private handleError(error) {
-    this.mapService.refreshStatusClass = true;
-    this.mapService.refreshStatus = 'An error has occurred';
-    return throwError('Something bad happened, please try again later.');
-  };
 }

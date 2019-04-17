@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
+import { Component } from '@angular/core';
 import { EnvService } from '../../services/env.service';
 import { MapService } from '../../services/map.service';
 import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
@@ -11,7 +10,7 @@ import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 })
 
 export class MapComponent {
-  constructor(private apiService: ApiService, private mapService: MapService){}
+  constructor(private mapService: MapService){}
 
   refreshStatusClasses() {
     return {

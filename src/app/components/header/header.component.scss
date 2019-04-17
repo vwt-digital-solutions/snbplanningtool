@@ -12,13 +12,9 @@
     float: left;
     display: table;
     overflow: hidden;
-
-    a{
-      float: left;
-      display: table;
-      padding: 12.5px 0;
-    }
     .logo{
+      float: left;
+      margin: 12.5px 0;
       display: table;
       background-image: url('/assets/images/volkerwesselstelecom_white.png');
       background-repeat: no-repeat;
@@ -59,6 +55,17 @@
         color: #008BB8;
         cursor: pointer;
       }
+    }
+    span{
+      color: #fff;
+      padding: 20px;
+      display: table;
+      font-size: 8px;
+      font-weight: 400;
+      line-height: 10px;
+      text-align: center;
+      float: right;
+      text-transform: uppercase;
     }
   }
 }

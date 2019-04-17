@@ -1,2 +1,2 @@
-<app-header></app-header>
-<app-map></app-map>
+<app-header *ngIf="authenticationToken"></app-header>
+<router-outlet *ngIf="authenticationToken"></router-outlet>
