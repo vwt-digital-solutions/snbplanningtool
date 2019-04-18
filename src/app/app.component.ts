@@ -19,8 +19,10 @@ export class AppComponent {
     config.clientId = env.clientId;
     config.scope = env.scope;
     config.issuer = env.issuer;
+    config.silentRefreshRedirectUri = window.location.origin + '/silent-refresh.html';
 
     this.oauthService.configure(config);
+    this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tryLogin({});
   }
 
