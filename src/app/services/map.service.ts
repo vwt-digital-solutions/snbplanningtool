@@ -1,5 +1,5 @@
 export class MapService {
-  geoJsonObject: Object = {"features":[], "type":"FeatureCollection"};
+  geoJsonObject: any = {"features": [], "type":"FeatureCollection"};
   refreshUpdate : number;
   refreshStatus : string = 'Auto refresh (5 min.)';
   refreshStatusClass : boolean = false;

@@ -8,7 +8,7 @@
     <agm-map [ngClass]="['col-12']" [latitude]="this.mapService.lat" [longitude]="this.mapService.lng" [styles]="this.mapService.styles" [streetViewControl]="false">
       <agm-marker-cluster imagePath="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m">
         <agm-marker
-          *ngFor="let m of this.mapService.geoJsonObject.features; let i = index"
+          *ngFor="let m of this.mapService.geoJsonObject['features']"
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
           [iconUrl]="this.mapService.iconUrl"
