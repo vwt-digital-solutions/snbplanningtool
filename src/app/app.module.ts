@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AgmCoreModule, LAZY_MAPS_API_CONFIG } from '@agm/core';
+import { AgmJsMarkerClustererModule } from '@agm/js-marker-clusterer';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
@@ -32,6 +33,7 @@ import { MapServiceProvider } from './services/map.service.provider';
     BrowserModule,
     NgbModule,
     AgmCoreModule.forRoot(),
+    AgmJsMarkerClustererModule,
     HttpClientModule,
     OAuthModule.forRoot(),
     AppRoutingModule

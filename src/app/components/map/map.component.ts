@@ -18,15 +18,6 @@ export class MapComponent {
       error: this.mapService.refreshStatusClass
     }
   }
-
-  styleFunc() {
-    return ({
-      icon: { url: 'assets/images/car-location.png' },
-      editable: false,
-      draggable: false,
-      clickable: false
-    });
-  }
 }
 
 export class MapsConfig implements LazyMapsAPILoaderConfigLiteral{

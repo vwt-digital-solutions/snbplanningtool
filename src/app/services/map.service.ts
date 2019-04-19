@@ -3,6 +3,7 @@ export class MapService {
   refreshUpdate : number;
   refreshStatus : string = 'Auto refresh (5 min.)';
   refreshStatusClass : boolean = false;
+  iconUrl: string = 'assets/images/car-location.png';
 
   lat: number = 52.155285;
   lng: number = 5.387219;
