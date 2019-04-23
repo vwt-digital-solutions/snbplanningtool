@@ -5,15 +5,26 @@
       <span [ngClass]="refreshStatusClasses()">{{this.mapService.refreshStatus}}</span>
     </div>
 
-    <agm-map [ngClass]="['col-12']" [latitude]="this.mapService.lat" [longitude]="this.mapService.lng" [styles]="this.mapService.styles" [streetViewControl]="false">
-      <agm-marker-cluster imagePath="assets/images/clusters/m">
+    <agm-map
+      [ngClass]="['col-12']"
+      [latitude]="this.mapService.lat"
+      [longitude]="this.mapService.lng"
+      [styles]="this.mapService.styles"
+      [minZoom]="this.mapService.minZoom"
+      [maxZoom]="this.mapService.maxZoom"
+      [streetViewControl]="false" >
+
+      <agm-marker-cluster
+        [styles]="this.mapService.clusterStyles"
+        [imagePath]="assets/images/clusters/m" >
+
         <agm-marker
           *ngFor="let m of this.mapService.geoJsonObject['features']"
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
           [iconUrl]="this.mapService.iconUrl"
           [markerClickable]="false"
-          [markerDraggable]="false">
+          [markerDraggable]="false" >
         </agm-marker>
       </agm-marker-cluster>
     </agm-map>
