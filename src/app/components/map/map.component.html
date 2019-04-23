@@ -16,7 +16,7 @@
 
       <agm-marker-cluster
         [styles]="this.mapService.clusterStyles"
-        [imagePath]="assets/images/clusters/m" >
+        [imagePath]="this.mapService.clusterUrl" >
 
         <agm-marker
           *ngFor="let m of this.mapService.geoJsonObject['features']"
