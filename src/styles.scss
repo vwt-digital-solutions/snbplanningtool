@@ -6,3 +6,38 @@ body{
 
   font-family: 'Poppins', sans-serif;
 }
+
+
+// MAP STYLING
+.gmnoprint{
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+
+  .gm-style-mtc{
+    div{
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 10px !important;
+      line-height: 12px !important;
+      text-transform: uppercase;
+    }
+    div[role="button"]{
+      padding: 10px !important;
+      height: auto !important;
+      box-shadow: none !important;
+    }
+    label{
+      font-family: 'Poppins', sans-serif !important;
+      font-size: 10px !important;
+      line-height: 12px !important;
+      text-transform: uppercase;
+      margin: 0 !important;
+    }
+    span[role="checkbox"] {
+      margin-right: 5px;
+      img{
+        height: 10px !important;
+        width: 10px !important;
+        transform: none !important;
+      }
+    }
+  }
+}

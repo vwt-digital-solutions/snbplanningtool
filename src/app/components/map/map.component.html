@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row map-container">
     <div class="overlay">
       <span>Last update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
       <span [ngClass]="refreshStatusClasses()">{{this.mapService.refreshStatus}}</span>
@@ -7,12 +7,15 @@
 
     <agm-map
       [ngClass]="['col-12']"
+      [disableDefaultUI]="true"
       [latitude]="this.mapService.lat"
       [longitude]="this.mapService.lng"
       [styles]="this.mapService.styles"
       [minZoom]="this.mapService.minZoom"
-      [maxZoom]="this.mapService.maxZoom"
-      [streetViewControl]="false" >
+      [disableDefaultUI]="true"
+      [streetViewControl]="false"
+      [scaleControl]="true"
+      [mapTypeControl]="true" >
 
       <agm-marker-cluster
         [styles]="this.mapService.clusterStyles"
