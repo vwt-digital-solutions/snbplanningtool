@@ -24,6 +24,7 @@ import { MapComponent, MapsConfig } from 'src/app/components/map/map.component';
   ],
   exports : [
     CommonModule,
+    HomeComponent,
     HeaderComponent,
     MapComponent
   ],
@@ -35,5 +36,6 @@ import { MapComponent, MapsConfig } from 'src/app/components/map/map.component';
       deps: [EnvService]
     }
   ],
+  bootstrap: [HomeComponent]
 })
 export class HomeModule { }

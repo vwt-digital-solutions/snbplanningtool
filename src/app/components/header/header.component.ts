@@ -8,7 +8,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class HeaderComponent {
   title = 'Planning tool';
-  username: string = '';
+  username: string;
 
   constructor(
     private oauthService: OAuthService
