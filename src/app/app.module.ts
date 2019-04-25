@@ -9,15 +9,17 @@ import { AuthGuard } from "./guards/auth.guard";
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
+import { InfoModule } from './modules/info/info.module';
 
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './components/header/header.component';
 
 import { EnvServiceProvider } from './services/env.service.provider';
 
-
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -25,10 +27,12 @@ import { EnvServiceProvider } from './services/env.service.provider';
     OAuthModule.forRoot(),
     AppRoutingModule,
     NgbModule,
-    HomeModule
+    HomeModule,
+    InfoModule
   ],
   exports: [
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   providers: [
     EnvServiceProvider,

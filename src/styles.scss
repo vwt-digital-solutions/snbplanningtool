@@ -1,5 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i");
+
 @import "~bootstrap/dist/css/bootstrap.css";
+
+$fa-font-path: "/assets/fontawesome/webfonts";
+@import "/assets/fontawesome/scss/fontawesome.scss";
+@import "/assets/fontawesome/scss/solid.scss";
+@import "/assets/fontawesome/scss/brands.scss";
+
 
 body{
   margin: 0;
@@ -7,6 +14,12 @@ body{
   font-family: 'Poppins', sans-serif;
 }
 
+h1{
+  font-size: 25px;
+  margin: 0;
+  font-weight: 700;
+  color: #008BB8;
+}
 
 // MAP STYLING
 .gmnoprint{

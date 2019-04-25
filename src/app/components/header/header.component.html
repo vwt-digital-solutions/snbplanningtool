@@ -5,9 +5,21 @@
       <span>{{title}}</span>
     </div>
 
-    <div *ngIf="email" class="navbar col-6">
-      <a (click)="logout()">Logout</a>
-      <span>{{email}}</span>
+    <div class="col-6 navbar-container">
+      <div class="navbar">
+        <a routerLink="map" [routerLinkActive]="['active']">Map</a>
+        <a routerLink="info" [routerLinkActive]="['active']">Car Info</a>
+
+        <div *ngIf="email" ngbDropdown class="d-inline-block">
+          <button class="btn" id="dropdownMenu" ngbDropdownToggle>
+            <i class="fas fa-user-cog"></i>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownMenu">
+            <span ngbDropdownItem>{{email}}</span>
+            <button ngbDropdownItem (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

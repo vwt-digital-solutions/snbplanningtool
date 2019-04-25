@@ -8,24 +8,21 @@ import { EnvService } from 'src/app/services/env.service';
 import { MapServiceProvider } from 'src/app/services/map.service.provider';
 
 import { HomeComponent } from './home.component';
-import { HeaderComponent } from 'src/app/components/header/header.component';
 import { MapComponent, MapsConfig } from 'src/app/components/map/map.component';
 
 @NgModule({
   imports: [
     CommonModule,
     AgmCoreModule.forRoot(),
-    AgmJsMarkerClustererModule,
+    AgmJsMarkerClustererModule
   ],
   declarations: [
     HomeComponent,
-    HeaderComponent,
     MapComponent
   ],
   exports : [
     CommonModule,
     HomeComponent,
-    HeaderComponent,
     MapComponent
   ],
   providers: [
