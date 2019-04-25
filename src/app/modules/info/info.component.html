@@ -3,5 +3,12 @@
     <div class="title col-12">
       <h1>{{title}}</h1>
     </div>
+
+    <ag-grid-angular
+      [ngClass]="['col-12', 'ag-theme-balham', 'info-grid']"
+      [gridOptions]="gridOptions"
+      [columnDefs]="columnDefs"
+      [rowData]="rowData | async" >
+    </ag-grid-angular>
   </div>
 </div>
