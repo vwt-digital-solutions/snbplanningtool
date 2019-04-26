@@ -1,0 +1,40 @@
+.map-container{
+  padding-top: 50px;
+  height: 100vh;
+
+  .overlay{
+    top: 60px;
+    right: 10px;
+    position: absolute;
+    z-index: 10;
+    text-align: right;
+    padding: 10px;
+    background-color: #FFF;
+    border-radius: 3px;
+    color: #000;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    font-size: 10px;
+    line-height: 10px;
+
+    span {
+      display: block;
+      text-transform: uppercase;
+
+      &:first-child{
+        margin-bottom: 10px;
+      }
+      &.small{
+        font-size: 8px;
+        line-height: 8px;
+      }
+      &.error{
+        color: #c0392b;
+      }
+    }
+  }
+
+  agm-map{
+    height: 100%;
+    padding: 0;
+  }
+}

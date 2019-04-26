@@ -32,7 +32,7 @@ module.exports = function (config) {
             flags: ['--no-sandbox','--headless','--hide-scrollbars', '--disable-gpu','--remote-debugging-port=9876']
         }
     },
-    singleRun: false,
-    restartOnFileChange: true
+    singleRun: true,
+    restartOnFileChange: false
   });
 };

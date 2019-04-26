@@ -1,39 +1,39 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injectable } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 
-import { AgmCoreModule, LAZY_MAPS_API_CONFIG, LazyMapsAPILoaderConfigLiteral } from '@agm/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { AuthGuard } from "./guards/auth.guard";
+
+import { AppRoutingModule } from './app-routing.module';
+import { HomeModule } from './modules/home/home.module';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
-import { EnvServiceProvider } from './services/env.service.provider';
-import { EnvService } from './services/env.service';
 
-@Injectable()
-export class MapsConfig implements LazyMapsAPILoaderConfigLiteral{
-  public apiKey: string
-  constructor(env: EnvService) {
-    this.apiKey = env.googleMapsKey
-  }
-}
+import { EnvServiceProvider } from './services/env.service.provider';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AgmCoreModule.forRoot()
+    OAuthModule.forRoot(),
+    AppRoutingModule,
+    NgbModule,
+    HomeModule
+  ],
+  exports: [
+    AppComponent
   ],
   providers: [
     EnvServiceProvider,
-    {
-      provide: LAZY_MAPS_API_CONFIG,
-      useClass: MapsConfig,
-      deps: [EnvService]
-    }
+    OAuthService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

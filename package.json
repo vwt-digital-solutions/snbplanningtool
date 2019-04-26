@@ -10,8 +10,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vwt-digital/snbplanningtool",
-    "directory": "frontend"
+    "url": "https://github.com/vwt-digital/snbplanningtool"
   },
   "scripts": {
     "ng": "ng",
@@ -24,6 +23,7 @@
   "private": true,
   "dependencies": {
     "@agm/core": "^1.0.0-beta.5",
+    "@agm/js-marker-clusterer": "^1.0.0-beta.5",
     "@angular/animations": "^7.2.12",
     "@angular/cdk": "^7.3.7",
     "@angular/common": "~7.2.0",
@@ -34,7 +34,11 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.1.1",
+    "angular-oauth2-oidc": "^5.0.2",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
+    "js-marker-clusterer": "^1.0.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"

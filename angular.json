@@ -25,7 +25,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/env.js"
+              "src/env.js",
+              "src/silent-refresh.html"
             ],
             "styles": [
               "src/styles.scss"

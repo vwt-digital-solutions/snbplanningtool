@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
-import { EnvService } from './env.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+
+import { EnvService } from './env.service';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private httpClient: HttpClient, private env: EnvService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private env: EnvService,
+    private oauthService: OAuthService
+  ) {}
 
   private handleError(error: HttpErrorResponse) {
     return throwError('Something bad happened, please try again later.');
   };
 
   public getCars(){
-    if(this.env.apiUrl){
-      return this.httpClient.get(`${this.env.apiUrl}/cars`);
+    if(this.env.apiUrl && this.oauthService.getAccessToken()){
+      return this.httpClient.get(`${this.env.apiUrl}/cars`, {
+        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
+      });
     } else{
       return throwError('Something bad happened, please try again later.');
     }

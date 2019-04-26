@@ -5,19 +5,17 @@
   position: fixed;
   z-index: 100;
   width: 100%;
+  top: 0;
 
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 
   .brand{
     float: left;
     display: table;
-
-    a{
-      float: left;
-      display: table;
-      padding: 12.5px 0;
-    }
+    overflow: hidden;
     .logo{
+      float: left;
+      margin: 12.5px 0;
       display: table;
       background-image: url('/assets/images/volkerwesselstelecom_white.png');
       background-repeat: no-repeat;
@@ -32,6 +30,42 @@
       font-weight: 600;
       padding: 17.5px 10px;
       float: left;
+      text-transform: uppercase;
+    }
+  }
+
+  .navbar{
+    float: right;
+    display: table;
+    padding: 0;
+
+    a{
+      color: #fff;
+      text-decoration: none;
+      padding: 20px;
+      display: table;
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 10px;
+      text-align: center;
+      float: right;
+      text-transform: uppercase;
+
+      &:hover{
+        background: #e5e5e5;
+        color: #008BB8;
+        cursor: pointer;
+      }
+    }
+    span{
+      color: #fff;
+      padding: 20px;
+      display: table;
+      font-size: 8px;
+      font-weight: 400;
+      line-height: 10px;
+      text-align: center;
+      float: right;
       text-transform: uppercase;
     }
   }

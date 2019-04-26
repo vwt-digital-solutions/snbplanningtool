@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row map-container">
+    <div class="overlay">
+      <span>Last update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
+      <span [ngClass]="refreshStatusClasses()">{{this.mapService.refreshStatus}}</span>
+    </div>
+
+    <agm-map
+      [ngClass]="['col-12']"
+      [disableDefaultUI]="true"
+      [latitude]="this.mapService.lat"
+      [longitude]="this.mapService.lng"
+      [styles]="this.mapService.styles"
+      [minZoom]="this.mapService.minZoom"
+      [disableDefaultUI]="true"
+      [streetViewControl]="false"
+      [scaleControl]="true"
+      [mapTypeControl]="true" >
+
+      <agm-marker-cluster
+        [styles]="this.mapService.clusterStyles"
+        [imagePath]="this.mapService.clusterUrl" >
+
+        <agm-marker
+          *ngFor="let m of this.mapService.geoJsonObject['features']"
+          [latitude]="m.geometry.coordinates[1]"
+          [longitude]="m.geometry.coordinates[0]"
+          [iconUrl]="this.mapService.iconUrl"
+          [markerClickable]="false"
+          [markerDraggable]="false" >
+        </agm-marker>
+      </agm-marker-cluster>
+    </agm-map>
+  </div>
+</div>

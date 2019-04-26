@@ -1,11 +1,2 @@
-<app-header></app-header>
-
-<div class="container">
-  <div class="overlay">
-    <span>Last update: <b>{{(refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
-    <span [ngClass]="refreshStatusClasses()">{{refreshStatus}}</span>
-  </div>
-  <agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false">
-    <agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc"></agm-data-layer>
-  </agm-map>
-</div>
+<app-header *ngIf="authenticationToken"></app-header>
+<router-outlet *ngIf="authenticationToken"></router-outlet>
