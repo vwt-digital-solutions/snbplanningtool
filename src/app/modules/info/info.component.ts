@@ -17,7 +17,7 @@ import { ApiService } from 'src/app/services/api.service';
   ]
 })
 export class InfoComponent {
-  private gridOptions: GridOptions;
+  gridOptions: GridOptions;
   title: string = 'Car info';
   titleExport: string = 'Export to Excel';
   titleSave: string = 'Save';
