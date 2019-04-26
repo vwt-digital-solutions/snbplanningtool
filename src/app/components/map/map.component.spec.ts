@@ -11,6 +11,8 @@ import { MapComponent, MapsConfig } from './map.component';
 import { HomeComponent } from 'src/app/modules/home/home.component';
 import { HeaderComponent } from '../header/header.component';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
@@ -25,7 +27,8 @@ describe('MapComponent', () => {
       ],
       imports: [
         AgmCoreModule.forRoot(),
-        AgmJsMarkerClustererModule
+        AgmJsMarkerClustererModule,
+        RouterTestingModule
       ],
       providers: [
         EnvServiceProvider,

@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { InfoComponent } from './info.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { EnvServiceProvider } from 'src/app/services/env.service.provider';
+import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
 
 describe('InfoComponent', () => {
   let component: InfoComponent;
@@ -8,7 +12,20 @@ describe('InfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InfoComponent ]
+      declarations: [
+        InfoComponent
+      ],
+      imports: [
+        AgGridModule.withComponents([]),
+        HttpClientModule
+      ],
+      providers: [
+        HttpClient,
+        EnvServiceProvider,
+        UrlHelperService,
+        OAuthLogger,
+        OAuthService
+      ]
     })
     .compileComponents();
   }));

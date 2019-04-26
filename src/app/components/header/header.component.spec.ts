@@ -5,6 +5,8 @@ import { HeaderComponent } from './header.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 
+import { RouterTestingModule } from '@angular/router/testing';
+
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
@@ -16,7 +18,8 @@ describe('HeaderComponent', () => {
       ],
       imports: [
         HttpClientModule,
-        OAuthModule.forRoot()
+        OAuthModule.forRoot(),
+        RouterTestingModule
       ],
       providers: [
         OAuthService,
