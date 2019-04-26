@@ -1,14 +1,18 @@
 <div class="container">
   <div class="row app-info">
-    <div class="title col-12">
+    <div [ngClass]="['col-6', 'title']">
       <h1>{{title}}</h1>
+    </div>
+
+    <div [ngClass]="['col-6', 'info-box']">
+      <button [ngClass]="['export']" (click)="onBtExport()">{{titleExport}}</button>
+      <button [ngClass]="['save']" disabled (click)="onBtSave()">{{titleSave}}</button>
     </div>
 
     <ag-grid-angular
       [ngClass]="['col-12', 'ag-theme-balham', 'info-grid']"
       [gridOptions]="gridOptions"
-      [columnDefs]="columnDefs"
-      [rowData]="rowData | async" >
+      (gridReady)="onGridReady($event)" >
     </ag-grid-angular>
   </div>
 </div>

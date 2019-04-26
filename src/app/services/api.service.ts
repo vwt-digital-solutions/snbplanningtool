@@ -15,10 +15,6 @@ export class ApiService {
     private oauthService: OAuthService
   ) {}
 
-  private handleError(error: HttpErrorResponse) {
-    return throwError('Something bad happened, please try again later.');
-  };
-
   public getCars(){
     if(this.env.apiUrl && this.oauthService.getAccessToken()){
       return this.httpClient.get(`${this.env.apiUrl}/cars`, {
@@ -28,6 +24,17 @@ export class ApiService {
       return throwError('Something bad happened, please try again later.');
     }
   }
+
+  public getCarsInfo(){
+    if(this.env.apiUrl && this.oauthService.getAccessToken()){
+      return this.httpClient.get(`${this.env.apiUrl}/carsinfo`, {
+        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
+      });
+    } else{
+      return throwError('Something bad happened, please try again later.');
+    }
+  }
+
 
   public updateData(){
     return this.getCars();
