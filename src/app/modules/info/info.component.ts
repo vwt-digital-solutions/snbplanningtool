@@ -23,6 +23,8 @@ export class InfoComponent {
   buttonNewRow: string = 'Add new row';
   buttonSave: string = 'Save changes';
 
+  editedColumns: boolean = false;
+
   constructor(
     private apiService: ApiService,
     public carsInfoService: CarsInfoService
@@ -55,6 +57,10 @@ export class InfoComponent {
       }
     }
 
+    if(sessionStorage.getItem('changedColumns')){
+      sessionStorage.removeItem('changedColumns');
+    }
+
     if(!isLocalStorage){
       this.apiService.getCarsInfo().subscribe(
         result => {
@@ -80,6 +86,34 @@ export class InfoComponent {
       event.api.setRowData(carInfo.items);
       event.api.sizeColumnsToFit();
     }
+
+    this.carsInfoService.gridOptions.api.addEventListener('cellValueChanged', function(event){
+      var columnsToPost = (sessionStorage.getItem('changedColumns') ? JSON.parse(sessionStorage.getItem('changedColumns')) : []);
+
+      if(event.newValue != event.oldValue){
+        var isExisting = false;
+
+        for (let i = 0; i < columnsToPost.length; i++) {
+            if(columnsToPost[i].id == event.data['id']){
+              columnsToPost[i] = event.data;
+              isExisting = true;
+            }
+        }
+
+        if(!isExisting){
+          columnsToPost.push(event.data);
+        }
+
+        sessionStorage.setItem('changedColumns', JSON.stringify(columnsToPost));
+      }
+
+      if(columnsToPost.length > 0){
+        that.editedColumns = true;
+      } else{
+        that.editedColumns = false;
+      }
+
+    });
   }
 
   private handleError(error) {
