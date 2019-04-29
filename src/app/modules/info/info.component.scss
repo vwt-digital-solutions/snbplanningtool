@@ -19,10 +19,15 @@
       line-height: 12px;
       border: none;
       margin: 0 5px;
+      text-align: center;
 
       -webkit-transition: all 0.5s;
 
-      &.export{
+      i{
+        margin-left: 5px;
+      }
+
+      &.export, &.refresh, &.newRow{
         background: #008BB8;
       }
       &.save{
@@ -30,7 +35,7 @@
       }
 
       &:hover{
-        &.export{
+        &.export, &.refresh, &.newRow{
           background: #006f93;
         }
         &.save{
