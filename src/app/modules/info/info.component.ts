@@ -22,8 +22,10 @@ export class InfoComponent {
   buttonExport: string = 'Export to Excel';
   buttonNewRow: string = 'Add new row';
   buttonSave: string = 'Save changes';
+  buttonSaveInner: string = 'Save <i class="fas fa-save"></i>';
 
-  editedColumns: boolean = false;
+  editedColumnsActive: boolean = false;
+  editedColumns = [];
 
   constructor(
     private apiService: ApiService,
@@ -34,6 +36,7 @@ export class InfoComponent {
     try{
       var carInfo = JSON.parse(localStorage.getItem('carInfo'));
       this.carsInfoService.gridOptions.api.setRowData(carInfo.items);
+      this.editedColumnsActive = false;
     } catch(err){
       this.handleError(err);
     }
@@ -42,7 +45,58 @@ export class InfoComponent {
     this.carsInfoService.gridOptions.api.exportDataAsExcel();
   }
   onBtSave(){
-    console.log('Saved');
+    let that = this;
+    this.buttonSaveInner = 'Saving <i class="fas fa-sync-alt fa-spin"></i>';
+
+    this.editedColumns.forEach(function(item){
+      that.apiService.postCarInfo(item).subscribe(
+        result => {
+          var newRow = [],
+            carInfo = JSON.parse(localStorage.getItem('carInfo'));
+
+          for (let i = 0; i < that.editedColumns.length; i++) {
+            if(that.editedColumns[i] && that.editedColumns[i].id == result['carinfo_id']){
+              newRow = that.editedColumns[i];
+              that.editedColumns.splice(i, 1);
+            }
+          }
+
+          for (let i = 0; i < carInfo.items.length; i++) {
+            if(carInfo.items[i].id == newRow['id']){
+              carInfo.items[i] = newRow;
+            }
+          }
+          localStorage.setItem('carInfo', JSON.stringify(carInfo));
+
+          that.onBtSaveSuccess();
+        }, error => this.handleError(error)
+      )
+    });
+  }
+  onBtSaveSuccess(){
+    if(this.editedColumns.length <= 0){
+      let that = this;
+      this.buttonSaveInner = 'Saved <i class="fas fa-check"></i>';
+      setTimeout(function(){
+        that.buttonSaveInner = 'Save';
+        that.editedColumnsActive = false;
+      }, 2000);
+    }
+  }
+  onCellValueChanged(row) {
+    var isExisting = false;
+
+    this.editedColumns.forEach(function(item){
+      if(item.id == row['data']['id']){
+        item = row['data'];
+        isExisting = true;
+      }
+    })
+
+    if(!isExisting){
+      this.editedColumns.push(row['data']);
+    }
+    this.editedColumnsActive = (this.editedColumns.length > 0 ? true : false);
   }
 
   onGridReady(event: any) {
@@ -68,8 +122,8 @@ export class InfoComponent {
             newCarInfo = new Object();
 
           for (let row in result) {
-              var data = result[row]
-              rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
+            var data = result[row];
+            rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
           }
 
           event.api.setRowData(rowData);
@@ -86,34 +140,6 @@ export class InfoComponent {
       event.api.setRowData(carInfo.items);
       event.api.sizeColumnsToFit();
     }
-
-    this.carsInfoService.gridOptions.api.addEventListener('cellValueChanged', function(event){
-      var columnsToPost = (sessionStorage.getItem('changedColumns') ? JSON.parse(sessionStorage.getItem('changedColumns')) : []);
-
-      if(event.newValue != event.oldValue){
-        var isExisting = false;
-
-        for (let i = 0; i < columnsToPost.length; i++) {
-            if(columnsToPost[i].id == event.data['id']){
-              columnsToPost[i] = event.data;
-              isExisting = true;
-            }
-        }
-
-        if(!isExisting){
-          columnsToPost.push(event.data);
-        }
-
-        sessionStorage.setItem('changedColumns', JSON.stringify(columnsToPost));
-      }
-
-      if(columnsToPost.length > 0){
-        that.editedColumns = true;
-      } else{
-        that.editedColumns = false;
-      }
-
-    });
   }
 
   private handleError(error) {
