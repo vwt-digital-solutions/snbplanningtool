@@ -23,11 +23,29 @@
 
         <agm-marker
           *ngFor="let m of this.mapService.geoJsonObject['features']"
+          (markerClick)="clickedMarker(infoWindow)"
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
           [iconUrl]="this.mapService.iconUrl"
-          [markerClickable]="false"
           [markerDraggable]="false" >
+
+          <agm-snazzy-info-window
+            *ngIf="m.properties.driver_name || m.properties.license_plate"
+            [closeWhenOthersOpen]="true"
+            [panOnOpen]="false"
+            #infoWindow >
+            <ng-template>
+              <div [ngClass]="['item', 'driver_name']" *ngIf="m.properties.driver_name && m.properties.driver_name != ''">
+                <p>Driver name</p>
+                <span>{{m.properties.driver_name}}</span>
+              </div>
+              <div [ngClass]="['item', 'license_plate']" *ngIf="m.properties.license_plate && m.properties.license_plate != ''">
+                <p>License plate</p>
+                <span class="license-plate license-nl">{{m.properties.license_plate}}</span>
+              </div>
+            </ng-template>
+          </agm-snazzy-info-window>
+
         </agm-marker>
       </agm-marker-cluster>
     </agm-map>

@@ -12,6 +12,7 @@ import { HomeComponent } from 'src/app/modules/home/home.component';
 import { HeaderComponent } from '../header/header.component';
 
 import { RouterTestingModule } from '@angular/router/testing';
+import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -28,7 +29,8 @@ describe('MapComponent', () => {
       imports: [
         AgmCoreModule.forRoot(),
         AgmJsMarkerClustererModule,
-        RouterTestingModule
+        RouterTestingModule,
+        AgmSnazzyInfoWindowModule
       ],
       providers: [
         EnvServiceProvider,

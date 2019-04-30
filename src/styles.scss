@@ -2,6 +2,8 @@
 
 @import "~bootstrap/dist/css/bootstrap.css";
 
+@import "~snazzy-info-window/dist/snazzy-info-window.scss";
+
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
@@ -9,6 +11,19 @@ $fa-font-path: "/assets/fontawesome/webfonts";
 @import "/assets/fontawesome/scss/fontawesome.scss";
 @import "/assets/fontawesome/scss/solid.scss";
 @import "/assets/fontawesome/scss/brands.scss";
+
+
+@font-face {
+  font-family: "license-plate";
+  src: url('assets/fonts/license-plate/license-plate.eot');
+  src: url('assets/fonts/license-plate/license-plate.eot?#iefix') format("embedded-opentype"),
+    url('assets/fonts/license-plate/license-plate.woff2') format("woff2"),
+    url('assets/fonts/license-plate/license-plate.woff') format("woff"),
+    url('assets/fonts/license-plate/license-plate.ttf') format("ttf"),
+    url('assets/fonts/license-plate/license-plate.svg#Kenteken') format("svg");
+  font-style: normal;
+  font-weight: 300;
+}
 
 
 body{
@@ -56,4 +71,35 @@ h1{
       }
     }
   }
+}
+
+.license-plate{
+  border: 1px solid #000;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-family: 'License Plate', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+  max-width: 120px;
+  padding: 2px 5px 2px 12.5px;
+  text-transform: uppercase;
+  -webkit-transition: background-color .3s ease, text-shadow .3s ease;
+  transition: background-color .3s ease, text-shadow .3s ease;
+
+  &:focus{
+    outline: 0;
+  }
+
+  &.license-nl{
+    background: #f2ba00 url('assets/images/license-plate-nl.svg') no-repeat top left;
+    color: #222;
+    text-shadow: 1px 1px #ffe153;
+
+    &:focus {
+      background-color: #ffc70d;
+      text-shadow: 0 0 #ffe153;
+    }
+  }
+
 }

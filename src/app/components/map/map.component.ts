@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EnvService } from '../../services/env.service';
 import { MapService } from '../../services/map.service';
+
 import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 
 @Component({
@@ -16,6 +17,12 @@ export class MapComponent {
     return {
       small: true,
       error: this.mapService.refreshStatusClass
+    }
+  }
+
+  clickedMarker(infoWindow) {
+    if(infoWindow){
+      infoWindow._openInfoWindow();
     }
   }
 }

@@ -38,3 +38,67 @@
     padding: 0;
   }
 }
+
+// SNAZZY INFO WINDOW
+:host /deep/ .si-float-wrapper{
+  box-sizing: border-box;
+  position: absolute;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+
+  & *{
+    box-sizing: border-box;
+  }
+
+  .si-content-wrapper{
+    overflow: visible;
+    padding: 0;
+
+    .si-close-button{
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      right: -30px;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 25px;
+      line-height: 25px;
+      padding: 2.5px;
+      text-align: center;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    .si-content{
+      padding: 10px;
+
+      .item{
+        display: table;
+        width: 100%;
+
+        &.driver_name{
+          margin-bottom: 10px;
+        }
+
+        p{
+          font-size: 10px;
+          line-height: 10px;
+          margin-bottom: 5px;
+          display: table;
+        }
+        &.driver_name{
+          span{
+            font-size: 12px;
+            line-height: 12px;
+            padding: 5px;
+            background-color: #008BB8;
+            border-radius: 3px;
+            color: #fff;
+            display: table;
+          }
+        }
+      }
+    }
+  }
+}
