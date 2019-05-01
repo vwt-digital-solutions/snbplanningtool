@@ -84,19 +84,34 @@ export class InfoComponent {
     }
   }
   onCellValueChanged(row) {
-    var isExisting = false;
+    if(row.oldValue != row.newValue){
+      var isExisting = false;
 
-    this.editedColumns.forEach(function(item){
-      if(item.id == row['data']['id']){
-        item = row['data'];
-        isExisting = true;
+      if(row.colDef.field == 'token'){
+        var carTokens = JSON.parse(localStorage.getItem('carTokens'));
+
+        for (let i = 0; i < carTokens.length; i++) {
+          if(carTokens[i] == row.newValue){
+            carTokens.splice(i, 1);
+          }
+        }
+
+        carTokens.push(row.oldValue);
+        localStorage.setItem('carTokens', JSON.stringify(carTokens));
       }
-    })
 
-    if(!isExisting){
-      this.editedColumns.push(row['data']);
+      this.editedColumns.forEach(function(item){
+        if(item.id == row['data']['id']){
+          item = row['data'];
+          isExisting = true;
+        }
+      })
+
+      if(!isExisting){
+        this.editedColumns.push(row['data']);
+      }
+      this.editedColumnsActive = (this.editedColumns.length > 0 ? true : false);
     }
-    this.editedColumnsActive = (this.editedColumns.length > 0 ? true : false);
   }
 
   onGridReady(event: any) {

@@ -16,7 +16,7 @@ export class CarsInfoFormComponent implements OnInit {
   titleEmpty: string = 'There are no unassigned tokens. Please try again later.';
   buttonSave: string = 'Save';
 
-  carsTokens = [];
+  carsTokens: Object;
 
   model = new CarInfo(null, '', '', null);
 
@@ -28,14 +28,8 @@ export class CarsInfoFormComponent implements OnInit {
   ngOnInit() {
     this.apiService.getCarsTokens().subscribe(
       result => {
-        for (var property in result) {
-          var lastSlash = result[property].lastIndexOf("/");
-          var label = result[property].substring(lastSlash + 1);
-          var token = result[property];
-
-          this.carsTokens.push({label: label, value: token});
-        }
-        localStorage.setItem('carTokens', JSON.stringify(this.carsTokens));
+        this.carsTokens = result;
+        localStorage.setItem('carTokens', JSON.stringify(result));
       },
       error => this.handleError(error)
     );

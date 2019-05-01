@@ -8,7 +8,7 @@
 
     <div [ngClass]="['col-6', 'info-box']">
       <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>
-      <button [ngClass]="['newRow']" (click)="this.carsInfoService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
+      <button [ngClass]="['newRow']" [attr.disabled]="editedColumnsActive ? true : null" (click)="this.carsInfoService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
       <button [ngClass]="['refresh']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Revert <i class="fas fa-sync-alt"></i></button>
       <button [ngClass]="['save']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
     </div>
