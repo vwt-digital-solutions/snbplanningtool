@@ -17,8 +17,8 @@ export class CarsInfoService {
   ) {
     this.gridOptions = <GridOptions>{
       columnDefs: [
-        { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorSelector },
-        { headerName: 'License plate', field: 'license_plate' },
+        { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
+        { headerName: 'License plate', field: 'license_plate', valueSetter: this.cellEditorLicense },
         { headerName: 'Driver name', field: 'driver_name' }
       ],
       defaultColDef: {
@@ -41,7 +41,20 @@ export class CarsInfoService {
     );
   }
 
-  cellEditorSelector(params){
+  cellEditorLicense(params){
+    console.log(params);
+    if (params.newValue.match(/.{1,3}-.{2,3}-.{1,2}/g)) {
+      params.data[params.colDef.field] = params.newValue;
+      params.colDef.cellStyle = { color: 'black', backgroundColor: 'transparent' };
+      return true;
+    } else{
+      params.colDef.cellStyle = { color: 'white', backgroundColor: '#c0392b' };
+    }
+
+    return false;
+  }
+
+  cellEditorToken(params){
     var carTokens = JSON.parse(localStorage.getItem('carTokens'));
     carTokens.push(params.value);
 

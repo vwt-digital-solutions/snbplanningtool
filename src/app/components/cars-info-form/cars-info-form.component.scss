@@ -27,6 +27,13 @@
       }
     }
 
+    span.value-format{
+      font-size: 8px;
+      line-height: 8px;
+      color: #4c4c4c;
+      font-style: italic;
+    }
+
     input#license_plate{
       display: table;
       text-transform: uppercase;

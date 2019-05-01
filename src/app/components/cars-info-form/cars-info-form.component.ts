@@ -14,6 +14,7 @@ import { CarsInfoService } from 'src/app/services/cars-info.service';
 export class CarsInfoFormComponent implements OnInit {
   title: string = 'Add a new car';
   titleEmpty: string = 'There are no unassigned tokens. Please try again later.';
+  valueFormat: string = 'Including dashes (e.g. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)'
   buttonSave: string = 'Save';
 
   carsTokens: Object;

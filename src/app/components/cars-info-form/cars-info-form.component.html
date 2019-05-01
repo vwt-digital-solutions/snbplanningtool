@@ -5,18 +5,38 @@
     <form (ngSubmit)="onSubmit()" #heroForm="ngForm" *ngIf="carsTokens">
       <div class="form-group">
         <label for="token">Token <span>&#42;</span></label>
-        <select class="form-control" id="token" [(ngModel)]="model.token" name="token" #token="ngModel" required>
+        <select
+          class="form-control"
+          id="token"
+          [(ngModel)]="model.token"
+          name="token"
+          #token="ngModel"
+          required >
           <option [ngValue]="null" selected disabled hidden>-- Select a token --</option>
           <option *ngFor="let token of carsTokens" [value]="token">{{token}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="license_plate">License plate</label>
-        <input type="text" class="license-plate license-nl" id="license_plate" minlength="6" maxlength="8" [(ngModel)]="model.license_plate" name="license_plate">
+        <input
+          type="text"
+          class="license-plate license-nl"
+          id="license_plate"
+          pattern=".{1,3}-.{2,3}-.{1,2}"
+          minlength="8"
+          maxlength="8"
+          [(ngModel)]="model.license_plate"
+          name="license_plate" >
+          <span class="value-format" [innerHTML]="valueFormat"></span>
       </div>
       <div class="form-group">
         <label for="driver_name">Driver name</label>
-        <input type="text" class="form-control" id="driver_name" [(ngModel)]="model.driver_name" name="driver_name">
+        <input
+          type="text"
+          class="form-control"
+          id="driver_name"
+          [(ngModel)]="model.driver_name"
+          name="driver_name" >
       </div>
 
       <button (click)="this.carsInfoService.isHidden = true" type="reset" class="btn btn-fail">Cancel</button>
