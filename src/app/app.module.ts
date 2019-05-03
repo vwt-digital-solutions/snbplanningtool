@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { AuthGuard } from "./guards/auth.guard";
+import { AuthGuard } from "./auth/auth.guard";
+import { TokenInterceptor } from './auth/token.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
@@ -37,7 +38,12 @@ import { EnvServiceProvider } from './services/env.service.provider';
   providers: [
     EnvServiceProvider,
     OAuthService,
-    AuthGuard
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

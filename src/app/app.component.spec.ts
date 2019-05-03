@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { EnvServiceProvider } from './services/env.service.provider';
 import { OAuthService, OAuthModule } from 'angular-oauth2-oidc';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './auth/auth.guard';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
