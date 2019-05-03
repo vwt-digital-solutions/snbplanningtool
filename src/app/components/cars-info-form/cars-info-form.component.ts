@@ -27,13 +27,8 @@ export class CarsInfoFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.apiService.getCarsTokens().subscribe(
-      result => {
-        this.carsTokens = result;
-        localStorage.setItem('carTokens', JSON.stringify(result));
-      },
-      error => this.handleError(error)
-    );
+    this.apiService.apiGetTokens();
+    this.carsTokens = JSON.parse(localStorage.getItem('carTokens'));
   }
 
   onSubmit() {

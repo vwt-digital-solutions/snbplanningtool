@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 
 import { EnvService } from './env.service';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { CarInfo } from '../classes/car-info';
 
 @Injectable({
@@ -12,54 +11,57 @@ import { CarInfo } from '../classes/car-info';
 export class ApiService {
   constructor(
     private httpClient: HttpClient,
-    private env: EnvService,
-    private oauthService: OAuthService
+    private env: EnvService
   ) {}
 
-  public getCars(){
-    if(this.env.apiUrl && this.oauthService.getAccessToken()){
-      return this.httpClient.get(`${this.env.apiUrl}/cars`, {
-        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
-      });
-    } else{
-      return throwError('Something bad happened, please try again later.');
-    }
+  public apiGet(url: string){
+    var requestUrl = this.env.apiUrl + url;
+    return this.httpClient.get(requestUrl);
   }
 
+  public apiGetCarsInfo(){
+    var requestUrl = this.env.apiUrl + '/carsinfo';
+    this.httpClient.get(requestUrl).subscribe(
+      result => {
+        var rowData = [],
+          newCarInfo = new Object();
 
-  public getCarsInfo(){
-    if(this.env.apiUrl && this.oauthService.getAccessToken()){
-      return this.httpClient.get(`${this.env.apiUrl}/carsinfo`, {
-        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
-      });
-    } else{
-      return throwError('Something bad happened, please try again later.');
-    }
+        for (let row in result) {
+          var data = result[row];
+          rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
+        }
+
+        newCarInfo['items'] = rowData;
+        newCarInfo['lastUpdated'] = new Date().getTime();
+        localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
+
+        return newCarInfo;
+      },
+      error => {
+        return throwError(error)
+      }
+    );
+  }
+
+  public apiGetTokens(){
+    var requestUrl = this.env.apiUrl + '/tokens',
+      response: Object;
+
+    return this.httpClient.get(requestUrl).subscribe(
+      result => {
+        var newCarTokens = new Object();
+        newCarTokens['items'] = result;
+        newCarTokens['lastUpdated'] = new Date().getTime();
+
+        localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
+      },
+      error => {
+        return throwError(error)
+      }
+    );
   }
 
   postCarInfo (carInfo: CarInfo): Observable<CarInfo> {
-    if(this.env.apiUrl && this.oauthService.getAccessToken()){
-      return this.httpClient.post<CarInfo>(`${this.env.apiUrl}/carsinfo`, carInfo, {
-        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
-      });
-    } else{
-      return throwError('Something bad happened, please try again later.');
-    }
-  }
-
-
-  public getCarsTokens(){
-    if(this.env.apiUrl && this.oauthService.getAccessToken()){
-      return this.httpClient.get(`${this.env.apiUrl}/tokens`, {
-        headers: new HttpHeaders().set('Authorization',  `Bearer ${this.oauthService.getAccessToken()}`)
-      });
-    } else{
-      return throwError('Something bad happened, please try again later.');
-    }
-  }
-
-
-  public updateData(){
-    return this.getCars();
+    return this.httpClient.post<CarInfo>(`${this.env.apiUrl}/carsinfo`, carInfo);
   }
 }

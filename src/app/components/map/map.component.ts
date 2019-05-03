@@ -3,6 +3,8 @@ import { EnvService } from '../../services/env.service';
 import { MapService } from '../../services/map.service';
 
 import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
+import { ClusterManager } from '@agm/js-marker-clusterer';
+import { ControlPosition } from '@agm/core/services/google-maps-types';
 
 @Component({
   selector: 'app-map',
@@ -11,7 +13,14 @@ import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 })
 
 export class MapComponent {
-  constructor(public mapService: MapService){}
+  constructor(
+    public mapService: MapService,
+    public clusterManager: ClusterManager
+  ){}
+
+  ngOnInit(){
+    this.mapService.setMapMarkers();
+  }
 
   refreshStatusClasses() {
     return {
@@ -24,6 +33,32 @@ export class MapComponent {
     if(infoWindow){
       infoWindow._openInfoWindow();
     }
+  }
+
+  setLayer(layer){
+    let that = this;
+    this.mapService.markerLayer[layer] = (this.mapService.markerLayer[layer] ? false : true);
+
+    this.mapService.geoJsonObjectAll.features.forEach(function(feature){
+      if(feature.layer == layer){
+        feature.active = that.mapService.markerLayer[layer];
+      }
+    });
+
+    this.mapService.setMapMarkers();
+  }
+
+  resetZoom() {
+    this.mapService.zoomLevel = 8;
+  }
+
+  mapReady(event: any) {
+    event.controls[ControlPosition.BOTTOM_RIGHT].push(document.getElementById('resetZoom'));
+    event.controls[ControlPosition.TOP_LEFT].push(document.getElementById('setMarkerLayers'));
+  }
+
+  zoomChange(event: any) {
+    this.mapService.zoomLevel = event;
   }
 }
 

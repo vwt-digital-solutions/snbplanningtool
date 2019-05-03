@@ -33,12 +33,7 @@ export class CarsInfoService {
       }
     };
 
-    this.apiService.getCarsTokens().subscribe(
-      result => {
-        localStorage.setItem('carTokens', JSON.stringify(result));
-      },
-      error => this.handleError(error)
-    );
+    this.apiService.apiGetTokens();
   }
 
   cellEditorLicense(params){
@@ -56,11 +51,11 @@ export class CarsInfoService {
 
   cellEditorToken(params){
     var carTokens = JSON.parse(localStorage.getItem('carTokens'));
-    carTokens.push(params.value);
+    carTokens.items.push(params.value);
 
     return {
       component: 'agRichSelectCellEditor',
-      params: { values: carTokens }
+      params: { values: carTokens.items }
     };
   }
 

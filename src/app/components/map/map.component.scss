@@ -36,6 +36,78 @@
   agm-map{
     height: 100%;
     padding: 0;
+
+    button.controls{
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -o-appearance: none;
+      -ms-appearance: none;
+      appearance: none;
+
+      border: none;
+
+      -webkit-transition: background-color .5s, color .5s;
+      background-color: rgb(255, 255, 255);
+
+      text-transform: uppercase;
+      padding: 10px;
+      text-align: center;
+
+      font-size: 10px;
+      line-height: 12px;
+
+
+      &:hover{
+        color: rgba(0, 0, 0, 0.9);
+      }
+
+      &:disabled{
+        color: rgba(0, 0, 0, 0.3);
+
+        &:hover{
+          color: rgba(0, 0, 0, 0.3);
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .mapControlOuter{
+      user-select: none;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+
+      -webkit-transition: color .5s;
+      color: rgba(0, 0, 0, 0.6);
+
+
+      &#setMarkerLayers{
+        top: 10px !important;
+
+        button.controls{
+          i{
+            margin-right: 5px;
+          }
+          &.inactive{
+            color: rgba(0, 0, 0, 0.3);
+            background-color: rgb(242,242,242);
+
+            &:hover{
+              color: rgba(0, 0, 0, 0.9);
+            }
+          }
+          &:hover{
+            background-color: rgb(235, 235, 235);
+          }
+        }
+      }
+      &#resetZoom{
+        right: 10px !important;
+        font-size: 20px;
+        line-height: 20px;
+      }
+    }
   }
 }
 
@@ -73,29 +145,32 @@
     .si-content{
       padding: 10px;
 
-      .item{
-        display: table;
-        width: 100%;
+      .row{
+        margin: 0;
 
-        &.driver_name{
-          margin-bottom: 10px;
-        }
+        .item{
+          padding: 5px;
 
-        p{
-          font-size: 10px;
-          line-height: 10px;
-          margin-bottom: 5px;
-          display: table;
-        }
-        &.driver_name{
-          span{
-            font-size: 12px;
-            line-height: 12px;
-            padding: 5px;
-            background-color: #008BB8;
-            border-radius: 3px;
-            color: #fff;
+          &.driver_name{
+            margin-bottom: 10px;
+          }
+
+          p{
+            font-size: 10px;
+            line-height: 10px;
+            margin-bottom: 5px;
             display: table;
+          }
+          &.driver_name{
+            span{
+              font-size: 12px;
+              line-height: 12px;
+              padding: 5px;
+              background-color: #008BB8;
+              border-radius: 3px;
+              color: #fff;
+              display: table;
+            }
           }
         }
       }

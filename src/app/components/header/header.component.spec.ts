@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { HeaderComponent } from './header.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { AuthGuard } from 'src/app/guards/auth.guard';
+import { AuthGuard } from 'src/app/auth/auth.guard';
 
 import { RouterTestingModule } from '@angular/router/testing';
 

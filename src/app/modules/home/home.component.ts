@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 
-import { OAuthService } from 'angular-oauth2-oidc';
 import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
 
 import { throwError } from 'rxjs';
-import { CarInfo } from 'src/app/classes/car-info';
 
 @Component({
   selector: 'app-home',
@@ -13,70 +11,103 @@ import { CarInfo } from 'src/app/classes/car-info';
 })
 export class HomeComponent {
   constructor(
-    private oauthService: OAuthService,
     private apiService: ApiService,
     private mapService: MapService
   ) {}
 
-  ngOnInit(){
-    if(this.oauthService.hasValidIdToken()) {
-      this.apiService.getCars().subscribe(
-        result => {
-          this.handleResult(result);
-          setInterval(() => {
-            this.refreshData()
-          }, (5 * 60 * 1000));
-        },
-        error => this.handleError(error)
-      );
-    }
+  public mapGetCars(){
+    let that = this;
 
-    if(!localStorage.getItem('carInfo')){
-      this.apiService.getCarsInfo().subscribe(
-        result => {
-          var rowData = [],
-            newCarInfo = new Object();
+    this.apiService.apiGet('/cars').subscribe(
+      result => {
+        result['features'].forEach(function(feature){
+          feature['layer'] = 'cars';
+          feature['active'] = that.mapService.markerLayer.cars;
+        });
 
-          for (let row in result) {
-            var data = result[row];
-            rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
-          }
-
-          newCarInfo['items'] = rowData;
-          newCarInfo['lastUpdated'] = new Date().getTime();
-          localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
-        },
-        error => this.handleError(error)
-      );
-    }
-  }
-
-  refreshData(){
-    this.apiService.updateData().subscribe(
-      result => this.handleResult(result),
+        this.handleResult(result, 'cars');
+      },
       error => this.handleError(error)
     );
   }
 
-  private handleResult(result) {
-    if(localStorage.getItem('carInfo')){
-      var carInfo = JSON.parse(localStorage.getItem('carInfo'));
+  public mapGetWorkItems(){
+    let that = this;
 
-      if(carInfo){
-        for (let i = 0; i < result.features.length; i++) {
-          for (let j = 0; j < carInfo.items.length; j++) {
-            if(carInfo.items[j].token == result.features[i].properties.token){
-              result.features[i].properties.driver_name = (carInfo.items[j].driver_name ? carInfo.items[j].driver_name : '');
-              result.features[i].properties.license_plate = (carInfo.items[j].license_plate ? carInfo.items[j].license_plate : '');
+    this.apiService.apiGet('/workitems/all').subscribe(
+      result => {
+        var workItems = {features: []};
+        for (let item in result) {
+          if(result[item].geometry){
+            var newWorkItem = { type: "Feature", geometry: { type: "Point", coordinates: [] }, properties: {} };
+
+            for (let property in result[item]) {
+              if(property != 'geometry'){
+                newWorkItem.properties[property] = result[item][property];
+              } else{
+                newWorkItem.geometry.coordinates = result[item][property].coordinates;
+              }
             }
+            newWorkItem['layer'] = 'work';
+            newWorkItem['active'] = that.mapService.markerLayer.work;
+            workItems.features.push(newWorkItem);
           }
         }
-      } else{
-        localStorage.removeItem('carInfo');
-      }
+
+        this.handleResult(workItems, 'work');
+      },
+      error => this.handleError(error)
+    );
+  }
+
+  ngOnInit(){
+    var carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
+    this.mapService.geoJsonObjectAll.features = [];
+    this.mapService.geoJsonObjectActive.features = [];
+
+    if(!carInfo){
+      this.apiService.apiGetCarsInfo();
     }
 
-    this.mapService.geoJsonObject = result;
+    this.mapGetCars();
+    this.mapGetWorkItems();
+
+    setInterval(() => {
+      this.mapService.geoJsonObjectAll = {"features": [], "type":"FeatureCollection"};
+      this.mapGetCars();
+      this.mapGetWorkItems();
+    }, (5 * 60 * 1000));
+  }
+
+  refreshData(){
+
+  }
+
+  private handleResult(result, layer) {
+    let that = this;
+    var carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
+
+    if(carInfo && layer == 'cars'){
+      for (let i = 0; i < result.features.length; i++) {
+        for (let j = 0; j < carInfo.items.length; j++) {
+          if(carInfo.items[j].token == result.features[i].properties.token){
+            result.features[i].properties.driver_name = (carInfo.items[j].driver_name ? carInfo.items[j].driver_name : '');
+            result.features[i].properties.license_plate = (carInfo.items[j].license_plate ? carInfo.items[j].license_plate : '');
+          }
+        }
+      }
+    } else if(!carInfo){
+      this.apiService.apiGetTokens();
+    }
+
+    result.features.forEach(function(feature){
+      that.mapService.geoJsonObjectAll.features.push(feature);
+
+      if(feature.active){
+        that.mapService.geoJsonObjectActive.features.push(feature);
+      }
+    });
+
     this.mapService.refreshUpdate = Date.now();
   };
 

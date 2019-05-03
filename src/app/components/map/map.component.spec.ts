@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgmCoreModule, LAZY_MAPS_API_CONFIG } from '@agm/core';
-import { AgmJsMarkerClustererModule } from '@agm/js-marker-clusterer';
+import { AgmCoreModule, LAZY_MAPS_API_CONFIG, GoogleMapsAPIWrapper } from '@agm/core';
+import { AgmJsMarkerClustererModule, ClusterManager } from '@agm/js-marker-clusterer';
 
 import { EnvServiceProvider } from 'src/app/services/env.service.provider';
 import { MapServiceProvider } from 'src/app/services/map.service.provider';
@@ -35,6 +35,8 @@ describe('MapComponent', () => {
       providers: [
         EnvServiceProvider,
         MapServiceProvider,
+        ClusterManager,
+        GoogleMapsAPIWrapper,
         {
           provide: LAZY_MAPS_API_CONFIG,
           useClass: MapsConfig,

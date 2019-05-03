@@ -90,13 +90,13 @@ export class InfoComponent {
       if(row.colDef.field == 'token'){
         var carTokens = JSON.parse(localStorage.getItem('carTokens'));
 
-        for (let i = 0; i < carTokens.length; i++) {
-          if(carTokens[i] == row.newValue){
-            carTokens.splice(i, 1);
+        for (let i = 0; i < carTokens.items.length; i++) {
+          if(carTokens.items[i] == row.newValue){
+            carTokens.items.splice(i, 1);
           }
         }
 
-        carTokens.push(row.oldValue);
+        carTokens.items.push(row.oldValue);
         localStorage.setItem('carTokens', JSON.stringify(carTokens));
       }
 
@@ -131,7 +131,7 @@ export class InfoComponent {
     }
 
     if(!isLocalStorage){
-      this.apiService.getCarsInfo().subscribe(
+      this.apiService.apiGet('/carsinfo').subscribe(
         result => {
           var rowData = [],
             newCarInfo = new Object();

@@ -35,7 +35,7 @@ describe('ApiService', () => {
       (httpMock: HttpTestingController, apiService: ApiService, envService: EnvService) => {
         const mockCars = { "features": [], "type": "FeatureCollection" };
 
-        apiService.getCars().subscribe((event: HttpEvent<any>) => {
+        apiService.apiGet('/cars').subscribe((event: HttpEvent<any>) => {
           switch (event.type) {
             case HttpEventType.Response:
               expect(event.body).toEqual(mockCars);

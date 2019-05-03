@@ -54,6 +54,8 @@ h1{
       padding: 10px !important;
       height: auto !important;
       box-shadow: none !important;
+
+      -webkit-transition: background-color .5s;
     }
     label{
       font-family: 'Poppins', sans-serif !important;

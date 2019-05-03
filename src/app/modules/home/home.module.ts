@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AgmCoreModule, LAZY_MAPS_API_CONFIG } from '@agm/core';
-import { AgmJsMarkerClustererModule } from '@agm/js-marker-clusterer';
+import { AgmCoreModule, LAZY_MAPS_API_CONFIG, GoogleMapsAPIWrapper } from '@agm/core';
+import { AgmJsMarkerClustererModule, ClusterManager } from '@agm/js-marker-clusterer';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 
 import { EnvService } from 'src/app/services/env.service';
@@ -29,6 +29,8 @@ import { MapComponent, MapsConfig } from 'src/app/components/map/map.component';
   ],
   providers: [
     MapServiceProvider,
+    ClusterManager,
+    GoogleMapsAPIWrapper,
     {
       provide: LAZY_MAPS_API_CONFIG,
       useClass: MapsConfig,

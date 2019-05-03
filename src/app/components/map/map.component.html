@@ -11,41 +11,80 @@
       [latitude]="this.mapService.lat"
       [longitude]="this.mapService.lng"
       [styles]="this.mapService.styles"
+      [zoom]="this.mapService.zoomLevel"
       [minZoom]="this.mapService.minZoom"
       [disableDefaultUI]="true"
       [streetViewControl]="false"
       [scaleControl]="true"
-      [mapTypeControl]="true" >
+      [mapTypeControl]="true"
+      (mapReady)="mapReady($event)"
+      (zoomChange)="zoomChange($event)" >
+
+      <div id="setMarkerLayers" [ngClass]="['mapControlOuter']">
+        <button
+          id="setMarkerLayersCars"
+          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.cars ? 'active' : 'inactive')]"
+          title="{{(this.mapService.markerLayer.cars ? 'Hide' : 'Show')}} car locations"
+          (click)="setLayer('cars')" >
+          <i class="fas {{(this.mapService.markerLayer.cars ? 'fa-eye' : 'fa-eye-slash')}}"></i>Cars
+        </button>
+        <button
+          id="setMarkerLayersWork"
+          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.work ? 'active' : 'inactive')]"
+          title="{{(this.mapService.markerLayer.work ? 'Hide' : 'Show')}} work locations"
+          (click)="setLayer('work')" >
+          <i class="fas {{(this.mapService.markerLayer.work ? 'fa-eye' : 'fa-eye-slash')}}"></i>Work
+        </button>
+      </div>
+
+      <button
+        id="resetZoom"
+        [ngClass]="['mapControlOuter', 'toggle-button', 'controls', 'button']"
+        title="Reset zoom"
+        [attr.disabled]="this.mapService.zoomLevel <= 8 ? true : null"
+        (click)="resetZoom()" >
+        <i class="fas fa-redo-alt"></i>
+      </button>
 
       <agm-marker-cluster
         [styles]="this.mapService.clusterStyles"
+        [minimumClusterSize]="3"
         [imagePath]="this.mapService.clusterUrl" >
 
         <agm-marker
-          *ngFor="let m of this.mapService.geoJsonObject['features']"
+          *ngFor="let m of this.mapService.geoJsonObjectActive['features']"
           (markerClick)="clickedMarker(infoWindow)"
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
-          [iconUrl]="this.mapService.iconUrl"
+          [iconUrl]="{ url: (m.layer == 'cars' ? this.mapService.iconUrlCar : this.mapService.iconUrlWork) }"
           [markerDraggable]="false" >
 
           <agm-snazzy-info-window
-            *ngIf="m.properties.driver_name || m.properties.license_plate"
             [closeWhenOthersOpen]="true"
-            [panOnOpen]="false"
+            [panOnOpen]="true"
+            [maxWidth]="400"
+            [maxHeight]="400"
             #infoWindow >
             <ng-template>
-              <div [ngClass]="['item', 'driver_name']" *ngIf="m.properties.driver_name && m.properties.driver_name != ''">
-                <p>Driver name</p>
-                <span>{{m.properties.driver_name}}</span>
+              <div [ngClass]="['row', 'marker-car']" *ngIf="m.layer == 'cars'">
+                <div [ngClass]="['col-12', 'item', 'driver_name']">
+                  <p>Driver name</p>
+                  <span>{{m.properties.driver_name || '-'}}</span>
+                </div>
+                <div [ngClass]="['col-12', 'item', 'license_plate']">
+                  <p>License plate</p>
+                  <span class="license-plate license-nl">{{m.properties.license_plate || 'N/A'}}</span>
+                </div>
               </div>
-              <div [ngClass]="['item', 'license_plate']" *ngIf="m.properties.license_plate && m.properties.license_plate != ''">
-                <p>License plate</p>
-                <span class="license-plate license-nl">{{m.properties.license_plate}}</span>
+
+              <div [ngClass]="['row', 'marker-work']" *ngIf="m.layer == 'work'">
+                <div [ngClass]="['col-6', 'item', 'driver_name']" *ngFor="let item of m.properties | keyvalue">
+                  <p>{{item.key.replace('_', ' ')}}</p>
+                  <span>{{item.value || '-'}}</span>
+                </div>
               </div>
             </ng-template>
           </agm-snazzy-info-window>
-
         </agm-marker>
       </agm-marker-cluster>
     </agm-map>
