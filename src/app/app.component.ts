@@ -5,6 +5,11 @@ import { EnvService } from './services/env.service';
 
 import { LicenseManager } from 'ag-grid-enterprise';
 
+import { registerLocaleData } from '@angular/common';
+import localeNl from '@angular/common/locales/nl';
+
+registerLocaleData(localeNl);
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
