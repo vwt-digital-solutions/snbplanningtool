@@ -7,11 +7,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { CarsInfoService } from 'src/app/services/cars-info.service';
 
 @Component({
-  selector: 'app-cars-info-form',
-  templateUrl: './cars-info-form.component.html',
-  styleUrls: ['./cars-info-form.component.scss']
+  selector: 'app-cars-form',
+  templateUrl: './cars-form.component.html',
+  styleUrls: ['./cars-form.component.scss']
 })
-export class CarsInfoFormComponent implements OnInit {
+export class CarsFormComponent implements OnInit {
   title: string = 'Add a new car';
   titleEmpty: string = 'There are no unassigned tokens. Please try again later.';
   valueFormat: string = 'Including dashes (e.g. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)'

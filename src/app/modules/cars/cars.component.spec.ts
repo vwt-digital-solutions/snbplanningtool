@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import { InfoComponent } from './info.component';
+import { CarsComponent } from './cars.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { EnvServiceProvider } from 'src/app/services/env.service.provider';
+import { EnvServiceProvider } from '../../services/env.service.provider';
 import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
-import { CarsInfoFormComponent } from 'src/app/components/cars-info-form/cars-info-form.component';
+import { CarsInfoFormComponent } from '../../components/cars-info-form/cars-info-form.component';
 import { FormsModule } from '@angular/forms';
 
-describe('InfoComponent', () => {
-  let component: InfoComponent;
-  let fixture: ComponentFixture<InfoComponent>;
+describe('CarsComponent', () => {
+  let component: CarsComponent;
+  let fixture: ComponentFixture<CarsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        InfoComponent,
+        CarsComponent,
         CarsInfoFormComponent
       ],
       imports: [
@@ -35,7 +35,7 @@ describe('InfoComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InfoComponent);
+    fixture = TestBed.createComponent(CarsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

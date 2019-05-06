@@ -4,7 +4,7 @@
       <h1>{{title}}</h1>
     </div>
 
-    <app-cars-info-form *ngIf="!this.carsInfoService.isHidden"></app-cars-info-form>
+    <app-cars-form *ngIf="!this.carsInfoService.isHidden"></app-cars-form>
 
     <div [ngClass]="['col-6', 'info-box']">
       <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>

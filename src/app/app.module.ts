@@ -10,7 +10,8 @@ import { TokenInterceptor } from './auth/token.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
-import { InfoModule } from './modules/info/info.module';
+import { CarsModule } from './modules/cars/cars.module';
+import { WorkModule } from './modules/work/work.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -29,7 +30,8 @@ import { EnvServiceProvider } from './services/env.service.provider';
     AppRoutingModule,
     NgbModule,
     HomeModule,
-    InfoModule
+    CarsModule,
+    WorkModule
   ],
   exports: [
     AppComponent,

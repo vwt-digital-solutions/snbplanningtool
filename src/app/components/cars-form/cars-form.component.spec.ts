@@ -2,19 +2,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { CarsInfoFormComponent } from './cars-info-form.component';
-import { EnvServiceProvider } from 'src/app/services/env.service.provider';
+import { CarsFormComponent } from './cars-form.component';
+import { EnvServiceProvider } from '../../services/env.service.provider';
 import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
-import { CarsInfoService } from 'src/app/services/cars-info.service';
+import { CarsInfoService } from '../../services/cars-info.service';
 
-describe('CarsInfoFormComponent', () => {
-  let component: CarsInfoFormComponent;
-  let fixture: ComponentFixture<CarsInfoFormComponent>;
+describe('CarsFormComponent', () => {
+  let component: CarsFormComponent;
+  let fixture: ComponentFixture<CarsFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        CarsInfoFormComponent
+        CarsFormComponent
       ],
       imports: [
         FormsModule,
@@ -33,7 +33,7 @@ describe('CarsInfoFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CarsInfoFormComponent);
+    fixture = TestBed.createComponent(CarsFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

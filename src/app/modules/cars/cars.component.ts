@@ -2,21 +2,21 @@ import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { throwError } from 'rxjs';
 
-import { ApiService } from 'src/app/services/api.service';
-import { CarsInfoService } from 'src/app/services/cars-info.service';
-import { CarInfo } from 'src/app/classes/car-info';
+import { ApiService } from '../../services/api.service';
+import { CarsInfoService } from '../../services/cars-info.service';
+import { CarInfo } from '../../classes/car-info';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.scss']
+  selector: 'app-cars',
+  templateUrl: './cars.component.html',
+  styleUrls: ['./cars.component.scss']
 })
 @NgModule({
   imports: [
     CommonModule
   ]
 })
-export class InfoComponent {
+export class CarsComponent {
   title: string = 'Car info';
   buttonRevert: string = 'Revert all changes';
   buttonExport: string = 'Export to Excel';
