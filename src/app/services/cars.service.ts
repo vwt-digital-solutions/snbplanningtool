@@ -7,7 +7,7 @@ import { ApiService } from './api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CarsInfoService {
+export class CarsService {
   public isHidden: boolean = true;
   public tokens: Object;
   gridOptions: GridOptions;

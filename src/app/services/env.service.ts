@@ -15,6 +15,9 @@ export class EnvService {
   // Google Maps key
   public googleMapsKey = '';
 
+  // ag-Grid enterprise key
+  public agGridKey = '';
+
   // Whether or not to enable debug mode
   public enableDebug = true;
 

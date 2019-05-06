@@ -2,9 +2,9 @@ import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { throwError } from 'rxjs';
 
-import { ApiService } from '../../services/api.service';
-import { CarsInfoService } from '../../services/cars-info.service';
-import { CarInfo } from '../../classes/car-info';
+import { ApiService } from 'src/app/services/api.service';
+import { CarsService } from 'src/app/services/cars.service';
+import { CarClass } from 'src/app/classes/car-class';
 
 @Component({
   selector: 'app-cars',
@@ -29,20 +29,20 @@ export class CarsComponent {
 
   constructor(
     private apiService: ApiService,
-    public carsInfoService: CarsInfoService
+    public carsService: CarsService
   ) { }
 
   onBtRefresh(){
     try{
       var carInfo = JSON.parse(localStorage.getItem('carInfo'));
-      this.carsInfoService.gridOptions.api.setRowData(carInfo.items);
+      this.carsService.gridOptions.api.setRowData(carInfo.items);
       this.editedColumnsActive = false;
     } catch(err){
       this.handleError(err);
     }
   }
   onBtExport(){
-    this.carsInfoService.gridOptions.api.exportDataAsExcel();
+    this.carsService.gridOptions.api.exportDataAsExcel();
   }
   onBtSave(){
     let that = this;
@@ -138,7 +138,7 @@ export class CarsComponent {
 
           for (let row in result) {
             var data = result[row];
-            rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
+            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
           }
 
           event.api.setRowData(rowData);

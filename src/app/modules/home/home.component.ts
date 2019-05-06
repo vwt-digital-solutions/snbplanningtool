@@ -73,7 +73,9 @@ export class HomeComponent {
     this.mapGetWorkItems();
 
     setInterval(() => {
-      this.mapService.geoJsonObjectAll = {"features": [], "type":"FeatureCollection"};
+      this.mapService.geoJsonObjectAll.features = [];
+      this.mapService.geoJsonObjectActive.features = [];
+
       this.mapGetCars();
       this.mapGetWorkItems();
     }, (5 * 60 * 1000));

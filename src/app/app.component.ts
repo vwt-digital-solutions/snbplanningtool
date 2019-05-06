@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { EnvService } from './services/env.service';
 
+import { LicenseManager } from 'ag-grid-enterprise';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -12,6 +14,8 @@ export class AppComponent {
     private env: EnvService,
     private oauthService: OAuthService
   ) {
+    LicenseManager.setLicenseKey(env.agGridKey);
+
     const config = new AuthConfig();
     config.loginUrl = env.loginUrl;
     config.redirectUri = window.location.origin + "/index.html";
@@ -24,6 +28,7 @@ export class AppComponent {
     this.oauthService.configure(config);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tryLogin({});
+
   }
 
   get authenticationToken() {

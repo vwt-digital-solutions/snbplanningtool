@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { CarInfo } from '../../classes/car-info';
+import { CarClass } from '../../classes/car-class';
 
 import { ApiService } from 'src/app/services/api.service';
-import { CarsInfoService } from 'src/app/services/cars-info.service';
+import { CarsService } from 'src/app/services/cars.service';
 
 @Component({
   selector: 'app-cars-form',
@@ -19,11 +19,11 @@ export class CarsFormComponent implements OnInit {
 
   carsTokens: Object;
 
-  model = new CarInfo(null, '', '', null);
+  model = new CarClass(null, '', '', null);
 
   constructor(
     private apiService: ApiService,
-    private carsInfoService: CarsInfoService
+    private carsService: CarsService
   ) { }
 
   ngOnInit() {
@@ -41,7 +41,7 @@ export class CarsFormComponent implements OnInit {
     this.apiService.postCarInfo(this.model).subscribe(
       result => {
         that.model.id = Number(result['carinfo_id']);
-        that.carsInfoService.gridOptions.api.updateRowData({add: [that.model]});
+        that.carsService.gridOptions.api.updateRowData({add: [that.model]});
 
         var oldRows = JSON.parse(localStorage.getItem('carInfo'));
         oldRows.items.push(that.model);
@@ -49,7 +49,7 @@ export class CarsFormComponent implements OnInit {
 
         this.buttonSave = 'Saved <i class="fas fa-check"></i>';
         setTimeout(function(){
-          that.carsInfoService.isHidden = true;
+          that.carsService.isHidden = true;
         }, 2000);
       },
       error => this.handleError(error)

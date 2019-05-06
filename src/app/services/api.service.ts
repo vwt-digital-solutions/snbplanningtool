@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
 
 import { EnvService } from './env.service';
-import { CarInfo } from '../classes/car-info';
+import { CarClass } from '../classes/car-class';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class ApiService {
 
         for (let row in result) {
           var data = result[row];
-          rowData.push(new CarInfo(data.id, data.license_plate, data.driver_name, data.token));
+          rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
         }
 
         newCarInfo['items'] = rowData;
@@ -61,7 +61,7 @@ export class ApiService {
     );
   }
 
-  postCarInfo (carInfo: CarInfo): Observable<CarInfo> {
-    return this.httpClient.post<CarInfo>(`${this.env.apiUrl}/carsinfo`, carInfo);
+  postCarInfo (carClass: CarClass): Observable<CarClass> {
+    return this.httpClient.post<CarClass>(`${this.env.apiUrl}/carsinfo`, carClass);
   }
 }

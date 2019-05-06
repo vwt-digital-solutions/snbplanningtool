@@ -1,21 +1,21 @@
 <div class="container">
-  <div class="row app-info">
+  <div class="row app-cars">
     <div [ngClass]="['col-6', 'title']">
       <h1>{{title}}</h1>
     </div>
 
-    <app-cars-form *ngIf="!this.carsInfoService.isHidden"></app-cars-form>
+    <app-cars-form *ngIf="!this.carsService.isHidden"></app-cars-form>
 
     <div [ngClass]="['col-6', 'info-box']">
       <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>
-      <button [ngClass]="['newRow']" [attr.disabled]="editedColumnsActive ? true : null" (click)="this.carsInfoService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
+      <button [ngClass]="['newRow']" [attr.disabled]="editedColumnsActive ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
       <button [ngClass]="['refresh']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Revert <i class="fas fa-sync-alt"></i></button>
       <button [ngClass]="['save']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
     </div>
 
     <ag-grid-angular
       [ngClass]="['col-12', 'ag-theme-balham', 'info-grid']"
-      [gridOptions]="this.carsInfoService.gridOptions"
+      [gridOptions]="this.carsService.gridOptions"
       (gridReady)="onGridReady($event)"
       (cellValueChanged)="onCellValueChanged($event)" >
     </ag-grid-angular>

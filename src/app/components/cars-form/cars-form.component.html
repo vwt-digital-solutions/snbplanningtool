@@ -39,13 +39,13 @@
           name="driver_name" >
       </div>
 
-      <button (click)="this.carsInfoService.isHidden = true" type="reset" class="btn btn-fail">Cancel</button>
+      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Cancel</button>
       <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid" [innerHTML]="buttonSave"></button>
     </form>
 
     <div *ngIf="!carsTokens" [ngClass]="['empty-tokens']">
       <span>{{titleEmpty}}</span>
-      <button (click)="this.carsInfoService.isHidden = true" type="reset" class="btn btn-fail">Ok</button>
+      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Ok</button>
     </div>
   </div>
 </div>

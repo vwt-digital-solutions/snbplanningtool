@@ -1,4 +1,4 @@
-export class CarInfo {
+export class CarClass {
   constructor(
     public id: number,
     public license_plate: string,

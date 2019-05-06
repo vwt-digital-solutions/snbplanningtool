@@ -1,12 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
+
+import { AgGridModule } from 'ag-grid-angular';
+import { EnvServiceProvider } from 'src/app/services/env.service.provider';
 
 import { CarsComponent } from './cars.component';
-import { AgGridModule } from 'ag-grid-angular';
-import { EnvServiceProvider } from '../../services/env.service.provider';
-import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
-import { CarsInfoFormComponent } from '../../components/cars-info-form/cars-info-form.component';
-import { FormsModule } from '@angular/forms';
+import { CarsFormComponent } from 'src/app/components/cars-form/cars-form.component';
 
 describe('CarsComponent', () => {
   let component: CarsComponent;
@@ -16,7 +18,7 @@ describe('CarsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         CarsComponent,
-        CarsInfoFormComponent
+        CarsFormComponent
       ],
       imports: [
         AgGridModule.withComponents([]),

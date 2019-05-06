@@ -3,9 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { CarsFormComponent } from './cars-form.component';
-import { EnvServiceProvider } from '../../services/env.service.provider';
+import { EnvServiceProvider } from 'src/app/services/env.service.provider';
 import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
-import { CarsInfoService } from '../../services/cars-info.service';
+import { CarsService } from 'src/app/services/cars.service';
 
 describe('CarsFormComponent', () => {
   let component: CarsFormComponent;
@@ -22,7 +22,7 @@ describe('CarsFormComponent', () => {
       ],
       providers: [
         HttpClient,
-        CarsInfoService,
+        CarsService,
         EnvServiceProvider,
         UrlHelperService,
         OAuthLogger,
