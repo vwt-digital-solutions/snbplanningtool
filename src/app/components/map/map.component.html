@@ -60,6 +60,7 @@
           [markerDraggable]="false" >
 
           <agm-snazzy-info-window
+            *ngIf="m.layer == 'cars' || m.layer == 'work'"
             [closeWhenOthersOpen]="true"
             [panOnOpen]="true"
             [maxWidth]="400"
@@ -77,10 +78,64 @@
                 </div>
               </div>
 
-              <div [ngClass]="['row', 'marker-work']" *ngIf="m.layer == 'work'">
-                <div [ngClass]="['col-6', 'item', 'driver_name']" *ngFor="let item of m.properties | keyvalue">
-                  <p>{{item.key.replace('_', ' ')}}</p>
-                  <span>{{item.value || '-'}}</span>
+              <div [ngClass]="['row', 'marker-work', 'no-gutters']" *ngIf="m.layer == 'work'">
+                <div [ngClass]="['col-12', 'marker-work-inner']">
+                  <div [ngClass]="['row']">
+                    <div [ngClass]="['col-4', 'item', 'project_number']">
+                      <p>Project number</p>
+                      <span>{{m.properties.project_number || '-'}}</span>
+                    </div>
+                    <div [ngClass]="['col-4', 'item', 'task_type']">
+                      <p>Task type</p>
+                      <span>{{m.properties.task_type || '-'}}</span>
+                    </div>
+                    <div [ngClass]="['col-4', 'item', 'status']">
+                      <p>Status</p>
+                      <span>{{m.properties.status || '-'}}</span>
+                    </div>
+                  </div>
+
+                  <div [ngClass]="['row']">
+                    <div [ngClass]="['col-12', 'item', 'description']">
+                      <p>Description</p>
+                      <span>{{m.properties.description || '-'}}</span>
+                    </div>
+                  </div>
+
+                  <div [ngClass]="['row']">
+                    <div [ngClass]="['col-6', 'item', 'date']">
+                      <p>Start date</p>
+                      <span>{{m.properties.start_timestamp | date:'dd-MM-yyyy' || 'N/A'}}</span>
+                      <span>{{m.properties.start_timestamp | date:'HH:mm' || 'N/A'}}</span>
+                    </div>
+                    <div [ngClass]="['col-6', 'item', 'date']">
+                      <p>End date</p>
+                      <span>{{m.properties.end_timestamp | date:'dd-MM-yyyy' || '-'}}</span>
+                      <span>{{m.properties.end_timestamp | date:'HH:mm' || '-'}}</span>
+                    </div>
+                  </div>
+
+                  <div [ngClass]="['row']" *ngIf="m.properties.city || m.properties.zip || m.properties.street">
+                    <div [ngClass]="['col-4', 'item', 'city']">
+                      <p>City</p>
+                      <span>{{m.properties.city || 'N/A'}}</span>
+                    </div>
+                    <div [ngClass]="['col-4', 'item', 'zip']" *ngIf="m.properties.zip">
+                      <p>Zip</p>
+                      <span>{{m.properties.zip}}</span>
+                    </div>
+                    <div [ngClass]="['col-4', 'item', 'street']" *ngIf="m.properties.street">
+                      <p>Street</p>
+                      <span>{{m.properties.street}}</span>
+                    </div>
+                  </div>
+
+                  <div [ngClass]="['row']"  *ngIf="m.properties.employee_name">
+                    <div [ngClass]="['col-12', 'item', 'employee_name']">
+                      <p>Employee name</p>
+                      <span>{{m.properties.employee_name}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </ng-template>

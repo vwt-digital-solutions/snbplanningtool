@@ -125,6 +125,8 @@
   .si-content-wrapper{
     overflow: visible;
     padding: 0;
+    border: none;
+    border-top-right-radius: 0px;
 
     .si-close-button{
       position: absolute;
@@ -148,12 +150,21 @@
       .row{
         margin: 0;
 
+        &.marker-work{
+          padding: 0;
+
+          .row{
+            padding: 5px;
+            border-radius: 5px;
+
+            &:nth-child(2n + 1){
+              background: #f2f2f2;
+            }
+          }
+        }
+
         .item{
           padding: 5px;
-
-          &.driver_name{
-            margin-bottom: 10px;
-          }
 
           p{
             font-size: 10px;
@@ -161,15 +172,36 @@
             margin-bottom: 5px;
             display: table;
           }
-          &.driver_name{
+          span:not(.license-plate){
+            font-size: 12px;
+            line-height: 12px;
+            padding: 5px;
+            background-color: #008BB8;
+            border-radius: 3px;
+            color: #fff;
+            display: table;
+            margin: 5px 0;
+
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+            -moz-hyphens: auto;
+            hyphens: auto;
+            max-width: 100%;
+          }
+
+          &.address{
             span{
-              font-size: 12px;
-              line-height: 12px;
-              padding: 5px;
-              background-color: #008BB8;
-              border-radius: 3px;
-              color: #fff;
-              display: table;
+              float: left;
+              margin: 2.5px;
+
+              &:first-child{
+                margin-left: 0;
+              }
+              &:last-child{
+                margin-right: 0;
+              }
             }
           }
         }

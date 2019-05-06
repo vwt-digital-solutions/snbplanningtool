@@ -29,7 +29,7 @@ export class MapComponent {
     }
   }
 
-  clickedMarker(infoWindow) {
+  clickedMarker(infoWindow: any) {
     if(infoWindow){
       infoWindow._openInfoWindow();
     }
