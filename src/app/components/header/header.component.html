@@ -8,8 +8,8 @@
     <div class="col-6 navbar-container">
       <div class="navbar">
         <a routerLink="map" [routerLinkActive]="['active']">Map</a>
-        <a routerLink="cars" [routerLinkActive]="['active']">Cars</a>
-        <a routerLink="work" [routerLinkActive]="['active']">Work</a>
+        <a routerLink="cars"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Cars</a>
+        <a routerLink="work" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Work</a>
 
         <div *ngIf="email" ngbDropdown class="d-inline-block">
           <button class="btn" id="dropdownMenu" ngbDropdownToggle>
@@ -17,6 +17,7 @@
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownMenu">
             <span ngbDropdownItem>{{email}}</span>
+            <span ngbDropdownItem *ngIf="roles">{{roles}}</span>
             <button ngbDropdownItem (click)="logout()">Logout</button>
           </div>
         </div>

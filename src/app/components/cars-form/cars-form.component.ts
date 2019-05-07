@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { CarClass } from '../../classes/car-class';
+import { CarClass } from 'src/app/classes/car-class';
 
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
@@ -52,7 +52,9 @@ export class CarsFormComponent implements OnInit {
           that.carsService.isHidden = true;
         }, 2000);
       },
-      error => this.handleError(error)
+      error => {
+        this.handleError(error);
+      }
     )
   }
 

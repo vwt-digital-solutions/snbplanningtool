@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+
 import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthRoleService } from 'src/app/services/auth-role.service';
 
 @Component({
   selector: 'app-header',
@@ -8,10 +10,10 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class HeaderComponent {
   title = 'Planning tool';
-  username: string;
 
   constructor(
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    public authRoleService: AuthRoleService
   ) {}
 
   logout() {
@@ -24,5 +26,12 @@ export class HeaderComponent {
       return null;
     }
     return claims['email'];
+  }
+  get roles() {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims || !claims['roles']) {
+      return null;
+    }
+    return claims['roles'][0].replace(/^[^.]+./g, '');
   }
 }

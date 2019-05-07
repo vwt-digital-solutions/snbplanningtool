@@ -64,7 +64,9 @@ export class WorkComponent {
           newworkItems['lastUpdated'] = new Date().getTime();
           localStorage.setItem('workItems', JSON.stringify(newworkItems));
         },
-        error => this.handleError(error)
+        error => {
+          this.handleError(error);
+        }
       );
     } else{
       console.log('Local');

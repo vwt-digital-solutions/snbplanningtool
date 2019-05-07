@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { EnvService } from '../../services/env.service';
-import { MapService } from '../../services/map.service';
+
+import { AuthRoleService } from 'src/app/services/auth-role.service';
+import { EnvService } from 'src/app/services/env.service';
+import { MapService } from 'src/app/services/map.service';
 
 import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 import { ClusterManager } from '@agm/js-marker-clusterer';
 import { ControlPosition } from '@agm/core/services/google-maps-types';
+
 
 @Component({
   selector: 'app-map',
@@ -14,6 +17,7 @@ import { ControlPosition } from '@agm/core/services/google-maps-types';
 
 export class MapComponent {
   constructor(
+    public authRoleService: AuthRoleService,
     public mapService: MapService,
     public clusterManager: ClusterManager
   ){}

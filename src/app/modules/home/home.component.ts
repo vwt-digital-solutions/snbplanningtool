@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { throwError } from 'rxjs';
 
+import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
 
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,7 @@ import { throwError } from 'rxjs';
 })
 export class HomeComponent {
   constructor(
+    private authRoleService: AuthRoleService,
     private apiService: ApiService,
     private mapService: MapService
   ) {}
@@ -27,37 +29,43 @@ export class HomeComponent {
 
         this.handleResult(result, 'cars');
       },
-      error => this.handleError(error)
+      error => {
+        this.handleError(error);
+      }
     );
   }
 
   public mapGetWorkItems(){
     let that = this;
 
-    this.apiService.apiGet('/workitems/all').subscribe(
-      result => {
-        var workItems = {features: []};
-        for (let item in result) {
-          if(result[item].geometry){
-            var newWorkItem = { type: "Feature", geometry: { type: "Point", coordinates: [] }, properties: {} };
+    if(this.authRoleService.isAuthorized){
+      this.apiService.apiGet('/workitems/all').subscribe(
+        result => {
+          var workItems = {features: []};
+          for (let item in result) {
+            if(result[item].geometry){
+              var newWorkItem = { type: "Feature", geometry: { type: "Point", coordinates: [] }, properties: {} };
 
-            for (let property in result[item]) {
-              if(property != 'geometry'){
-                newWorkItem.properties[property] = result[item][property];
-              } else{
-                newWorkItem.geometry.coordinates = result[item][property].coordinates;
+              for (let property in result[item]) {
+                if(property != 'geometry'){
+                  newWorkItem.properties[property] = result[item][property];
+                } else{
+                  newWorkItem.geometry.coordinates = result[item][property].coordinates;
+                }
               }
+              newWorkItem['layer'] = 'work';
+              newWorkItem['active'] = that.mapService.markerLayer.work;
+              workItems.features.push(newWorkItem);
             }
-            newWorkItem['layer'] = 'work';
-            newWorkItem['active'] = that.mapService.markerLayer.work;
-            workItems.features.push(newWorkItem);
           }
-        }
 
-        this.handleResult(workItems, 'work');
-      },
-      error => this.handleError(error)
-    );
+          this.handleResult(workItems, 'work');
+        },
+        error => {
+          this.handleError(error);
+        }
+      );
+    }
   }
 
   ngOnInit(){
@@ -79,10 +87,6 @@ export class HomeComponent {
       this.mapGetCars();
       this.mapGetWorkItems();
     }, (5 * 60 * 1000));
-  }
-
-  refreshData(){
-
   }
 
   private handleResult(result, layer) {
@@ -114,8 +118,10 @@ export class HomeComponent {
   };
 
   private handleError(error) {
-    this.mapService.refreshStatusClass = true;
-    this.mapService.refreshStatus = 'An error has occurred';
-    return throwError('Something bad happened, please try again later.');
+    if(error.status != 403){
+      this.mapService.refreshStatusClass = true;
+      this.mapService.refreshStatus = 'An error has occurred';
+      return throwError('Something bad happened, please try again later.');
+    }
   };
 }

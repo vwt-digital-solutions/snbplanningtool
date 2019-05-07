@@ -3,6 +3,7 @@ import { GridOptions } from 'ag-grid-community';
 import { throwError } from 'rxjs';
 
 import { ApiService } from './api.service';
+import { AuthRoleService } from './auth-role.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class CarsService {
   gridOptions: GridOptions;
 
   constructor(
+    public authRoleService: AuthRoleService,
     private apiService: ApiService
   ) {
     this.gridOptions = <GridOptions>{
@@ -24,7 +26,7 @@ export class CarsService {
       defaultColDef: {
         sortable: true,
         filter: true,
-        editable: true
+        editable: (this.authRoleService.isEditor ? true : false)
       },
       rowData: [],
       enableRangeSelection: true,
@@ -37,7 +39,6 @@ export class CarsService {
   }
 
   cellEditorLicense(params){
-    console.log(params);
     if (params.newValue.match(/.{1,3}-.{2,3}-.{1,2}/g)) {
       params.data[params.colDef.field] = params.newValue;
       params.colDef.cellStyle = { color: 'black', backgroundColor: 'transparent' };

@@ -4,13 +4,13 @@
       <h1>{{title}}</h1>
     </div>
 
-    <app-cars-form *ngIf="!this.carsService.isHidden"></app-cars-form>
+    <app-cars-form *ngIf="this.authRoleService.isEditor && !this.carsService.isHidden"></app-cars-form>
 
     <div [ngClass]="['col-6', 'info-box']">
       <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>
-      <button [ngClass]="['newRow']" [attr.disabled]="editedColumnsActive ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
-      <button [ngClass]="['refresh']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Revert <i class="fas fa-sync-alt"></i></button>
-      <button [ngClass]="['save']" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
+      <button [ngClass]="['newRow']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumnsActive ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
+      <button [ngClass]="['refresh']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Revert <i class="fas fa-sync-alt"></i></button>
+      <button [ngClass]="['save']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="!editedColumnsActive ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
     </div>
 
     <ag-grid-angular

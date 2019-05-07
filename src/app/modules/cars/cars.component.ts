@@ -2,6 +2,8 @@ import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { throwError } from 'rxjs';
 
+import { AuthRoleService } from 'src/app/services/auth-role.service';
+
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
 import { CarClass } from 'src/app/classes/car-class';
@@ -28,6 +30,7 @@ export class CarsComponent {
   editedColumns = [];
 
   constructor(
+    public authRoleService: AuthRoleService,
     private apiService: ApiService,
     public carsService: CarsService
   ) { }
@@ -88,7 +91,7 @@ export class CarsComponent {
       var isExisting = false;
 
       if(row.colDef.field == 'token'){
-        var carTokens = JSON.parse(localStorage.getItem('carTokens'));
+        var carTokens = (JSON.parse(localStorage.getItem('carTokens')) ? JSON.parse(localStorage.getItem('carTokens')) : null);
 
         for (let i = 0; i < carTokens.items.length; i++) {
           if(carTokens.items[i] == row.newValue){
@@ -130,7 +133,7 @@ export class CarsComponent {
       sessionStorage.removeItem('changedColumns');
     }
 
-    if(!isLocalStorage){
+    if(!isLocalStorage && this.authRoleService.isAuthorized){
       this.apiService.apiGet('/carsinfo').subscribe(
         result => {
           var rowData = [],

@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 
 import { AgmCoreModule, LAZY_MAPS_API_CONFIG, GoogleMapsAPIWrapper } from '@agm/core';
 import { AgmJsMarkerClustererModule, ClusterManager } from '@agm/js-marker-clusterer';
@@ -27,12 +30,16 @@ describe('MapComponent', () => {
         MapComponent
       ],
       imports: [
+        OAuthModule.forRoot(),
         AgmCoreModule.forRoot(),
         AgmJsMarkerClustererModule,
         RouterTestingModule,
         AgmSnazzyInfoWindowModule
       ],
       providers: [
+        OAuthService,
+        HttpClient,
+        HttpHandler,
         EnvServiceProvider,
         MapServiceProvider,
         ClusterManager,

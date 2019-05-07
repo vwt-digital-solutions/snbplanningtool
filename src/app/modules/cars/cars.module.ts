@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CarsComponent } from './cars.component';
 import { AgGridModule } from 'ag-grid-angular';
 
-import { CarsFormComponent } from '../../components/cars-form/cars-form.component';
+import { CarsFormComponent } from 'src/app/components/cars-form/cars-form.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({

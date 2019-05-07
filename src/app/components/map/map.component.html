@@ -29,6 +29,7 @@
           <i class="fas {{(this.mapService.markerLayer.cars ? 'fa-eye' : 'fa-eye-slash')}}"></i>Cars
         </button>
         <button
+          *ngIf="this.authRoleService.isAuthorized"
           id="setMarkerLayersWork"
           [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.work ? 'active' : 'inactive')]"
           title="{{(this.mapService.markerLayer.work ? 'Hide' : 'Show')}} work locations"
@@ -57,10 +58,11 @@
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
           [iconUrl]="{ url: (m.layer == 'cars' ? this.mapService.iconUrlCar : this.mapService.iconUrlWork) }"
+          [markerClickable]="(this.authRoleService.isAuthorized ? true : false)"
           [markerDraggable]="false" >
 
           <agm-snazzy-info-window
-            *ngIf="m.layer == 'cars' || m.layer == 'work'"
+            *ngIf="this.authRoleService.isAuthorized && m.layer == 'cars' || m.layer == 'work'"
             [closeWhenOthersOpen]="true"
             [panOnOpen]="true"
             [maxWidth]="400"

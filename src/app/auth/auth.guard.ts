@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    
     this.oauthService.tryLogin()
       .catch(err => {
         console.error(err);
@@ -23,6 +22,12 @@ export class AuthGuard implements CanActivate {
           this.oauthService.initImplicitFlow()
         }
       });
+
+    const claims = this.oauthService.getIdentityClaims();
+    if(route.data.roles && route.data.roles.indexOf(claims['roles'][0]) === -1) {
+      this.router.navigate(['/']);
+      return false;
+    }
     return true;
   }
 }

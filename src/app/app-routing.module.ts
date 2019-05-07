@@ -6,11 +6,30 @@ import { HomeComponent } from './modules/home/home.component';
 import { CarsComponent } from './modules/cars/cars.component';
 import { WorkComponent } from './modules/work/work.component';
 
+import { Role } from './models/role';
+
 const routes: Routes = [
-    { path: 'map', component: HomeComponent, canActivate: [AuthGuard] },
-    { path: 'cars', component: CarsComponent, canActivate: [AuthGuard] },
-    { path: 'work', component: WorkComponent, canActivate: [AuthGuard] },
-    { path: '**', redirectTo: 'map' }
+    {
+      path: 'map',
+      component: HomeComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'cars',
+      component: CarsComponent,
+      canActivate: [AuthGuard],
+      data: { roles: [Role.Editor, Role.Planner] }
+    },
+    {
+      path: 'work',
+      component: WorkComponent,
+      canActivate: [AuthGuard],
+      data: { roles: [Role.Editor, Role.Planner] }
+    },
+    {
+      path: '**',
+      redirectTo: 'map'
+    }
   ];
 
 @NgModule({

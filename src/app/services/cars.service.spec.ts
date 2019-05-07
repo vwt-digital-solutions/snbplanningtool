@@ -7,9 +7,6 @@ import { OAuthService, OAuthLogger, UrlHelperService } from 'angular-oauth2-oidc
 
 describe('CarsService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [
-
-    ],
     imports: [
       HttpClientModule
     ],
