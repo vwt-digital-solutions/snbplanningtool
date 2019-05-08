@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     if(route.data.roles && claims['roles']) {
       var isAuthorisedRoute: boolean = false;
       for (let i = 0; i < claims['roles'].length; i++) {
-        if(route.data.roles.indexOf(claims['roles'][i]) > 0){
+        if(route.data.roles.indexOf(claims['roles'][i]) > -1){
           isAuthorisedRoute = true;
         }
       }
