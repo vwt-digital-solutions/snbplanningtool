@@ -37,35 +37,53 @@ export class HomeComponent {
 
   public mapGetWorkItems(){
     let that = this;
+    var workItems = (localStorage.getItem('workItems') ? JSON.parse(localStorage.getItem('workItems')) : null),
+      isLocalStorage: boolean = false;
 
     if(this.authRoleService.isAuthorized){
-      this.apiService.apiGet('/workitems/all').subscribe(
-        result => {
-          var workItems = {features: []};
-          for (let item in result) {
-            if(result[item].geometry){
-              var newWorkItem = { type: "Feature", geometry: { type: "Point", coordinates: [] }, properties: {} };
+      if(workItems && workItems.lastUpdated >= (60 * 60 * 1000) && workItems.items.length > 0){
+        isLocalStorage = true;
+      }
 
-              for (let property in result[item]) {
-                if(property != 'geometry'){
-                  newWorkItem.properties[property] = result[item][property];
-                } else{
-                  newWorkItem.geometry.coordinates = result[item][property].coordinates;
-                }
-              }
-              newWorkItem['layer'] = 'work';
-              newWorkItem['active'] = that.mapService.markerLayer.work;
-              workItems.features.push(newWorkItem);
-            }
+      if(isLocalStorage){
+        this.mapProcessWorkItems(workItems.items);
+      } else{
+        this.apiService.apiGet('/workitems/all').subscribe(
+          result => {
+            this.mapProcessWorkItems(result);
+          },
+          error => {
+            this.handleError(error);
           }
-
-          this.handleResult(workItems, 'work');
-        },
-        error => {
-          this.handleError(error);
-        }
-      );
+        );
+      }
+    } else{
+      this.handleError({status: 403, error: 'Unauthorized'});
     }
+  }
+
+  public mapProcessWorkItems(result){
+    let that = this;
+
+    var workItems = [];
+    for (let item in result) {
+      if(result[item].geometry){
+        var newWorkItem = { type: "Feature", geometry: { type: "Point", coordinates: [] }, properties: {} };
+
+        for (let property in result[item]) {
+          if(property != 'geometry'){
+            newWorkItem.properties[property] = result[item][property];
+          } else{
+            newWorkItem.geometry.coordinates = result[item][property].coordinates;
+          }
+        }
+        newWorkItem['layer'] = 'work';
+        newWorkItem['active'] = that.mapService.markerLayer.work;
+        workItems.push(newWorkItem);
+      }
+    }
+
+    this.handleResult(workItems, 'work');
   }
 
   ngOnInit(){
@@ -91,31 +109,53 @@ export class HomeComponent {
 
   private handleResult(result, layer) {
     let that = this;
-    var carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
 
-    if(carInfo && layer == 'cars'){
-      for (let i = 0; i < result.features.length; i++) {
-        for (let j = 0; j < carInfo.items.length; j++) {
-          if(carInfo.items[j].token == result.features[i].properties.token){
-            result.features[i].properties.driver_name = (carInfo.items[j].driver_name ? carInfo.items[j].driver_name : '');
-            result.features[i].properties.license_plate = (carInfo.items[j].license_plate ? carInfo.items[j].license_plate : '');
-          }
+    if(layer != 'cars'){
+      this.featureToMap(result);
+    } else {
+      var carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null),
+        timeout = 0;
+
+      if(carInfo){
+        if(carInfo.items.length <= 0){
+          timeout = 3000;
+          this.apiService.apiGetCarsInfo();
         }
       }
-    } else if(!carInfo){
-      this.apiService.apiGetTokens();
+
+      setTimeout(function(){
+        carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
+
+        if(carInfo.items.length > 0){
+          for (let i = 0; i < result.features.length; i++) {
+            for (let j = 0; j < carInfo.items.length; j++) {
+              if(carInfo.items[j].token == result.features[i].properties.token){
+                result.features[i].properties.driver_name = (carInfo.items[j].driver_name ? carInfo.items[j].driver_name : '');
+                result.features[i].properties.license_plate = (carInfo.items[j].license_plate ? carInfo.items[j].license_plate : '');
+              }
+            }
+          }
+        }
+
+        that.featureToMap(result.features);
+      }, timeout);
     }
 
-    result.features.forEach(function(feature){
+    this.mapService.refreshUpdate = Date.now();
+  };
+
+  private featureToMap(features){
+    let that = this;
+
+    features.forEach(function(feature){
       that.mapService.geoJsonObjectAll.features.push(feature);
 
       if(feature.active){
         that.mapService.geoJsonObjectActive.features.push(feature);
       }
     });
+  }
 
-    this.mapService.refreshUpdate = Date.now();
-  };
 
   private handleError(error) {
     if(error.status != 403){

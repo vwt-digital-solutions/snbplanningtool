@@ -14,6 +14,7 @@ import { WorkClass } from 'src/app/classes/work-class';
 export class WorkComponent {
   title: string = 'Work items';
   buttonExport: string = 'Export to Excel';
+  callProcessing: string;
 
   constructor(
     private apiService: ApiService,
@@ -25,22 +26,18 @@ export class WorkComponent {
   }
 
   onGridReady(event: any) {
-    let that = this;
     var isLocalStorage: boolean = false;
 
     if(localStorage.getItem('workItems')){
       var workItems = JSON.parse(localStorage.getItem('workItems'));
 
-      if(workItems.lastUpdated >= (30 * 60 * 1000)){
+      if(workItems.lastUpdated >= (60 * 60 * 1000) && workItems.items.length > 0){
         isLocalStorage = true;
       }
     }
 
-    if(sessionStorage.getItem('changedColumns')){
-      sessionStorage.removeItem('changedColumns');
-    }
-
     if(!isLocalStorage){
+      this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
       this.apiService.apiGet('/workitems/all').subscribe(
         result => {
           var rowData = [],
@@ -59,6 +56,7 @@ export class WorkComponent {
           }
 
           event.api.setRowData(rowData);
+          this.callProcessing = '';
 
           newworkItems['items'] = rowData;
           newworkItems['lastUpdated'] = new Date().getTime();

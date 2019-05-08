@@ -26,7 +26,7 @@ export class CarsComponent {
   buttonSave: string = 'Save changes';
   buttonSaveInner: string = 'Save <i class="fas fa-save"></i>';
 
-  editedColumnsActive: boolean = false;
+  callProcessing: string;
   editedColumns = [];
 
   constructor(
@@ -37,9 +37,10 @@ export class CarsComponent {
 
   onBtRefresh(){
     try{
+      this.apiService.apiGetTokens();
       var carInfo = JSON.parse(localStorage.getItem('carInfo'));
       this.carsService.gridOptions.api.setRowData(carInfo.items);
-      this.editedColumnsActive = false;
+      this.editedColumns = [];
     } catch(err){
       this.handleError(err);
     }
@@ -72,7 +73,9 @@ export class CarsComponent {
           localStorage.setItem('carInfo', JSON.stringify(carInfo));
 
           that.onBtSaveSuccess();
-        }, error => this.handleError(error)
+        }, error => {
+          this.handleError(error);
+        }
       )
     });
   }
@@ -82,11 +85,12 @@ export class CarsComponent {
       this.buttonSaveInner = 'Saved <i class="fas fa-check"></i>';
       setTimeout(function(){
         that.buttonSaveInner = 'Save';
-        that.editedColumnsActive = false;
+        that.editedColumns = [];
       }, 2000);
     }
   }
   onCellValueChanged(row) {
+    console.log(row);
     if(row.oldValue != row.newValue){
       var isExisting = false;
 
@@ -113,18 +117,17 @@ export class CarsComponent {
       if(!isExisting){
         this.editedColumns.push(row['data']);
       }
-      this.editedColumnsActive = (this.editedColumns.length > 0 ? true : false);
     }
   }
 
   onGridReady(event: any) {
-    let that = this;
     var isLocalStorage: boolean = false;
+    this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
 
     if(localStorage.getItem('carInfo')){
       var carInfo = JSON.parse(localStorage.getItem('carInfo'));
 
-      if(carInfo.lastUpdated >= (30 * 60 * 1000)){
+      if(carInfo.lastUpdated >= (30 * 60 * 1000) && carInfo.items.length > 0){
         isLocalStorage = true;
       }
     }
@@ -146,21 +149,26 @@ export class CarsComponent {
 
           event.api.setRowData(rowData);
           event.api.sizeColumnsToFit();
+          this.callProcessing = '';
 
           newCarInfo['items'] = rowData;
           newCarInfo['lastUpdated'] = new Date().getTime();
           localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
         },
-        error => this.handleError(error)
+        error => {
+          this.handleError(error);
+        }
       );
     } else{
       console.log('Local');
       event.api.setRowData(carInfo.items);
       event.api.sizeColumnsToFit();
+      this.callProcessing = '';
     }
   }
 
   private handleError(error) {
+    this.buttonSaveInner = 'An error has occured';
     return throwError('Something bad happened, please try again later.');
   };
 }

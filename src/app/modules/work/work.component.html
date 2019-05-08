@@ -5,6 +5,7 @@
     </div>
 
     <div [ngClass]="['col-6', 'info-box']">
+      <span *ngIf="callProcessing" [ngClass]="['call-processing']" [innerHTML]="callProcessing"></span>
       <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>
     </div>
 
