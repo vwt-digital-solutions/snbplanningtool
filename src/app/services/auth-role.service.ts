@@ -15,25 +15,46 @@ export class AuthRoleService {
 
   get isAuthorized() {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims || !claims['roles']) {
-      return null;
+    var isAuthorized: boolean = false;
+
+    if (!claims || !claims['roles']) { return null; }
+
+    for (let i = 0; i < claims['roles'].length; i++) {
+      if(claims['roles'][i] === Role.Planner || claims['roles'][i] === Role.Editor){
+        isAuthorized = true;
+      }
     }
-    return claims && claims['roles'][0] === Role.Planner || claims['roles'][0] === Role.Editor;
+
+    return isAuthorized;
   }
 
   get isEditor() {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims || !claims['roles']) {
-      return null;
+    var isAuthorized: boolean = false;
+
+    if (!claims || !claims['roles']) { return null; }
+
+    for (let i = 0; i < claims['roles'].length; i++) {
+      if(claims['roles'][i] === Role.Editor){
+        isAuthorized = true;
+      }
     }
-    return claims && claims['roles'][0] === Role.Editor;
+
+    return isAuthorized;
   }
 
   get isPlanner() {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims || !claims['roles']) {
-      return null;
+    var isAuthorized: boolean = false;
+
+    if (!claims || !claims['roles']) { return null; }
+
+    for (let i = 0; i < claims['roles'].length; i++) {
+      if(claims['roles'][i] === Role.Planner){
+        isAuthorized = true;
+      }
     }
-    return claims && claims['roles'][0] === Role.Planner;
+
+    return isAuthorized;
   }
 }

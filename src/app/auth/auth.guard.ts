@@ -24,9 +24,18 @@ export class AuthGuard implements CanActivate {
       });
 
     const claims = this.oauthService.getIdentityClaims();
-    if(route.data.roles && route.data.roles.indexOf(claims['roles'][0]) === -1) {
-      this.router.navigate(['/']);
-      return false;
+    if(route.data.roles && claims['roles']) {
+      var isAuthorisedRoute: boolean = false;
+      for (let i = 0; i < claims['roles'].length; i++) {
+        if(route.data.roles.indexOf(claims['roles'][i]) > 0){
+          isAuthorisedRoute = true;
+        }
+      }
+
+      if(!isAuthorisedRoute){
+        this.router.navigate(['/']);
+        return false;
+      }
     }
     return true;
   }

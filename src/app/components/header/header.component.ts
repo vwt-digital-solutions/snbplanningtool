@@ -29,9 +29,15 @@ export class HeaderComponent {
   }
   get roles() {
     const claims = this.oauthService.getIdentityClaims();
-    if (!claims || !claims['roles']) {
-      return null;
+    var allRoles = [];
+
+    if (!claims || !claims['roles']) { return null; }
+
+    for (let i = 0; i < claims['roles'].length; i++) {
+        allRoles.push(claims['roles'][i].replace(/^[^.]+./g, ''));
     }
-    return claims['roles'][0].replace(/^[^.]+./g, '');
+    allRoles.sort();
+
+    return allRoles.join(', ');
   }
 }
