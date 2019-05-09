@@ -19,7 +19,7 @@ export class AppComponent {
   constructor(
     private env: EnvService,
     private oauthService: OAuthService,
-    private authRoleService: AuthRoleService
+    public authRoleService: AuthRoleService
   ) {
     LicenseManager.setLicenseKey(env.agGridKey);
 
