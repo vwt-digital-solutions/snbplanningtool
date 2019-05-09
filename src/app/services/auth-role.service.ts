@@ -13,6 +13,13 @@ export class AuthRoleService {
     private oauthService: OAuthService
   ) { }
 
+  get hasValidAccessToken() {
+    if (this.oauthService.hasValidAccessToken()) {
+      return true;
+    }
+    return false;
+  }
+
   get isAuthorized() {
     const claims = this.oauthService.getIdentityClaims();
     var isAuthorized: boolean = false;

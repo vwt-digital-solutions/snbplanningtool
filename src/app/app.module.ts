@@ -17,11 +17,13 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 
 import { EnvServiceProvider } from './services/env.service.provider';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,

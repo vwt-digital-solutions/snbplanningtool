@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { EnvService } from './services/env.service';
+import { AuthRoleService } from './services/auth-role.service';
 
 import { LicenseManager } from 'ag-grid-enterprise';
 
@@ -17,7 +18,8 @@ registerLocaleData(localeNl);
 export class AppComponent {
   constructor(
     private env: EnvService,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    private authRoleService: AuthRoleService
   ) {
     LicenseManager.setLicenseKey(env.agGridKey);
 
@@ -33,13 +35,5 @@ export class AppComponent {
     this.oauthService.configure(config);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tryLogin({});
-
-  }
-
-  get authenticationToken() {
-    if (this.oauthService.hasValidIdToken()) {
-      return true;
-    }
-    return false;
   }
 }
