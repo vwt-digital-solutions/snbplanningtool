@@ -90,7 +90,6 @@ export class CarsComponent {
     }
   }
   onCellValueChanged(row) {
-    console.log(row);
     if(row.oldValue != row.newValue){
       var isExisting = false;
 
@@ -123,6 +122,7 @@ export class CarsComponent {
   onGridReady(event: any) {
     var isLocalStorage: boolean = false;
     this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
+    this.apiService.apiGetTokens();
 
     if(localStorage.getItem('carInfo')){
       var carInfo = JSON.parse(localStorage.getItem('carInfo'));

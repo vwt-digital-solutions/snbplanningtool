@@ -34,8 +34,6 @@ export class CarsService {
         statusPanels: [{ statusPanel: "agTotalRowCountComponent", align: "left" }]
       }
     };
-
-    this.apiService.apiGetTokens();
   }
 
   cellEditorLicense(params){
