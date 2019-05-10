@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { EnvService } from 'src/app/services/env.service';
@@ -17,6 +18,7 @@ import { ControlPosition } from '@agm/core/services/google-maps-types';
 
 export class MapComponent {
   constructor(
+    private location: Location,
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public clusterManager: ClusterManager
@@ -30,12 +32,6 @@ export class MapComponent {
     return {
       small: true,
       error: this.mapService.refreshStatusClass
-    }
-  }
-
-  clickedMarker(infoWindow: any) {
-    if(infoWindow){
-      infoWindow._openInfoWindow();
     }
   }
 
@@ -57,12 +53,42 @@ export class MapComponent {
   }
 
   mapReady(event: any) {
+    let that = this;
     event.controls[ControlPosition.BOTTOM_RIGHT].push(document.getElementById('resetZoom'));
     event.controls[ControlPosition.TOP_LEFT].push(document.getElementById('setMarkerLayers'));
+
+    if(this.mapService.activeTokenId){
+      var hasExistingMarker: boolean = false;
+      this.mapService.geoJsonObjectActive.features.forEach(function(feature){
+        if(feature.properties['token'] == that.mapService.activeTokenId){
+          hasExistingMarker = true;
+          if(this.mapService.zoomLevel != 16){
+            this.mapService.zoomLevel = 16;
+          }
+        }
+      });
+
+      if(!hasExistingMarker){
+        this.location.go('/map');
+      }
+    }
   }
 
   zoomChange(event: any) {
     this.mapService.zoomLevel = event;
+  }
+
+  panToActiveMarker(coordinateType){
+    let that = this;
+    var coordinate: string;
+
+    this.mapService.geoJsonObjectActive.features.forEach(function(feature){
+      if(feature.properties['token'] == that.mapService.activeTokenId){
+        coordinate = (coordinateType == 'lng' ? feature.geometry.coordinates[0] : feature.geometry.coordinates[1]);
+      }
+    });
+
+    return (coordinate ? coordinate : this.mapService[coordinateType]);
   }
 }
 

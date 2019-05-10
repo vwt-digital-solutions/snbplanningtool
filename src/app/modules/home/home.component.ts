@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
@@ -12,6 +13,7 @@ import { MapService } from 'src/app/services/map.service';
 })
 export class HomeComponent {
   constructor(
+    private route: ActivatedRoute,
     private authRoleService: AuthRoleService,
     private apiService: ApiService,
     private mapService: MapService
@@ -87,9 +89,16 @@ export class HomeComponent {
   }
 
   ngOnInit(){
+    let that = this;
     var carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
     this.mapService.geoJsonObjectAll.features = [];
     this.mapService.geoJsonObjectActive.features = [];
+
+    this.route.paramMap.subscribe(params => {
+      if(params.get('trackerId')){
+        this.mapService.activeTokenId = params.get('trackerId').replace(/-/g, '/');
+      }
+    });
 
     if(!carInfo){
       this.apiService.apiGetCarsInfo();

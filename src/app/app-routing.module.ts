@@ -17,6 +17,11 @@ const routes: Routes = [
       canActivate: [AuthGuard]
     },
     {
+      path: 'map/:trackerId',
+      component: HomeComponent,
+      canActivate: [AuthGuard]
+    },
+    {
       path: 'cars',
       component: CarsComponent,
       canActivate: [AuthGuard],

@@ -21,7 +21,17 @@ export class CarsService {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'License plate', field: 'license_plate', valueSetter: this.cellEditorLicense },
-        { headerName: 'Driver name', field: 'driver_name' }
+        { headerName: 'Driver name', field: 'driver_name' },
+        {
+          headerName: 'Location',
+          field: 'token',
+          cellRenderer: this.cellTokenLocator,
+          sortable: false,
+          filter: false,
+          editable: false,
+          width: 75,
+          pinned: 'right'
+        }
       ],
       defaultColDef: {
         sortable: true,
@@ -56,6 +66,14 @@ export class CarsService {
       component: 'agRichSelectCellEditor',
       params: { values: carTokens.items }
     };
+  }
+
+  cellTokenLocator(params){
+    if(params.value != ''){
+      return '<a href="/map/'+ params.value.replace(/\//g, '-') +'">View</a>';
+    } else{
+      return '';
+    }
   }
 
   private handleError(error) {
