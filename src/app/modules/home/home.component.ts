@@ -39,29 +39,14 @@ export class HomeComponent {
 
   public mapGetWorkItems(){
     let that = this;
-    var workItems = (localStorage.getItem('workItems') ? JSON.parse(localStorage.getItem('workItems')) : null),
-      isLocalStorage: boolean = false;
-
-    if(this.authRoleService.isAuthorized){
-      if(workItems && workItems.lastUpdated >= (60 * 60 * 1000) && workItems.items.length > 0){
-        isLocalStorage = true;
+    this.apiService.apiGet('/workitems/all').subscribe(
+      result => {
+        this.mapProcessWorkItems(result);
+      },
+      error => {
+        this.handleError(error);
       }
-
-      if(isLocalStorage){
-        this.mapProcessWorkItems(workItems.items);
-      } else{
-        this.apiService.apiGet('/workitems/all').subscribe(
-          result => {
-            this.mapProcessWorkItems(result);
-          },
-          error => {
-            this.handleError(error);
-          }
-        );
-      }
-    } else{
-      this.handleError({status: 403, error: 'Unauthorized'});
-    }
+    );
   }
 
   public mapProcessWorkItems(result){
