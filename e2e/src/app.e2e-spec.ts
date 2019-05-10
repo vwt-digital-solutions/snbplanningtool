@@ -47,7 +47,7 @@ describe("SnB Planning Tool", function() {
 
     it("should show more than 0 car location(s)", function() {
       browser.get('/');
-      browser.sleep(2000);
+      browser.sleep(10000);
 
       var markerImages = element.all(by.css("img[src*='assets/images/car-location.png']")).count();
       expect(markerImages).toBeGreaterThan(0);
