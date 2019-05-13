@@ -4,15 +4,23 @@ export class MapService {
   geoJsonObjectAll: any = {"features": [], "type":"FeatureCollection"};
   geoJsonObjectActive: any = {"features": [], "type":"FeatureCollection"};
 
+  geoJsonReady = {
+    map: false,
+    cars: false,
+    work: false
+  };
+
   activeTokenId: string;
 
   refreshUpdate : number;
-  refreshStatus : string = 'Auto refresh (5 min.)';
+  refreshStatus : string = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass : boolean = false;
   zoomLevel: number = 8;
 
   iconUrlCar: string = 'assets/images/car-location.png';
+  iconUrlCarOpen: string = 'assets/images/car-location-open.png';
   iconUrlWork: string = 'assets/images/work-location.png';
+  iconUrlWorkOpen: string = 'assets/images/work-location-open.png';
 
   markerLayer = {
     cars: true,

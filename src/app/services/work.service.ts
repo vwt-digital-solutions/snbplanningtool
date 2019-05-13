@@ -41,6 +41,16 @@ export class WorkService {
             { headerName: 'Street', field: 'street' }
           ]
         },
+        {
+          headerName: 'Location',
+          field: 'L2GUID',
+          cellRenderer: this.cellTokenLocator,
+          sortable: false,
+          filter: false,
+          editable: false,
+          width: 100,
+          pinned: 'right'
+        }
       ],
       defaultColDef: {
         sortable: true,
@@ -61,6 +71,14 @@ export class WorkService {
 
   dateTimeFormatter(params){
     return formatDate(params.value, 'HH:mm', 'nl');
+  }
+
+  cellTokenLocator(params){
+    if(params.data.geometry && params.value != ''){
+      return '<a href="/map/'+ params.value +'">View</a>';
+    } else{
+      return '-';
+    }
   }
 
   private handleError(error) {

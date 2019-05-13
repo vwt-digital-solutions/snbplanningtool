@@ -1,6 +1,7 @@
 .map-container{
   padding-top: 50px;
   height: 100vh;
+  background-color: #e5e5e5;
 
   .overlay{
     top: 60px;
@@ -30,6 +31,19 @@
       &.error{
         color: #c0392b;
       }
+    }
+  }
+
+  .map-loading{
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 12px;
+
+    i{
+      margin-left: 5px;
     }
   }
 
@@ -111,96 +125,104 @@
   }
 }
 
-// SNAZZY INFO WINDOW
-:host /deep/ .si-float-wrapper{
-  box-sizing: border-box;
-  position: absolute;
-  width: 100%;
-  font-family: 'Poppins', sans-serif;
-
-  & *{
-    box-sizing: border-box;
+// OVERLAY
+:host /deep/ .map-container{
+  .overlay{
+    i{
+      margin-left: 5px;
+    }
   }
 
-  .si-content-wrapper{
-    overflow: visible;
-    padding: 0;
-    border: none;
-    border-top-right-radius: 0px;
+  .si-float-wrapper{
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
 
-    .si-close-button{
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      right: -30px;
-      top: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white;
-      font-size: 25px;
-      line-height: 25px;
-      padding: 2.5px;
-      text-align: center;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+    & *{
+      box-sizing: border-box;
     }
 
-    .si-content{
-      padding: 10px;
+    .si-content-wrapper{
+      overflow: visible;
+      padding: 0;
+      border: none;
+      border-top-right-radius: 0px;
 
-      .row{
-        margin: 0;
+      .si-close-button{
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        right: -30px;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 25px;
+        line-height: 25px;
+        padding: 2.5px;
+        text-align: center;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
 
-        &.marker-work{
-          padding: 0;
+      .si-content{
+        padding: 10px;
 
-          .row{
-            padding: 5px;
-            border-radius: 5px;
+        .row{
+          margin: 0;
 
-            &:nth-child(2n + 1){
-              background: #f2f2f2;
+          &.marker-work{
+            padding: 0;
+
+            .row{
+              padding: 5px;
+              border-radius: 5px;
+
+              &:nth-child(2n + 1){
+                background: #f2f2f2;
+              }
             }
           }
-        }
 
-        .item{
-          padding: 5px;
-
-          p{
-            font-size: 10px;
-            line-height: 10px;
-            margin-bottom: 5px;
-            display: table;
-          }
-          span:not(.license-plate){
-            font-size: 12px;
-            line-height: 12px;
+          .item{
             padding: 5px;
-            background-color: #008BB8;
-            border-radius: 3px;
-            color: #fff;
-            display: table;
-            margin: 5px 0;
 
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            -webkit-hyphens: auto;
-            -ms-hyphens: auto;
-            -moz-hyphens: auto;
-            hyphens: auto;
-            max-width: 100%;
-          }
+            p{
+              font-size: 10px;
+              line-height: 10px;
+              margin-bottom: 5px;
+              display: table;
+            }
+            span:not(.license-plate){
+              font-size: 12px;
+              line-height: 12px;
+              padding: 5px;
+              background-color: #008BB8;
+              border-radius: 3px;
+              color: #fff;
+              display: table;
+              margin: 5px 0;
 
-          &.address{
-            span{
-              float: left;
-              margin: 2.5px;
+              overflow-wrap: break-word;
+              word-wrap: break-word;
+              -webkit-hyphens: auto;
+              -ms-hyphens: auto;
+              -moz-hyphens: auto;
+              hyphens: auto;
+              max-width: 100%;
+            }
 
-              &:first-child{
-                margin-left: 0;
-              }
-              &:last-child{
-                margin-right: 0;
+            &.address{
+              span{
+                float: left;
+                margin: 2.5px;
+
+                &:first-child{
+                  margin-left: 0;
+                }
+                &:last-child{
+                  margin-right: 0;
+                }
               }
             }
           }

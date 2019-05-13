@@ -10,6 +10,7 @@ export class WorkClass {
     public status: string,
     public street: string,
     public task_type: string,
-    public zip: string
+    public zip: string,
+    public L2GUID: string
   ) {}
 }

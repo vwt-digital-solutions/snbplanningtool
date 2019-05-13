@@ -2,10 +2,11 @@
   <div class="row map-container">
     <div class="overlay">
       <span>Last update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
-      <span [ngClass]="refreshStatusClasses()">{{this.mapService.refreshStatus}}</span>
+      <span [ngClass]="refreshStatusClasses()" [innerHTML]="this.mapService.refreshStatus"></span>
     </div>
 
     <agm-map
+      *ngIf="this.mapService.geoJsonReady.map"
       [ngClass]="['col-12']"
       [disableDefaultUI]="true"
       [latitude]="this.mapService.activeTokenId ? panToActiveMarker('lat') : this.mapService.lat"
@@ -23,16 +24,16 @@
       <div id="setMarkerLayers" [ngClass]="['mapControlOuter']">
         <button
           id="setMarkerLayersCars"
-          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.cars ? 'active' : 'inactive')]"
           title="{{(this.mapService.markerLayer.cars ? 'Hide' : 'Show')}} car locations"
+          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.cars ? 'active' : 'inactive')]"
           (click)="setLayer('cars')" >
           <i class="fas {{(this.mapService.markerLayer.cars ? 'fa-eye' : 'fa-eye-slash')}}"></i>Cars
         </button>
         <button
           *ngIf="this.authRoleService.isAuthorized"
           id="setMarkerLayersWork"
-          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.work ? 'active' : 'inactive')]"
           title="{{(this.mapService.markerLayer.work ? 'Hide' : 'Show')}} work locations"
+          [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.work ? 'active' : 'inactive')]"
           (click)="setLayer('work')" >
           <i class="fas {{(this.mapService.markerLayer.work ? 'fa-eye' : 'fa-eye-slash')}}"></i>Work
         </button>
@@ -40,8 +41,8 @@
 
       <button
         id="resetZoom"
-        [ngClass]="['mapControlOuter', 'toggle-button', 'controls', 'button']"
         title="Reset zoom"
+        [ngClass]="['mapControlOuter', 'toggle-button', 'controls', 'button']"
         [attr.disabled]="this.mapService.zoomLevel <= 8 ? true : null"
         (click)="resetZoom()" >
         <i class="fas fa-redo-alt"></i>
@@ -62,11 +63,13 @@
 
           <agm-snazzy-info-window
             *ngIf="this.authRoleService.isAuthorized && m.layer == 'cars' || m.layer == 'work'"
+            [isOpen]="this.mapService.activeTokenId == m.properties.token || this.mapService.activeTokenId == m.properties.L2GUID ? true : false"
             [closeWhenOthersOpen]="true"
             [panOnOpen]="true"
             [maxWidth]="400"
             [maxHeight]="400"
-            [isOpen]="this.mapService.activeTokenId == m.properties.token ? true : false"
+            (beforeOpen)="infoWindowBeforeOpen(m)"
+            (afterClose)="infoWindowAfterClose(m)"
             #infoWindow >
             <ng-template>
               <div [ngClass]="['row', 'marker-car']" *ngIf="m.layer == 'cars'">
