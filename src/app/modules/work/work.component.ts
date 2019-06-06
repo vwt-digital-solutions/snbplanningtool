@@ -29,18 +29,20 @@ export class WorkComponent {
     this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
     this.apiService.apiGet('/workitems/all').subscribe(
       result => {
-        var rowData = [];
+        let rowData = [];
 
         for (let row in result) {
-          var data = result[row];
-          rowData.push(new WorkClass(
-            data.city, data.description,
-            data.employee_name, data.end_timestamp,
-            data.geometry, data.project_number,
-            data.start_timestamp, data.status,
-            data.street, data.task_type,
-            data.zip, data.L2GUID
-          ));
+          if (result.hasOwnProperty(row)) {
+            const data = result[row];
+            rowData.push(new WorkClass(
+              data.city, data.description,
+              data.employee_name, data.end_timestamp,
+              data.geometry, data.project_number,
+              data.start_timestamp, data.status,
+              data.street, data.task_type,
+              data.zip, data.L2GUID
+            ));
+          }
         }
 
         event.api.setRowData(rowData);

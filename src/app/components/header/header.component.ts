@@ -25,16 +25,16 @@ export class HeaderComponent {
     if (!claims) {
       return null;
     }
-    return claims['email'];
+    return (claims as any)._email;
   }
   get roles() {
     const claims = this.oauthService.getIdentityClaims();
-    var allRoles = [];
+    const allRoles = [];
 
-    if (!claims || !claims['roles']) { return null; }
+    if (!claims || !(claims as any)._roles) { return null; }
 
-    for (let i = 0; i < claims['roles'].length; i++) {
-        allRoles.push(claims['roles'][i].replace(/^[^.]+./g, ''));
+    for (const value of (claims as any)._roles) {
+        allRoles.push(value.replace(/^[^.]+./g, ''));
     }
     allRoles.sort();
 

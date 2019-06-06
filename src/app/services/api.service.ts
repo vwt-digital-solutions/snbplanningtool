@@ -14,54 +14,55 @@ export class ApiService {
     private env: EnvService
   ) {}
 
-  public apiGet(url: string){
-    var requestUrl = this.env.apiUrl + url;
+  public apiGet(url: string) {
+    const requestUrl = this.env.apiUrl + url;
     return this.httpClient.get(requestUrl);
   }
 
-  public apiGetCarsInfo(){
-    var requestUrl = this.env.apiUrl + '/carsinfo';
+  public apiGetCarsInfo() {
+    const requestUrl = this.env.apiUrl + '/carsinfo';
     this.httpClient.get(requestUrl).subscribe(
       result => {
-        var rowData = [],
-          newCarInfo = new Object();
+        const rowData = [];
+        const newCarInfo = new Object();
 
-        for (let row in result) {
-          var data = result[row];
-          rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
+        for (const row in result) {
+          if (result.hasOwnProperty(row)) {
+            const data = result[row];
+            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
+          }
         }
 
-        newCarInfo['items'] = rowData;
-        newCarInfo['lastUpdated'] = new Date().getTime();
+        (newCarInfo as any).items = rowData;
+        (newCarInfo as any).lastUpdated = new Date().getTime();
         localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
 
         return newCarInfo;
       },
       error => {
-        return throwError(error)
+        return throwError(error);
       }
     );
   }
 
-  public apiGetTokens(){
-    var requestUrl = this.env.apiUrl + '/tokens',
-      response: Object;
+  public apiGetTokens() {
+    const requestUrl = this.env.apiUrl + '/tokens';
 
     return this.httpClient.get(requestUrl).subscribe(
       result => {
-        var newCarTokens = new Object();
-        newCarTokens['items'] = result;
-        newCarTokens['lastUpdated'] = new Date().getTime();
+        const newCarTokens = new Object();
+        (newCarTokens as any).items = result;
+        (newCarTokens as any).lastUpdated = new Date().getTime();
 
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
       },
       error => {
-        return throwError(error)
+        return throwError(error);
       }
     );
   }
 
-  postCarInfo (carClass: CarClass): Observable<CarClass> {
+  postCarInfo(carClass: CarClass): Observable<CarClass> {
     return this.httpClient.post<CarClass>(`${this.env.apiUrl}/carsinfo`, carClass);
   }
 }

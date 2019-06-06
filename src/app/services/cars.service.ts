@@ -59,7 +59,7 @@ export class CarsService {
   }
 
   cellEditorToken(params){
-    var carTokens = JSON.parse(localStorage.getItem('carTokens'));
+    let carTokens = JSON.parse(localStorage.getItem('carTokens'));
     carTokens.items.push(params.value);
 
     return {

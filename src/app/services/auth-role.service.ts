@@ -22,12 +22,12 @@ export class AuthRoleService {
 
   get isAuthorized() {
     const claims = this.oauthService.getIdentityClaims();
-    var isAuthorized: boolean = false;
+    let isAuthorized = false;
 
-    if (!claims || !claims['roles']) { return null; }
+    if (!claims || !(claims as any).roles) { return null; }
 
-    for (let i = 0; i < claims['roles'].length; i++) {
-      if(claims['roles'][i] === Role.Planner || claims['roles'][i] === Role.Editor){
+    for (const value of (claims as any).roles) {
+      if (value === Role.Planner || value === Role.Editor) {
         isAuthorized = true;
       }
     }
@@ -37,12 +37,12 @@ export class AuthRoleService {
 
   get isEditor() {
     const claims = this.oauthService.getIdentityClaims();
-    var isAuthorized: boolean = false;
+    let isAuthorized = false;
 
-    if (!claims || !claims['roles']) { return null; }
+    if (!claims || !(claims as any).roles) { return null; }
 
-    for (let i = 0; i < claims['roles'].length; i++) {
-      if(claims['roles'][i] === Role.Editor){
+    for (const value of (claims as any).roles) {
+      if (value === Role.Editor) {
         isAuthorized = true;
       }
     }
@@ -52,12 +52,12 @@ export class AuthRoleService {
 
   get isPlanner() {
     const claims = this.oauthService.getIdentityClaims();
-    var isAuthorized: boolean = false;
+    let isAuthorized = false;
 
-    if (!claims || !claims['roles']) { return null; }
+    if (!claims || !(claims as any).roles) { return null; }
 
-    for (let i = 0; i < claims['roles'].length; i++) {
-      if(claims['roles'][i] === Role.Planner){
+    for (const value of (claims as any).roles) {
+      if (value === Role.Planner) {
         isAuthorized = true;
       }
     }

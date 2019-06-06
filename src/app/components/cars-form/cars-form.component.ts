@@ -12,12 +12,12 @@ import { CarsService } from 'src/app/services/cars.service';
   styleUrls: ['./cars-form.component.scss']
 })
 export class CarsFormComponent implements OnInit {
-  title: string = 'Add a new car';
-  titleEmpty: string = 'There are no unassigned tokens. Please try again later.';
-  valueFormat: string = 'Including dashes (e.g. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)'
-  buttonSave: string = 'Save';
+  title = 'Add a new car';
+  titleEmpty = 'There are no unassigned tokens. Please try again later.';
+  valueFormat = 'Including dashes (e.g. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
+  buttonSave = 'Save';
 
-  carsTokens: Object;
+  carsTokens: object;
 
   model = new CarClass(null, '', '', null);
 
@@ -32,7 +32,7 @@ export class CarsFormComponent implements OnInit {
   }
 
   onSubmit() {
-    let that = this;
+    const that = this;
 
     delete this.model.id;
     this.model.license_plate = this.model.license_plate.toUpperCase();
@@ -40,25 +40,25 @@ export class CarsFormComponent implements OnInit {
 
     this.apiService.postCarInfo(this.model).subscribe(
       result => {
-        that.model.id = Number(result['carinfo_id']);
+        that.model.id = Number((result as any)._carinfo_id);
         that.carsService.gridOptions.api.updateRowData({add: [that.model]});
 
-        var oldRows = JSON.parse(localStorage.getItem('carInfo'));
+        const oldRows = JSON.parse(localStorage.getItem('carInfo'));
         oldRows.items.push(that.model);
         localStorage.setItem('carInfo', JSON.stringify(oldRows));
 
         this.buttonSave = 'Saved <i class="fas fa-check"></i>';
-        setTimeout(function(){
+        setTimeout(() => {
           that.carsService.isHidden = true;
         }, 2000);
       },
       error => {
         this.handleError(error);
       }
-    )
+    );
   }
 
   private handleError(error) {
     return throwError('Something bad happened, please try again later.');
-  };
+  }
 }

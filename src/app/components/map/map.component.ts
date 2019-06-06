@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
@@ -16,40 +16,40 @@ import { ControlPosition } from '@agm/core/services/google-maps-types';
   styleUrls: ['./map.component.scss']
 })
 
-export class MapComponent {
+export class MapComponent implements OnInit {
   constructor(
     private location: Location,
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public clusterManager: ClusterManager
-  ){}
+  ) {}
 
-  private setActiveMarker(){
-    let that = this;
-    var hasExistingMarker: boolean = false;
+  private setActiveMarker() {
+    const that = this;
+    let hasExistingMarker = false;
 
-    this.mapService.geoJsonObjectActive.features.forEach(function(feature){
-      if(feature.properties['token'] == that.mapService.activeTokenId || feature.properties['L2GUID'] == that.mapService.activeTokenId){
+    this.mapService.geoJsonObjectActive.features.forEach((feature: any) => {
+      if (feature.properties.token === that.mapService.activeTokenId || feature.properties.L2GUID === that.mapService.activeTokenId) {
         hasExistingMarker = true;
-        if(that.mapService.zoomLevel != 16){
+        if (that.mapService.zoomLevel !== 16) {
           that.mapService.zoomLevel = 16;
         }
       }
     });
 
     this.mapService.refreshStatus = 'Auto refresh (5 min.)';
-    if(!hasExistingMarker){
+    if (!hasExistingMarker) {
       that.location.go('/map');
     }
   }
 
-  private panToActiveMarker(coordinateType){
-    let that = this;
-    var coordinate: string;
+  private panToActiveMarker(coordinateType: string) {
+    const that = this;
+    let coordinate: string;
 
-    this.mapService.geoJsonObjectActive.features.forEach(function(feature){
-      if(feature.properties['token'] == that.mapService.activeTokenId || feature.properties['L2GUID'] == that.mapService.activeTokenId){
-        coordinate = (coordinateType == 'lng' ? feature.geometry.coordinates[0] : feature.geometry.coordinates[1]);
+    this.mapService.geoJsonObjectActive.features.forEach((feature: any) => {
+      if (feature.properties.token === that.mapService.activeTokenId || feature.properties.L2GUID === that.mapService.activeTokenId) {
+        coordinate = (coordinateType === 'lng' ? feature.geometry.coordinates[0] : feature.geometry.coordinates[1]);
       }
     });
 
@@ -60,16 +60,16 @@ export class MapComponent {
     return {
       small: true,
       error: this.mapService.refreshStatusClass
-    }
+    };
   }
 
-  public setLayer(layer){
-    let that = this;
+  public setLayer(layer: string) {
+    const that = this;
     this.mapService.markerLayer[layer] = (this.mapService.markerLayer[layer] ? false : true);
     this.location.go('/map');
 
-    this.mapService.geoJsonObjectAll.features.forEach(function(feature){
-      if(feature.layer == layer){
+    this.mapService.geoJsonObjectAll.features.forEach((feature: any) => {
+      if (feature.layer === layer) {
         feature.active = that.mapService.markerLayer[layer];
       }
     });
@@ -83,38 +83,36 @@ export class MapComponent {
   }
 
   public mapReady(event: any) {
-    if(this.mapService.geoJsonReady.map){
+    if (this.mapService.geoJsonReady.map) {
       this.mapIsReady(event);
-    } else{
-      var mapIntervalCount: number = 0,
-        mapInterval = setInterval(function(){
-          if(this.mapService.geoJsonReady.map){
+    } else {
+      let mapIntervalCount = 0;
+      const mapInterval = setInterval(function() {
+          if (this.mapService.geoJsonReady.map) {
             clearInterval(mapInterval);
             this.mapIsReady(event);
           }
-          if(mapIntervalCount >= 8){
+          if (mapIntervalCount >= 8) {
             this.mapService.refreshStatus = 'An error has occurred.';
             clearInterval(mapInterval);
-          };
-          mapIntervalCount++
+          }
+          mapIntervalCount++;
         }, 1000);
     }
 
 
   }
 
-  private mapIsReady(event: any){
-    let that = this;
-
+  private mapIsReady(event: any) {
     this.mapService.refreshUpdate = Date.now();
     this.mapService.refreshStatus = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
 
     event.controls[ControlPosition.BOTTOM_RIGHT].push(document.getElementById('resetZoom'));
     event.controls[ControlPosition.TOP_LEFT].push(document.getElementById('setMarkerLayers'));
 
-    if(this.mapService.activeTokenId){
+    if (this.mapService.activeTokenId) {
       this.setActiveMarker();
-    } else{
+    } else {
       this.mapService.refreshStatus = 'Auto refresh (5 min.)';
     }
   }
@@ -123,35 +121,35 @@ export class MapComponent {
     this.mapService.zoomLevel = event;
   }
 
-  public infoWindowBeforeOpen(marker){
-    if(marker.properties.token){
-      this.location.go('/map/'+ marker.properties.token.replace(/\//g, '-'));
-    } else if(marker.properties.L2GUID){
-      this.location.go('/map/'+ marker.properties.L2GUID);
+  public infoWindowBeforeOpen(marker: any) {
+    if (marker.properties.token) {
+      this.location.go('/map/' + marker.properties.token.replace(/\//g, '-'));
+    } else if (marker.properties.L2GUID) {
+      this.location.go('/map/' + marker.properties.L2GUID);
     }
   }
 
-  public infoWindowAfterClose(marker){
-    var isNotActive: boolean = false;
-    if(marker.properties.token && window.location.pathname.indexOf(marker.properties.token.replace(/\//g, '-')) > -1){
+  public infoWindowAfterClose(marker: any) {
+    let isNotActive = false;
+    if (marker.properties.token && window.location.pathname.indexOf(marker.properties.token.replace(/\//g, '-')) > -1) {
       isNotActive = true;
-    } else if(marker.properties.L2GUID && window.location.pathname.indexOf(marker.properties.L2GUID) > -1){
+    } else if (marker.properties.L2GUID && window.location.pathname.indexOf(marker.properties.L2GUID) > -1) {
       isNotActive = true;
     }
 
-    if(isNotActive){
+    if (isNotActive) {
       this.location.go('/map');
     }
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.mapService.setMapMarkers();
   }
 }
 
-export class MapsConfig implements LazyMapsAPILoaderConfigLiteral{
-  public apiKey: string
+export class MapsConfig implements LazyMapsAPILoaderConfigLiteral {
+  public apiKey: string;
   constructor(env: EnvService) {
-    this.apiKey = env.googleMapsKey
+    this.apiKey = env.googleMapsKey;
   }
 }

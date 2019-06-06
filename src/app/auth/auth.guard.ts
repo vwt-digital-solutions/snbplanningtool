@@ -18,21 +18,21 @@ export class AuthGuard implements CanActivate {
         console.error(err);
       })
       .then(() => {
-        if(!this.oauthService.hasValidAccessToken()) {
-          this.oauthService.initImplicitFlow()
+        if (!this.oauthService.hasValidAccessToken()) {
+          this.oauthService.initImplicitFlow();
         }
       });
 
     const claims = this.oauthService.getIdentityClaims();
-    if(route.data.roles && claims['roles']) {
-      var isAuthorisedRoute: boolean = false;
-      for (let i = 0; i < claims['roles'].length; i++) {
-        if(route.data.roles.indexOf(claims['roles'][i]) > -1){
+    if (route.data.roles && (claims as any)._roles) {
+      let isAuthorisedRoute = false;
+      for (const value of (claims as any)._roles) {
+        if (route.data.roles.indexOf(value) > -1) {
           isAuthorisedRoute = true;
         }
       }
 
-      if(!isAuthorisedRoute){
+      if (!isAuthorisedRoute) {
         this.router.navigate(['/']);
         return false;
       }
