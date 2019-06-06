@@ -12,8 +12,8 @@ import { WorkClass } from 'src/app/classes/work-class';
   styleUrls: ['./work.component.scss']
 })
 export class WorkComponent {
-  title: string = 'Work items';
-  buttonExport: string = 'Export to Excel';
+  title = 'Work items';
+  buttonExport = 'Export to Excel';
   callProcessing: string;
 
   constructor(
@@ -21,7 +21,7 @@ export class WorkComponent {
     public workService: WorkService
   ) { }
 
-  onBtExport(){
+  onBtExport() {
     this.workService.gridOptions.api.exportDataAsExcel();
   }
 
@@ -29,9 +29,9 @@ export class WorkComponent {
     this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
     this.apiService.apiGet('/workitems/all').subscribe(
       result => {
-        let rowData = [];
+        const rowData = [];
 
-        for (let row in result) {
+        for (const row in result) {
           if (result.hasOwnProperty(row)) {
             const data = result[row];
             rowData.push(new WorkClass(
@@ -56,5 +56,5 @@ export class WorkComponent {
 
   private handleError(error) {
     return throwError('Something bad happened, please try again later.');
-  };
+  }
 }

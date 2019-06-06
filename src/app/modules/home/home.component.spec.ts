@@ -27,7 +27,7 @@ describe('HomeComponent', () => {
         }
       })
     }
-  }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -70,8 +70,8 @@ describe('HomeComponent', () => {
   });
 
   it(`should have a defined components`, () => {
-    const fixture = TestBed.createComponent(HomeComponent);
-    const component = fixture.componentInstance;
+    fixture = TestBed.createComponent(HomeComponent);
+    component = fixture.componentInstance;
     expect(component).toBeDefined();
   });
 });

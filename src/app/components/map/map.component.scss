@@ -1,40 +1,42 @@
-.map-container{
+.map-container {
   padding-top: 50px;
   height: 100vh;
   background-color: #e5e5e5;
 
-  .overlay{
+  .overlay {
     top: 60px;
     right: 10px;
     position: absolute;
     z-index: 10;
     text-align: right;
     padding: 10px;
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 3px;
     color: #000;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+    box-shadow: rgba(0, 0, 0, .3) 0 1px 4px -1px;
     font-size: 10px;
     line-height: 10px;
 
-    span {
+    span  {
       display: block;
       text-transform: uppercase;
 
-      &:first-child{
+      &:first-child {
         margin-bottom: 10px;
       }
-      &.small{
+
+      &.small {
         font-size: 8px;
         line-height: 8px;
       }
-      &.error{
+
+      &.error {
         color: #c0392b;
       }
     }
   }
 
-  .map-loading{
+  .map-loading {
     padding: 40px;
     width: 100%;
     text-align: center;
@@ -42,23 +44,23 @@
     font-size: 12px;
     line-height: 12px;
 
-    i{
+    i {
       margin-left: 5px;
     }
   }
 
-  agm-map{
+  agm-map {
     height: 100%;
     padding: 0;
 
-    button.controls{
+    .controls {
       -webkit-appearance: none;
       -moz-appearance: none;
       -o-appearance: none;
       -ms-appearance: none;
       appearance: none;
 
-      border: none;
+      border: 0;
 
       -webkit-transition: background-color .5s, color .5s;
       background-color: rgb(255, 255, 255);
@@ -71,52 +73,52 @@
       line-height: 12px;
 
 
-      &:hover{
-        color: rgba(0, 0, 0, 0.9);
+      &:hover {
+        color: rgba(0, 0, 0, .9);
       }
 
-      &:disabled{
-        color: rgba(0, 0, 0, 0.3);
+      &:disabled {
+        color: rgba(0, 0, 0, .3);
 
-        &:hover{
-          color: rgba(0, 0, 0, 0.3);
+        &:hover {
+          color: rgba(0, 0, 0, .3);
           cursor: not-allowed;
         }
       }
     }
 
-    .mapControlOuter{
+    .mapControlOuter {
       user-select: none;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      box-shadow: rgba(0, 0, 0, .3) 0 1px 4px -1px;
       border-radius: 2px;
       overflow: hidden;
       cursor: pointer;
 
       -webkit-transition: color .5s;
-      color: rgba(0, 0, 0, 0.6);
+      color: rgba(0, 0, 0, .6);
 
 
-      &#setMarkerLayers{
+      &#setMarkerLayers {
         top: 10px !important;
 
-        button.controls{
-          i{
+        button.controls {
+          i {
             margin-right: 5px;
           }
-          &.inactive{
+          &.inactive {
             color: rgba(0, 0, 0, 0.3);
-            background-color: rgb(242,242,242);
+            background-color: rgb(242, 242, 242);
 
-            &:hover{
+            &:hover {
               color: rgba(0, 0, 0, 0.9);
             }
           }
-          &:hover{
+          &:hover {
             background-color: rgb(235, 235, 235);
           }
         }
       }
-      &#resetZoom{
+      &#resetZoom {
         right: 10px !important;
         font-size: 20px;
         line-height: 20px;
@@ -126,30 +128,30 @@
 }
 
 // OVERLAY
-:host /deep/ .map-container{
-  .overlay{
-    i{
+:host /deep/ .map-container {
+  .overlay {
+    i {
       margin-left: 5px;
     }
   }
 
-  .si-float-wrapper{
+  .si-float-wrapper {
     box-sizing: border-box;
     position: absolute;
     width: 100%;
     font-family: 'Poppins', sans-serif;
 
-    & *{
+    & * {
       box-sizing: border-box;
     }
 
-    .si-content-wrapper{
+    .si-content-wrapper {
       overflow: visible;
       padding: 0;
       border: none;
-      border-top-right-radius: 0px;
+      border-top-right-radius: 0;
 
-      .si-close-button{
+      .si-close-button {
         position: absolute;
         width: 30px;
         height: 30px;
@@ -165,35 +167,35 @@
         border-bottom-right-radius: 5px;
       }
 
-      .si-content{
+      .si-content {
         padding: 10px;
 
-        .row{
+        .row {
           margin: 0;
 
-          &.marker-work{
+          &.marker-work {
             padding: 0;
 
-            .row{
+            .row {
               padding: 5px;
               border-radius: 5px;
 
-              &:nth-child(2n + 1){
+              &:nth-child(2n + 1) {
                 background: #f2f2f2;
               }
             }
           }
 
-          .item{
+          .item {
             padding: 5px;
 
-            p{
+            p {
               font-size: 10px;
               line-height: 10px;
               margin-bottom: 5px;
               display: table;
             }
-            span:not(.license-plate){
+            span:not(.license-plate) {
               font-size: 12px;
               line-height: 12px;
               padding: 5px;
@@ -212,15 +214,15 @@
               max-width: 100%;
             }
 
-            &.address{
-              span{
+            &.address {
+              span {
                 float: left;
                 margin: 2.5px;
 
-                &:first-child{
+                &:first-child {
                   margin-left: 0;
                 }
-                &:last-child{
+                &:last-child {
                   margin-right: 0;
                 }
               }

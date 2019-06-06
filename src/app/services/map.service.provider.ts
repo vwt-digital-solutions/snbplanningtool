@@ -6,11 +6,11 @@ export const MapServiceFactory = () => {
 
   // Read Mapironment variables from browser window
   const browserWindow = window || {};
-  const browserWindowMap = browserWindow['__Map'] || {};
+  const browserWindowMap = (browserWindow as any).__Map || {};
 
   for (const key in browserWindowMap) {
     if (browserWindowMap.hasOwnProperty(key)) {
-      Map[key] = window['__Map'][key];
+      Map[key] = (window as any).__Map[key];
     }
   }
 
