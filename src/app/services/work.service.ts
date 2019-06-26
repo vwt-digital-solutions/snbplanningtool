@@ -11,8 +11,8 @@ export class WorkService {
   gridOptions: GridOptions;
 
   constructor() {
-    let that = this;
-    this.gridOptions = <GridOptions>{
+    const that = this;
+    this.gridOptions = {
       columnDefs: [
         { headerName: 'Project number', field: 'project_number', pinned: 'left', width: 100 },
         { headerName: 'Status', field: 'status', pinned: 'left', width: 100 },
@@ -41,6 +41,16 @@ export class WorkService {
             { headerName: 'Street', field: 'street' }
           ]
         },
+        {
+          headerName: 'Location',
+          field: 'L2GUID',
+          cellRenderer: this.cellTokenLocator,
+          sortable: false,
+          filter: false,
+          editable: false,
+          width: 100,
+          pinned: 'right'
+        }
       ],
       defaultColDef: {
         sortable: true,
@@ -50,20 +60,28 @@ export class WorkService {
       rowData: [],
       enableRangeSelection: true,
       statusBar: {
-        statusPanels: [{ statusPanel: "agTotalRowCountComponent", align: "left" }]
+        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
       }
     };
   }
 
-  dateFormatter(params){
+  dateFormatter(params) {
     return formatDate(params.value, 'dd-MM-yyyy', 'nl');
   }
 
-  dateTimeFormatter(params){
+  dateTimeFormatter(params) {
     return formatDate(params.value, 'HH:mm', 'nl');
+  }
+
+  cellTokenLocator(params) {
+    if (params.data.geometry && params.value !== '') {
+      return '<a href="/map/' + params.value + '">View</a>';
+    } else {
+      return '-';
+    }
   }
 
   private handleError(error) {
     return throwError('Something bad happened, please try again later.');
-  };
+  }
 }

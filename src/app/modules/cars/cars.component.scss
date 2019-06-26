@@ -83,4 +83,16 @@
       }
     }
   }
+  .ag-row{
+    a{
+      color: #323232;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      &:hover{
+        color: #008BB8;
+        text-decoration: none;
+      }
+    }
+  }
 }

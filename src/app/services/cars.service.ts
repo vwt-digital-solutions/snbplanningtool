@@ -9,19 +9,29 @@ import { AuthRoleService } from './auth-role.service';
   providedIn: 'root'
 })
 export class CarsService {
-  public isHidden: boolean = true;
-  public tokens: Object;
+  public isHidden = true;
+  public tokens: object;
   gridOptions: GridOptions;
 
   constructor(
     public authRoleService: AuthRoleService,
     private apiService: ApiService
   ) {
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'License plate', field: 'license_plate', valueSetter: this.cellEditorLicense },
-        { headerName: 'Driver name', field: 'driver_name' }
+        { headerName: 'Driver name', field: 'driver_name' },
+        {
+          headerName: 'Location',
+          field: 'token',
+          cellRenderer: this.cellTokenLocator,
+          sortable: false,
+          filter: false,
+          editable: false,
+          width: 75,
+          pinned: 'right'
+        }
       ],
       defaultColDef: {
         sortable: true,
@@ -31,27 +41,25 @@ export class CarsService {
       rowData: [],
       enableRangeSelection: true,
       statusBar: {
-        statusPanels: [{ statusPanel: "agTotalRowCountComponent", align: "left" }]
+        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
       }
     };
-
-    this.apiService.apiGetTokens();
   }
 
-  cellEditorLicense(params){
+  cellEditorLicense(params) {
     if (params.newValue.match(/.{1,3}-.{2,3}-.{1,2}/g)) {
       params.data[params.colDef.field] = params.newValue;
       params.colDef.cellStyle = { color: 'black', backgroundColor: 'transparent' };
       return true;
-    } else{
+    } else {
       params.colDef.cellStyle = { color: 'white', backgroundColor: '#c0392b' };
     }
 
     return false;
   }
 
-  cellEditorToken(params){
-    var carTokens = JSON.parse(localStorage.getItem('carTokens'));
+  cellEditorToken(params) {
+    const carTokens = JSON.parse(localStorage.getItem('carTokens'));
     carTokens.items.push(params.value);
 
     return {
@@ -60,7 +68,15 @@ export class CarsService {
     };
   }
 
+  cellTokenLocator(params) {
+    if (params.value !== '') {
+      return '<a href="/map/' + params.value.replace(/\//g, '-') + '">View</a>';
+    } else {
+      return '';
+    }
+  }
+
   private handleError(error) {
     return throwError('Something bad happened, please try again later.');
-  };
+  }
 }

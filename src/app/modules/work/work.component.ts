@@ -12,8 +12,8 @@ import { WorkClass } from 'src/app/classes/work-class';
   styleUrls: ['./work.component.scss']
 })
 export class WorkComponent {
-  title: string = 'Work items';
-  buttonExport: string = 'Export to Excel';
+  title = 'Work items';
+  buttonExport = 'Export to Excel';
   callProcessing: string;
 
   constructor(
@@ -21,59 +21,40 @@ export class WorkComponent {
     public workService: WorkService
   ) { }
 
-  onBtExport(){
+  onBtExport() {
     this.workService.gridOptions.api.exportDataAsExcel();
   }
 
   onGridReady(event: any) {
-    var isLocalStorage: boolean = false;
+    this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
+    this.apiService.apiGet('/workitems/all').subscribe(
+      result => {
+        const rowData = [];
 
-    if(localStorage.getItem('workItems')){
-      var workItems = JSON.parse(localStorage.getItem('workItems'));
-
-      if(workItems.lastUpdated >= (60 * 60 * 1000) && workItems.items.length > 0){
-        isLocalStorage = true;
-      }
-    }
-
-    if(!isLocalStorage){
-      this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
-      this.apiService.apiGet('/workitems/all').subscribe(
-        result => {
-          var rowData = [],
-            newworkItems = new Object();
-
-          for (let row in result) {
-            var data = result[row];
+        for (const row in result) {
+          if (result.hasOwnProperty(row)) {
+            const data = result[row];
             rowData.push(new WorkClass(
               data.city, data.description,
               data.employee_name, data.end_timestamp,
               data.geometry, data.project_number,
               data.start_timestamp, data.status,
               data.street, data.task_type,
-              data.zip
+              data.zip, data.L2GUID
             ));
           }
-
-          event.api.setRowData(rowData);
-          this.callProcessing = '';
-
-          newworkItems['items'] = rowData;
-          newworkItems['lastUpdated'] = new Date().getTime();
-          localStorage.setItem('workItems', JSON.stringify(newworkItems));
-        },
-        error => {
-          this.handleError(error);
         }
-      );
-    } else{
-      console.log('Local');
-      event.api.setRowData(workItems.items);
-    }
 
+        event.api.setRowData(rowData);
+        this.callProcessing = '';
+      },
+      error => {
+        this.handleError(error);
+      }
+    );
   }
 
   private handleError(error) {
     return throwError('Something bad happened, please try again later.');
-  };
+  }
 }

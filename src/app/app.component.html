@@ -1,2 +1,2 @@
-<app-header *ngIf="authenticationToken"></app-header>
-<router-outlet *ngIf="authenticationToken"></router-outlet>
+<app-header *ngIf="this.authRoleService.hasValidAccessToken"></app-header>
+<router-outlet></router-outlet>

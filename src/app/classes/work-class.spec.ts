@@ -13,7 +13,8 @@ describe('WorkClass', () => {
       'in_progress',
       'Modemweg',
       'basic',
-      '1234 AB'
+      '1234 AB',
+      'abcd'
     )).toBeTruthy();
   });
 });

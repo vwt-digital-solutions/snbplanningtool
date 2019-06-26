@@ -4,7 +4,6 @@
   color: #FFF;
   position: fixed;
   z-index: 100;
-  width: 100%;
   top: 0;
 
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
@@ -122,7 +121,7 @@
           right: 0;
           left: auto;
 
-          border-radius: 0px !important;
+          border-radius: 0 !important;
           border: none;
           margin: 0;
           padding: 0;
