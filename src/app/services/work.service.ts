@@ -66,11 +66,11 @@ export class WorkService {
   }
 
   dateFormatter(params) {
-    return formatDate(params.value, 'dd-MM-yyyy', 'nl');
+    return (params.value ? formatDate(params.value, 'dd-MM-yyyy', 'nl') : '');
   }
 
   dateTimeFormatter(params) {
-    return formatDate(params.value, 'HH:mm', 'nl');
+    return (params.value ? formatDate(params.value, 'HH:mm', 'nl') : '');
   }
 
   cellTokenLocator(params) {
