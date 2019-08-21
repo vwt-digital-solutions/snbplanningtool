@@ -5,6 +5,12 @@
       <span [ngClass]="refreshStatusClasses()" [innerHTML]="this.mapService.refreshStatus"></span>
     </div>
 
+    <div
+      *ngIf="!this.mapService.geoJsonReady.map"
+      class="alert alert-warning" >
+      <strong>Loading</strong> The application is retrieving all locations, please have patience.
+    </div>
+
     <agm-map
       *ngIf="this.mapService.geoJsonReady.map"
       [ngClass]="['col-12']"
