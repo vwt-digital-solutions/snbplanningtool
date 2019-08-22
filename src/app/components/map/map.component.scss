@@ -36,6 +36,14 @@
     }
   }
 
+  .alert {
+    top: 60px;
+    left: 10px;
+    position: absolute;
+    z-index: 10;
+    font-size: 12px;
+  }
+
   .map-loading {
     padding: 40px;
     width: 100%;

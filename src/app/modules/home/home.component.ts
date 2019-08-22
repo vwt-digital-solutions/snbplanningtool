@@ -107,6 +107,8 @@ export class HomeComponent implements OnInit {
               }
             }
             that.featureToMap(result.features, layer);
+          } else {
+            that.featureToMap(result.features, layer);
           }
 
           if (carsIntervalTimer <= 10) { clearInterval(carsInterval); }
