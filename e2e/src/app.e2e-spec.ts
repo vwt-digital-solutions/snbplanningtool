@@ -37,19 +37,19 @@ describe('SnB Planning Tool', () => {
 
       const flow = protractor.promise.controlFlow();
       flow.execute(setupCommon).then((response) => {
-        const responseBody = JSON.parse((response as any)._body);
-        browser.get('/auth/' + JSON.stringify(responseBody));
+        const authBody = JSON.parse(response.body);
+        browser.params.login.accessToken = authBody.access_token;
+        browser.get('/auth/' + response.body);
       });
-
-      browser.sleep(4000);
     });
 
-    it('should show more than 0 car location(s)', () => {
+    it('should show more than 0 location(s)', () => {
       browser.get('/');
-      browser.sleep(2000);
+      browser.sleep(20000);
 
-      const markerImages = element.all(by.css('img[src*="assets/images/car-location.png"]')).count();
-      expect(markerImages).toBeGreaterThan(0);
+      const mapContainer = element(by.css('.sebm-google-map-container'));
+      const imageCount = mapContainer.all(by.tagName('img')).count();
+      expect(imageCount).toBeGreaterThan(0);
     });
 
     it('should show more than 0 carInfo rows', () => {
@@ -116,7 +116,7 @@ describe('SnB Planning Tool', () => {
 
     it('should show more than 0 workItems rows', () => {
       browser.get('/work');
-      browser.sleep(2000);
+      browser.sleep(20000);
 
       const carsRows = element.all(by.css('.ag-row')).count();
       expect(carsRows).toBeGreaterThan(0);
