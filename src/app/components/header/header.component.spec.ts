@@ -41,7 +41,7 @@ describe('HeaderComponent', () => {
 
   it(`should have as title 'Planning tool'`, () => {
     fixture = TestBed.createComponent(HeaderComponent);
-    app = fixture.debugElement.componentInstance;
+    const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('Planning tool');
   });
 });

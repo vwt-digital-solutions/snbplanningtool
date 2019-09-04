@@ -39,8 +39,8 @@ export class AuthComponent {
           // SAVE ACCESS TOKEN
           const decodedToken = helper.decodeToken(accessToken);
           this.sessionStorageItems.id_token_claims_obj = decodedToken;
-          (this.sessionStorageItems as any).id_token_claims_obj._roles = ['snbplanningapi.editor'];
-          (this.sessionStorageItems as any).id_token_claims_obj._email = 'opensource@vwt.digital';
+          this.sessionStorageItems.id_token_claims_obj['roles'] = ['snbplanningapi.editor'];
+          this.sessionStorageItems.id_token_claims_obj['email'] = 'opensource@vwt.digital';
           this.sessionStorageItems.access_token = accessToken;
           this.sessionStorageItems.id_token = accessToken;
 
