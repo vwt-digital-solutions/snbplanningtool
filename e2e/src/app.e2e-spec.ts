@@ -43,6 +43,38 @@ describe('SnB Planning Tool', () => {
       });
     });
 
+    it('should connect to the API', () => {
+      const requestOptions = {
+        method: 'GET',
+        url: browser.params.apiUrl,
+        headers: {
+          Authorization: 'Bearer ' + browser.params.login.accessToken
+        }
+      };
+
+      const get = (options: any): any => {
+        const defer = protractor.promise.defer();
+
+        request(options, (error, message) => {
+          if (error || message.statusCode >= 400) {
+            defer.reject({ error, message });
+          } else {
+            defer.fulfill(message);
+          }
+        });
+        return defer.promise;
+      };
+
+      const setupCommon = (): any => {
+        return get(requestOptions);
+      };
+
+      const flow = protractor.promise.controlFlow();
+      flow.execute(setupCommon).then((response) => {
+        expect(response.statusMessage).toBe('OK');
+      });
+    });
+
     it('should show more than 0 location(s)', () => {
       browser.get('/');
       browser.sleep(20000);
@@ -60,13 +92,20 @@ describe('SnB Planning Tool', () => {
       expect(carsRows).toBeGreaterThan(0);
     });
 
-    it('should edit carInfo row with token "161035" to "Pietje Puk"', () => {
+    it('should edit first carInfo row to "Pietje Puk"', () => {
       browser.get('/cars');
       browser.sleep(2000);
 
       let firstRow = element.all(by.css('.ag-row:first-child'));
       let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+
+      firstRowTokenColumn.getText().then(function (text) {
+        browser.params.carInfoRow.token = text[0];
+      });
+      firstRowDriverColumn.getText().then(function (text) {
+        browser.params.carInfoRow.driverName = text[0];
+      });
 
       firstRowDriverColumn.click();
       browser.actions().sendKeys(protractor.Key.RETURN, 'Pietje Puk', protractor.Key.RETURN).perform();
@@ -74,7 +113,6 @@ describe('SnB Planning Tool', () => {
       element(by.css('button.save')).click();
       browser.sleep(3000);
 
-      // REFRESHING BROWSER
       browser.executeScript('window.localStorage.clear();');
       browser.refresh();
       browser.sleep(2000);
@@ -83,11 +121,15 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      expect(firstRowTokenColumn.getText()).toContain('vwt/hyrde/token/161035');
-      expect(firstRowDriverColumn.getText()).toContain('Pietje Puk');
+      firstRowTokenColumn.getText().then(function (text) {
+        expect(text[0]).toContain(browser.params.carInfoRow.token);
+      });
+      firstRowDriverColumn.getText().then(function (text) {
+        expect(text[0]).toContain('Pietje Puk');
+      });
     });
 
-    it('should revert carInfo row with token "161035" back to "Pascal van t End"', () => {
+    it('should revert first carInfo row back to original name', () => {
       browser.get('/cars');
       browser.sleep(2000);
 
@@ -96,7 +138,7 @@ describe('SnB Planning Tool', () => {
       let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
       firstRowDriverColumn.click();
-      browser.actions().sendKeys(protractor.Key.RETURN, 'Pascal van t End', protractor.Key.RETURN).perform();
+      browser.actions().sendKeys(protractor.Key.RETURN, browser.params.carInfoRow.driverName, protractor.Key.RETURN).perform();
 
       element(by.css('button.save')).click();
       browser.sleep(3000);
@@ -110,8 +152,12 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      expect(firstRowTokenColumn.getText()).toContain('vwt/hyrde/token/161035');
-      expect(firstRowDriverColumn.getText()).toContain('Pascal van t End');
+      firstRowTokenColumn.getText().then(function (text) {
+        expect(text[0]).toContain(browser.params.carInfoRow.token);
+      });
+      firstRowDriverColumn.getText().then(function (text) {
+        expect(text[0]).toContain(browser.params.carInfoRow.driverName);
+      });
     });
 
     it('should show more than 0 workItems rows', () => {
