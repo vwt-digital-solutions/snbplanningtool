@@ -80,7 +80,7 @@ describe('SnB Planning Tool', () => {
       browser.sleep(20000);
 
       const mapContainer = element(by.css('.sebm-google-map-container'));
-      const imageCount = mapContainer.all(by.tagName('img')).count();
+      const imageCount = mapContainer.all(by.tagName('agm-marker')).count();
       expect(imageCount).toBeGreaterThan(0);
     });
 
