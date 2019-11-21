@@ -77,7 +77,7 @@ describe('SnB Planning Tool', () => {
 
     it('should show more than 0 location(s)', () => {
       browser.get('/');
-      browser.sleep(20000);
+      browser.sleep(30000);
 
       const mapContainer = element(by.css('.sebm-google-map-container'));
       const imageCount = mapContainer.all(by.tagName('agm-marker')).count();
