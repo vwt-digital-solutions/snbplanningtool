@@ -12,26 +12,38 @@ import { Role } from './models/role';
 
 const routes: Routes = [
     {
-      path: 'map',
+      path: 'kaart',
       component: HomeComponent,
       canActivate: [AuthGuard]
     },
     {
-      path: 'map/:trackerId',
+      path: 'kaart/:trackerId',
       component: HomeComponent,
       canActivate: [AuthGuard]
     },
     {
-      path: 'cars',
+      path: 'autos',
       component: CarsComponent,
       canActivate: [AuthGuard],
       data: { roles: [Role.Editor, Role.Planner] }
     },
     {
-      path: 'work',
+      path: 'werk',
       component: WorkComponent,
       canActivate: [AuthGuard],
       data: { roles: [Role.Editor, Role.Planner] }
+    },
+    {
+      path: 'map',
+      redirectTo: 'kaart'
+    },
+    {
+      path: 'cars',
+      redirectTo: 'autos'
+    },
+    {
+      path: 'work',
+      redirectTo: 'werk'
     },
     {
       path: 'auth/:authBody',
@@ -39,7 +51,7 @@ const routes: Routes = [
     },
     {
       path: '**',
-      redirectTo: 'map'
+      redirectTo: 'kaart'
     }
   ];
 

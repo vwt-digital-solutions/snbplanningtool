@@ -12,12 +12,12 @@
           name="token"
           #token="ngModel"
           required >
-          <option [ngValue]="null" selected disabled hidden>-- Select a token --</option>
+          <option [ngValue]="null" selected disabled hidden>-- Selecteer een token --</option>
           <option *ngFor="let token of carsTokens.items" [value]="token">{{token}}</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="license_plate">License plate</label>
+        <label for="license_plate">Kentekenplaat</label>
         <input
           type="text"
           class="license-plate license-nl"
@@ -30,7 +30,7 @@
           <span class="value-format" [innerHTML]="valueFormat"></span>
       </div>
       <div class="form-group">
-        <label for="driver_name">Driver name</label>
+        <label for="driver_name">Naam bestuurder</label>
         <input
           type="text"
           class="form-control"
@@ -39,13 +39,13 @@
           name="driver_name" >
       </div>
 
-      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Cancel</button>
+      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Annuleren</button>
       <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid" [innerHTML]="buttonSave"></button>
     </form>
 
     <div *ngIf="!carsTokens" [ngClass]="['empty-tokens']">
       <span>{{titleEmpty}}</span>
-      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Ok</button>
+      <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Ok&#233;</button>
     </div>
   </div>
 </div>

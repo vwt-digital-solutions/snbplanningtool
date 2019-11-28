@@ -85,7 +85,7 @@ describe('SnB Planning Tool', () => {
     });
 
     it('should show more than 0 carInfo rows', () => {
-      browser.get('/cars');
+      browser.get('/autos');
       browser.sleep(2000);
 
       const carsRows = element.all(by.css('.ag-row')).count();
@@ -93,7 +93,7 @@ describe('SnB Planning Tool', () => {
     });
 
     it('should edit first carInfo row to "Pietje Puk"', () => {
-      browser.get('/cars');
+      browser.get('/autos');
       browser.sleep(2000);
 
       let firstRow = element.all(by.css('.ag-row:first-child'));
@@ -130,7 +130,7 @@ describe('SnB Planning Tool', () => {
     });
 
     it('should revert first carInfo row back to original name', () => {
-      browser.get('/cars');
+      browser.get('/autos');
       browser.sleep(2000);
 
       let firstRow = element.all(by.css('.ag-row:first-child'));
@@ -161,7 +161,7 @@ describe('SnB Planning Tool', () => {
     });
 
     it('should show more than 0 workItems rows', () => {
-      browser.get('/work');
+      browser.get('/werk');
       browser.sleep(20000);
 
       const carsRows = element.all(by.css('.ag-row')).count();

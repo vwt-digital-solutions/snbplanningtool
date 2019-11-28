@@ -14,35 +14,35 @@ export class WorkService {
     const that = this;
     this.gridOptions = {
       columnDefs: [
-        { headerName: 'Project number', field: 'project_number', pinned: 'left', width: 100 },
+        { headerName: 'Projectnummer', field: 'project_number', pinned: 'left', width: 100 },
         { headerName: 'Status', field: 'status', pinned: 'left', width: 100 },
-        { headerName: 'Task type', field: 'task_type' },
-        { headerName: 'Description', field: 'description' },
+        { headerName: 'Taaktype', field: 'task_type' },
+        { headerName: 'Beschrijving', field: 'description' },
         {
-          headerName: 'Start date',
+          headerName: 'Startdatum',
           field: 'start_timestamp',
           cellRenderer: this.dateRenderer,
           filter: 'agDateColumnFilter',
           filterParams: { comparator: this.dateComparator }
         },
         {
-          headerName: 'End date',
+          headerName: 'Einddatum',
           field: 'end_timestamp',
           cellRenderer: this.dateRenderer,
           filter: 'agDateColumnFilter',
           filterParams: { comparator: this.dateComparator }
         },
-        { headerName: 'Employee name', field: 'employee_name' },
+        { headerName: 'Naam medewerker', field: 'employee_name' },
         {
-          headerName: 'Address',
+          headerName: 'Adres',
           children: [
-            { headerName: 'City', field: 'city' },
-            { headerName: 'Zip code', field: 'zip' },
-            { headerName: 'Street', field: 'street' }
+            { headerName: 'Plaats', field: 'city' },
+            { headerName: 'Postcode', field: 'zip' },
+            { headerName: 'Straat', field: 'street' }
           ]
         },
         {
-          headerName: 'Location',
+          headerName: 'Locatie',
           field: 'L2GUID',
           cellRenderer: this.cellTokenLocator,
           sortable: false,
@@ -86,13 +86,13 @@ export class WorkService {
 
   cellTokenLocator(params) {
     if (params.data.geometry && params.value !== '') {
-      return '<a href="/map/' + params.value + '">View</a>';
+      return '<a href="/kaart/' + params.value + '">Bekijk</a>';
     } else {
       return '-';
     }
   }
 
   private handleError(error) {
-    return throwError('Something bad happened, please try again later.');
+    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

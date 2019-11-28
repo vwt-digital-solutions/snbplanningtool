@@ -7,9 +7,9 @@
 
     <div class="col-6 navbar-container">
       <div class="navbar">
-        <a routerLink="map" [routerLinkActive]="['active']">Map</a>
-        <a routerLink="cars"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Cars</a>
-        <a routerLink="work" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Work</a>
+        <a routerLink="kaart" [routerLinkActive]="['active']">Kaart</a>
+        <a routerLink="autos"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Auto's</a>
+        <a routerLink="werk" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Werk</a>
 
         <div *ngIf="email" ngbDropdown class="d-inline-block">
           <button class="btn" id="dropdownMenu" ngbDropdownToggle>

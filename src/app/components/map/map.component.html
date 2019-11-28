@@ -1,14 +1,14 @@
 <div class="container-fluid">
   <div class="row map-container">
     <div class="overlay">
-      <span>Last update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/A'}}</b></span>
+      <span>Laatste update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/B'}}</b></span>
       <span [ngClass]="refreshStatusClasses()" [innerHTML]="this.mapService.refreshStatus"></span>
     </div>
 
     <div
       *ngIf="!this.mapService.geoJsonReady.map"
       class="alert alert-warning" >
-      <strong>Loading</strong> The application is retrieving all locations, please have patience.
+      <strong>Laden</strong> De applicatie is de locaties aan het ophalen, een moment geduld alstublieft.
     </div>
 
     <agm-map
@@ -30,24 +30,24 @@
       <div id="setMarkerLayers" [ngClass]="['mapControlOuter']">
         <button
           id="setMarkerLayersCars"
-          title="{{(this.mapService.markerLayer.cars ? 'Hide' : 'Show')}} car locations"
+          title="{{(this.mapService.markerLayer.cars ? 'Verberg' : 'Toon')}} auto locaties"
           [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.cars ? 'active' : 'inactive')]"
           (click)="setLayer('cars')" >
-          <i class="fas {{(this.mapService.markerLayer.cars ? 'fa-eye' : 'fa-eye-slash')}}"></i>Cars
+          <i class="fas {{(this.mapService.markerLayer.cars ? 'fa-eye' : 'fa-eye-slash')}}"></i>Auto's
         </button>
         <button
           *ngIf="this.authRoleService.isAuthorized"
           id="setMarkerLayersWork"
-          title="{{(this.mapService.markerLayer.work ? 'Hide' : 'Show')}} work locations"
+          title="{{(this.mapService.markerLayer.work ? 'Verberg' : 'Toon')}} werk locaties"
           [ngClass]="['toggle-button', 'controls', 'button', (this.mapService.markerLayer.work ? 'active' : 'inactive')]"
           (click)="setLayer('work')" >
-          <i class="fas {{(this.mapService.markerLayer.work ? 'fa-eye' : 'fa-eye-slash')}}"></i>Work
+          <i class="fas {{(this.mapService.markerLayer.work ? 'fa-eye' : 'fa-eye-slash')}}"></i>Werk
         </button>
       </div>
 
       <button
         id="resetZoom"
-        title="Reset zoom"
+        title="Herstel zoom"
         [ngClass]="['mapControlOuter', 'toggle-button', 'controls', 'button']"
         [attr.disabled]="this.mapService.zoomLevel <= 8 ? true : null"
         (click)="resetZoom()" >
@@ -80,12 +80,12 @@
             <ng-template>
               <div [ngClass]="['row', 'marker-car']" *ngIf="m.layer == 'cars'">
                 <div [ngClass]="['col-12', 'item', 'driver_name']">
-                  <p>Driver name</p>
+                  <p>Naam bestuurder</p>
                   <span>{{m.properties.driver_name || '-'}}</span>
                 </div>
                 <div [ngClass]="['col-12', 'item', 'license_plate']">
-                  <p>License plate</p>
-                  <span class="license-plate license-nl">{{m.properties.license_plate || 'N/A'}}</span>
+                  <p>Kentekenplaat</p>
+                  <span class="license-plate license-nl">{{m.properties.license_plate || 'N/B'}}</span>
                 </div>
               </div>
 
@@ -93,11 +93,11 @@
                 <div [ngClass]="['col-12', 'marker-work-inner']">
                   <div [ngClass]="['row']">
                     <div [ngClass]="['col-4', 'item', 'project_number']">
-                      <p>Project number</p>
+                      <p>Projectnummer</p>
                       <span>{{m.properties.project_number || '-'}}</span>
                     </div>
                     <div [ngClass]="['col-4', 'item', 'task_type']">
-                      <p>Task type</p>
+                      <p>Taaktype</p>
                       <span>{{m.properties.task_type || '-'}}</span>
                     </div>
                     <div [ngClass]="['col-4', 'item', 'status']">
@@ -108,19 +108,19 @@
 
                   <div [ngClass]="['row']">
                     <div [ngClass]="['col-12', 'item', 'description']">
-                      <p>Description</p>
+                      <p>Beschrijving</p>
                       <span>{{m.properties.description || '-'}}</span>
                     </div>
                   </div>
 
                   <div [ngClass]="['row']">
                     <div [ngClass]="['col-6', 'item', 'date']">
-                      <p>Start date</p>
-                      <span>{{m.properties.start_timestamp | date:'dd-MM-yyyy' || 'N/A'}}</span>
-                      <span>{{m.properties.start_timestamp | date:'HH:mm' || 'N/A'}}</span>
+                      <p>Startdatum</p>
+                      <span>{{m.properties.start_timestamp | date:'dd-MM-yyyy' || 'N/B'}}</span>
+                      <span>{{m.properties.start_timestamp | date:'HH:mm' || 'N/B'}}</span>
                     </div>
                     <div [ngClass]="['col-6', 'item', 'date']">
-                      <p>End date</p>
+                      <p>Einddatum</p>
                       <span>{{m.properties.end_timestamp | date:'dd-MM-yyyy' || '-'}}</span>
                       <span>{{m.properties.end_timestamp | date:'HH:mm' || '-'}}</span>
                     </div>
@@ -128,22 +128,22 @@
 
                   <div [ngClass]="['row']" *ngIf="m.properties.city || m.properties.zip || m.properties.street">
                     <div [ngClass]="['col-4', 'item', 'city']">
-                      <p>City</p>
-                      <span>{{m.properties.city || 'N/A'}}</span>
+                      <p>Plaats</p>
+                      <span>{{m.properties.city || 'N/B'}}</span>
                     </div>
                     <div [ngClass]="['col-4', 'item', 'zip']" *ngIf="m.properties.zip">
-                      <p>Zip</p>
+                      <p>Postcode</p>
                       <span>{{m.properties.zip}}</span>
                     </div>
                     <div [ngClass]="['col-4', 'item', 'street']" *ngIf="m.properties.street">
-                      <p>Street</p>
+                      <p>Straat</p>
                       <span>{{m.properties.street}}</span>
                     </div>
                   </div>
 
                   <div [ngClass]="['row']"  *ngIf="m.properties.employee_name">
                     <div [ngClass]="['col-12', 'item', 'employee_name']">
-                      <p>Employee name</p>
+                      <p>Naam werknemer</p>
                       <span>{{m.properties.employee_name}}</span>
                     </div>
                   </div>

@@ -19,12 +19,12 @@ import { CarClass } from 'src/app/classes/car-class';
   ]
 })
 export class CarsComponent {
-  title = 'Car info';
-  buttonRevert = 'Revert all changes';
-  buttonExport = 'Export to Excel';
-  buttonNewRow = 'Add new row';
-  buttonSave = 'Save changes';
-  buttonSaveInner = 'Save <i class="fas fa-save"></i>';
+  title = 'Auto informatie';
+  buttonRevert = 'Zet alle wijzigingen terug';
+  buttonExport = 'Exporteren naar Excel';
+  buttonNewRow = 'Nieuwe rij toevoegen';
+  buttonSave = 'Wijzigingen opslaan';
+  buttonSaveInner = 'Opslaan <i class="fas fa-save"></i>';
 
   callProcessing: string;
   editedColumns = [];
@@ -50,7 +50,7 @@ export class CarsComponent {
   }
   onBtSave() {
     const that = this;
-    this.buttonSaveInner = 'Saving <i class="fas fa-sync-alt fa-spin"></i>';
+    this.buttonSaveInner = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
     this.editedColumns.forEach((item) => {
       that.apiService.postCarInfo(item).subscribe(
@@ -82,9 +82,9 @@ export class CarsComponent {
   onBtSaveSuccess() {
     if (this.editedColumns.length <= 0) {
       const that = this;
-      this.buttonSaveInner = 'Saved <i class="fas fa-check"></i>';
+      this.buttonSaveInner = 'Opgeslagen <i class="fas fa-check"></i>';
       setTimeout(() => {
-        that.buttonSaveInner = 'Save';
+        that.buttonSaveInner = 'Opslaan';
         that.editedColumns = [];
       }, 2000);
     }
@@ -123,7 +123,7 @@ export class CarsComponent {
     let isLocalStorage = false;
     let carInfo = [];
 
-    this.callProcessing = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
+    this.callProcessing = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
     this.apiService.apiGetTokens();
 
     if (localStorage.getItem('carInfo')) {
@@ -172,7 +172,7 @@ export class CarsComponent {
   }
 
   private handleError(error) {
-    this.buttonSaveInner = 'An error has occured';
-    return throwError('Something bad happened, please try again later.');
+    this.buttonSaveInner = 'Er is een fout opgetreden';
+    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

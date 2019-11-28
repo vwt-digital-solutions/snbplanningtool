@@ -9,9 +9,9 @@
 
     <div [ngClass]="['col-8', 'info-box']">
       <span *ngIf="callProcessing" [ngClass]="['call-processing']" [innerHTML]="callProcessing"></span>
-      <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Export <i class="fas fa-file-download"></i></button>
-      <button [ngClass]="['newRow']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length > 0 ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">New <i class="fas fa-plus"></i></button>
-      <button [ngClass]="['refresh']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length <= 0 ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Revert <i class="fas fa-sync-alt"></i></button>
+      <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Exporteren <i class="fas fa-file-download"></i></button>
+      <button [ngClass]="['newRow']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length > 0 ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">Nieuw <i class="fas fa-plus"></i></button>
+      <button [ngClass]="['refresh']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length <= 0 ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Herstel <i class="fas fa-sync-alt"></i></button>
       <button [ngClass]="['save']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length <= 0 ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
     </div>
 
