@@ -20,17 +20,17 @@ export class WorkService {
         { headerName: 'Description', field: 'description' },
         {
           headerName: 'Start date',
-          children: [
-            { headerName: 'Date', field: 'start_timestamp', cellRenderer: this.dateFormatter, filter: 'agDateColumnFilter' },
-            { headerName: 'Time', field: 'start_timestamp', cellRenderer: this.dateTimeFormatter, filter: 'agDateColumnFilter' }
-          ]
+          field: 'start_timestamp',
+          cellRenderer: this.dateRenderer,
+          filter: 'agDateColumnFilter',
+          filterParams: { comparator: this.dateComparator }
         },
         {
           headerName: 'End date',
-          children: [
-            { headerName: 'Date', field: 'end_timestamp', cellRenderer: this.dateFormatter, filter: 'agDateColumnFilter' },
-            { headerName: 'Time', field: 'end_timestamp', cellRenderer: this.dateTimeFormatter, filter: 'agDateColumnFilter' }
-          ]
+          field: 'end_timestamp',
+          cellRenderer: this.dateRenderer,
+          filter: 'agDateColumnFilter',
+          filterParams: { comparator: this.dateComparator }
         },
         { headerName: 'Employee name', field: 'employee_name' },
         {
@@ -65,12 +65,23 @@ export class WorkService {
     };
   }
 
-  dateFormatter(params) {
-    return (params.value ? formatDate(params.value, 'dd-MM-yyyy', 'nl') : '');
+  dateComparator(filterDate, cellValue) {
+    if (cellValue == null) return 0;
+
+    const old_date = new Date(cellValue).setHours(0,0,0,0);
+    const new_date = new Date(filterDate).setHours(0,0,0,0);
+
+    if (old_date < new_date) {
+      return -1;
+    } else if (old_date > new_date) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
-  dateTimeFormatter(params) {
-    return (params.value ? formatDate(params.value, 'HH:mm', 'nl') : '');
+  dateRenderer(params) {
+    return (params.value ? formatDate(params.value, 'dd-MM-yyyy hh:mm', 'nl') : '');
   }
 
   cellTokenLocator(params) {
