@@ -59,6 +59,8 @@ export class WorkService {
       },
       rowData: [],
       enableRangeSelection: true,
+      pagination: true,
+      paginationPageSize: 30,
       statusBar: {
         statusPanels: [
           { statusPanel: 'agTotalRowCountComponent', align: 'left' },
