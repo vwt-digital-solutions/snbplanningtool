@@ -60,7 +60,10 @@ export class WorkService {
       rowData: [],
       enableRangeSelection: true,
       statusBar: {
-        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
+        statusPanels: [
+          { statusPanel: 'agTotalRowCountComponent', align: 'left' },
+          { statusPanel: 'agFilteredRowCountComponent', align: 'left' }
+        ]
       }
     };
   }

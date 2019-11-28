@@ -40,8 +40,13 @@ export class CarsService {
       },
       rowData: [],
       enableRangeSelection: true,
+      pagination: true,
+      paginationPageSize: 30,
       statusBar: {
-        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
+        statusPanels: [
+          { statusPanel: 'agTotalRowCountComponent', align: 'left' },
+          { statusPanel: 'agFilteredRowCountComponent', align: 'left' }
+        ]
       }
     };
   }
