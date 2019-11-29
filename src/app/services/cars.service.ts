@@ -20,10 +20,10 @@ export class CarsService {
     this.gridOptions = {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
-        { headerName: 'License plate', field: 'license_plate', valueSetter: this.cellEditorLicense },
-        { headerName: 'Driver name', field: 'driver_name' },
+        { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
+        { headerName: 'Naam bestuurder', field: 'driver_name' },
         {
-          headerName: 'Location',
+          headerName: 'Locatie',
           field: 'token',
           cellRenderer: this.cellTokenLocator,
           sortable: false,
@@ -40,8 +40,13 @@ export class CarsService {
       },
       rowData: [],
       enableRangeSelection: true,
+      pagination: true,
+      paginationPageSize: 30,
       statusBar: {
-        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
+        statusPanels: [
+          { statusPanel: 'agTotalRowCountComponent', align: 'left' },
+          { statusPanel: 'agFilteredRowCountComponent', align: 'left' }
+        ]
       }
     };
   }
@@ -70,13 +75,13 @@ export class CarsService {
 
   cellTokenLocator(params) {
     if (params.value !== '') {
-      return '<a href="/map/' + params.value.replace(/\//g, '-') + '">View</a>';
+      return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
       return '';
     }
   }
 
   private handleError(error) {
-    return throwError('Something bad happened, please try again later.');
+    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

@@ -37,7 +37,7 @@ export class MapComponent implements OnInit {
       }
     });
 
-    this.mapService.refreshStatus = 'Auto refresh (5 min.)';
+    this.mapService.refreshStatus = 'Automatisch vernieuwen (5 min.)';
     if (!hasExistingMarker) {
       that.location.go('/map');
     }
@@ -93,7 +93,7 @@ export class MapComponent implements OnInit {
             this.mapIsReady(event);
           }
           if (mapIntervalCount >= 8) {
-            this.mapService.refreshStatus = 'An error has occurred.';
+            this.mapService.refreshStatus = 'Er is een fout opgetreden.';
             clearInterval(mapInterval);
           }
           mapIntervalCount++;
@@ -105,7 +105,7 @@ export class MapComponent implements OnInit {
 
   private mapIsReady(event: any) {
     this.mapService.refreshUpdate = Date.now();
-    this.mapService.refreshStatus = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
+    this.mapService.refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
 
     event.controls[ControlPosition.BOTTOM_RIGHT].push(document.getElementById('resetZoom'));
     event.controls[ControlPosition.TOP_LEFT].push(document.getElementById('setMarkerLayers'));
@@ -113,7 +113,7 @@ export class MapComponent implements OnInit {
     if (this.mapService.activeTokenId) {
       this.setActiveMarker();
     } else {
-      this.mapService.refreshStatus = 'Auto refresh (5 min.)';
+      this.mapService.refreshStatus = 'Automatisch vernieuwen (5 min.)';
     }
   }
 
@@ -149,7 +149,11 @@ export class MapComponent implements OnInit {
 
 export class MapsConfig implements LazyMapsAPILoaderConfigLiteral {
   public apiKey: string;
+  public language: string;
+  public region: string;
   constructor(env: EnvService) {
     this.apiKey = env.googleMapsKey;
+    this.language = 'nl'
+    this.region = 'NL'
   }
 }

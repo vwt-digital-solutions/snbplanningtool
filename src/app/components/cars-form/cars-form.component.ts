@@ -12,10 +12,10 @@ import { CarsService } from 'src/app/services/cars.service';
   styleUrls: ['./cars-form.component.scss']
 })
 export class CarsFormComponent implements OnInit {
-  title = 'Add a new car';
-  titleEmpty = 'There are no unassigned tokens. Please try again later.';
-  valueFormat = 'Including dashes (e.g. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
-  buttonSave = 'Save';
+  title = 'Voeg een nieuwe auto toe';
+  titleEmpty = 'Er zijn geen niet-toegewezen tokens, probeer het later opnieuw.';
+  valueFormat = 'Inclusief streepjes (bv. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
+  buttonSave = 'Opslaan';
 
   carsTokens: object;
 
@@ -36,7 +36,7 @@ export class CarsFormComponent implements OnInit {
 
     delete this.model.id;
     this.model.license_plate = this.model.license_plate.toUpperCase();
-    this.buttonSave = 'Saving <i class="fas fa-sync-alt fa-spin"></i>';
+    this.buttonSave = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
     this.apiService.postCarInfo(this.model).subscribe(
       result => {
@@ -47,7 +47,7 @@ export class CarsFormComponent implements OnInit {
         oldRows.items.push(that.model);
         localStorage.setItem('carInfo', JSON.stringify(oldRows));
 
-        this.buttonSave = 'Saved <i class="fas fa-check"></i>';
+        this.buttonSave = 'Opgeslagen <i class="fas fa-check"></i>';
         setTimeout(() => {
           that.carsService.isHidden = true;
         }, 2000);
@@ -59,6 +59,6 @@ export class CarsFormComponent implements OnInit {
   }
 
   private handleError(error) {
-    return throwError('Something bad happened, please try again later.');
+    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

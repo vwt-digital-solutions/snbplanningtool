@@ -14,35 +14,35 @@ export class WorkService {
     const that = this;
     this.gridOptions = {
       columnDefs: [
-        { headerName: 'Project number', field: 'project_number', pinned: 'left', width: 100 },
+        { headerName: 'Projectnummer', field: 'project_number', pinned: 'left', width: 100 },
         { headerName: 'Status', field: 'status', pinned: 'left', width: 100 },
-        { headerName: 'Task type', field: 'task_type' },
-        { headerName: 'Description', field: 'description' },
+        { headerName: 'Taaktype', field: 'task_type' },
+        { headerName: 'Beschrijving', field: 'description' },
         {
-          headerName: 'Start date',
+          headerName: 'Startdatum',
+          field: 'start_timestamp',
+          cellRenderer: this.dateRenderer,
+          filter: 'agDateColumnFilter',
+          filterParams: { comparator: this.dateComparator }
+        },
+        {
+          headerName: 'Einddatum',
+          field: 'end_timestamp',
+          cellRenderer: this.dateRenderer,
+          filter: 'agDateColumnFilter',
+          filterParams: { comparator: this.dateComparator }
+        },
+        { headerName: 'Naam medewerker', field: 'employee_name' },
+        {
+          headerName: 'Adres',
           children: [
-            { headerName: 'Date', field: 'start_timestamp', cellRenderer: this.dateFormatter, filter: 'agDateColumnFilter' },
-            { headerName: 'Time', field: 'start_timestamp', cellRenderer: this.dateTimeFormatter, filter: 'agDateColumnFilter' }
+            { headerName: 'Plaats', field: 'city' },
+            { headerName: 'Postcode', field: 'zip' },
+            { headerName: 'Straat', field: 'street' }
           ]
         },
         {
-          headerName: 'End date',
-          children: [
-            { headerName: 'Date', field: 'end_timestamp', cellRenderer: this.dateFormatter, filter: 'agDateColumnFilter' },
-            { headerName: 'Time', field: 'end_timestamp', cellRenderer: this.dateTimeFormatter, filter: 'agDateColumnFilter' }
-          ]
-        },
-        { headerName: 'Employee name', field: 'employee_name' },
-        {
-          headerName: 'Address',
-          children: [
-            { headerName: 'City', field: 'city' },
-            { headerName: 'Zip code', field: 'zip' },
-            { headerName: 'Street', field: 'street' }
-          ]
-        },
-        {
-          headerName: 'Location',
+          headerName: 'Locatie',
           field: 'L2GUID',
           cellRenderer: this.cellTokenLocator,
           sortable: false,
@@ -59,29 +59,45 @@ export class WorkService {
       },
       rowData: [],
       enableRangeSelection: true,
+      pagination: true,
+      paginationPageSize: 30,
       statusBar: {
-        statusPanels: [{ statusPanel: 'agTotalRowCountComponent', align: 'left' }]
+        statusPanels: [
+          { statusPanel: 'agTotalRowCountComponent', align: 'left' },
+          { statusPanel: 'agFilteredRowCountComponent', align: 'left' }
+        ]
       }
     };
   }
 
-  dateFormatter(params) {
-    return (params.value ? formatDate(params.value, 'dd-MM-yyyy', 'nl') : '');
+  dateComparator(filterDate, cellValue) {
+    if (cellValue == null) return 0;
+
+    const old_date = new Date(cellValue).setHours(0,0,0,0);
+    const new_date = new Date(filterDate).setHours(0,0,0,0);
+
+    if (old_date < new_date) {
+      return -1;
+    } else if (old_date > new_date) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
-  dateTimeFormatter(params) {
-    return (params.value ? formatDate(params.value, 'HH:mm', 'nl') : '');
+  dateRenderer(params) {
+    return (params.value ? formatDate(params.value, 'dd-MM-yyyy hh:mm', 'nl') : '');
   }
 
   cellTokenLocator(params) {
     if (params.data.geometry && params.value !== '') {
-      return '<a href="/map/' + params.value + '">View</a>';
+      return '<a href="/kaart/' + params.value + '">Bekijk</a>';
     } else {
       return '-';
     }
   }
 
   private handleError(error) {
-    return throwError('Something bad happened, please try again later.');
+    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

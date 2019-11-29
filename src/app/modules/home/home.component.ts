@@ -73,8 +73,8 @@ export class HomeComponent implements OnInit {
     private handleError(error) {
       if (error.status !== 403) {
         this.mapService.refreshStatusClass = true;
-        this.mapService.refreshStatus = 'An error has occurred';
-        return throwError('Something bad happened, please try again later.');
+        this.mapService.refreshStatus = 'Er is een fout opgetreden';
+        return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
       }
     }
   // END API CALLS

@@ -13,7 +13,7 @@ export class MapService {
   activeTokenId: string;
 
   refreshUpdate: number;
-  refreshStatus = 'Processing <i class="fas fa-sync-alt fa-spin"></i>';
+  refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass = false;
   zoomLevel = 8;
 
