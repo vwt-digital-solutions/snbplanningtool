@@ -129,7 +129,7 @@ export class CarsComponent {
     if (localStorage.getItem('carInfo')) {
       carInfo = JSON.parse(localStorage.getItem('carInfo'));
 
-      if ((carInfo as any).lastUpdated >= (30 * 60 * 1000) && (carInfo as any).items.length > 0) {
+      if ((carInfo as any).lastUpdated >= (new Date().getTime() - (30 * 60 * 1000)) && (carInfo as any).items.length > 0) {
         isLocalStorage = true;
       }
     }
