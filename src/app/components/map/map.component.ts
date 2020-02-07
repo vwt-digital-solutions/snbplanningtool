@@ -142,6 +142,15 @@ export class MapComponent implements OnInit {
     }
   }
 
+  public getDriverName(feature): string {
+    if (feature['layer'] == 'cars' && feature['properties']['driver_name']) {
+      return feature['properties']['driver_name']
+    }
+
+    // Return space string (empty string returns [object Object] internally (AGM BUG))
+    return ' ';
+  }
+
   ngOnInit() {
     this.mapService.setMapMarkers();
   }

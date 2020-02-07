@@ -63,9 +63,10 @@
           *ngFor="let m of this.mapService.geoJsonObjectActive['features']"
           [latitude]="m.geometry.coordinates[1]"
           [longitude]="m.geometry.coordinates[0]"
-          [iconUrl]="{ url: (m.layer == 'cars' ? this.mapService.iconUrlCar : this.mapService.iconUrlWork) }"
+          [iconUrl]="{ url: (m.layer == 'cars' ? this.mapService.iconUrlCar : this.mapService.iconUrlWork), labelOrigin: {x:15,y:-10} }"
           [markerClickable]="(this.authRoleService.isAuthorized ? true : false)"
-          [markerDraggable]="false" >
+          [markerDraggable]="false"
+          [label]="{ color: 'black', text: getDriverName(m), fontWeight: 'bold', fontSize: '16px' }">
 
           <agm-snazzy-info-window
             *ngIf="this.authRoleService.isAuthorized && m.layer == 'cars' || m.layer == 'work'"
