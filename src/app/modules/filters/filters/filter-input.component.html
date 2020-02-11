@@ -1,0 +1,20 @@
+<div class="form-group mb-3" [ngSwitch]="filter.inputType">
+    <label [for]="filter.field">{{filter.name}}</label>
+
+    <input *ngSwitchCase="'input'" type="text" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field" [value]="filter.value" (input)="filter.value = $event.target.value">
+
+    <select *ngSwitchCase="'single-choice'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
+      <option value="">--</option>
+      <option *ngFor="let opt of filter.options" [value]="opt">{{opt}}</option>
+    </select>
+
+    <div *ngSwitchCase="'multiple-choice'">
+      <div class="form-check" *ngFor="let opt of filter.options">
+        <label class="form-check-label" [for]="opt"> <input [id]="opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
+      </div>
+    </div>
+
+    <input *ngSwitchCase="'date-range'" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-from'" [value]="filter.value[0]" (input)="filter.value[0] = $event.target.value">
+    <input *ngSwitchCase="'date-range'" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-to'" [value]="filter.value[1]" (input)="filter.value[1] = $event.target.value">
+
+</div>
