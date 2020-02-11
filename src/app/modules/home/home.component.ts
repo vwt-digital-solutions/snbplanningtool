@@ -20,9 +20,9 @@ export class HomeComponent implements OnInit {
     private workItemProviderService: WorkItemProviderService
   ) {
 
-    workItemProviderService.mapWorkItemsSubject.subscribe(
+    workItemProviderService.loadingSubject.subscribe(
       value => {
-        this.mapService.geoJsonReady.work = true;
+        this.mapService.geoJsonReady.work = !value;
       }
     );
   }
@@ -116,7 +116,7 @@ export class HomeComponent implements OnInit {
     const carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
     this.mapService.geoJsonObjectCars.features = [];
     this.mapService.geoJsonObjectActive.features = [];
-    this.mapService.geoJsonReady = { map: false, cars: false, work: this.workItemProviderService.loadingSubject };
+    this.mapService.geoJsonReady = { map: false, cars: false, work: !this.workItemProviderService.loading };
 
     this.route.paramMap.subscribe(params => {
       if (params.get('trackerId')) {

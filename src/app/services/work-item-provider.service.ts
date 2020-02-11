@@ -14,6 +14,7 @@ export class WorkItemProviderService {
   rawWorkItems: any[]  = [];
   filteredWorkItems: any[] = [];
   workItemsFeatureCollection: any[] = [];
+  loading = true;
 
   workItemsSubject = new Subject<any[]>();
   mapWorkItemsSubject = new Subject<any[]>();
@@ -39,6 +40,7 @@ export class WorkItemProviderService {
 
   //
   private getWorkItems() {
+    this.loading = true;
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/workitems/all').subscribe(
@@ -47,9 +49,11 @@ export class WorkItemProviderService {
 
         this.filterWorkItems();
         this.workItemsToFeatureCollection();
+        this.loading = false;
         this.loadingSubject.next(false);
       },
       error => {
+        this.loading = false;
         this.loadingSubject.next(false);
         this.errorSubject.next(error);
       }
