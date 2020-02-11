@@ -1,7 +1,7 @@
 import { ControlPosition } from '@agm/core/services/google-maps-types';
 
 export class MapService {
-  geoJsonObjectAll: any = {features: [], type: 'FeatureCollection'};
+  geoJsonObjectCars: any = {features: [], type: 'FeatureCollection'};
   geoJsonObjectActive: any = {features: [], type: 'FeatureCollection'};
 
   geoJsonReady = {
@@ -217,7 +217,7 @@ export class MapService {
   setMapMarkers() {
     const that = this;
     this.geoJsonObjectActive.features = [];
-    this.geoJsonObjectAll.features.forEach((feature) => {
+    this.geoJsonObjectCars.features.forEach((feature) => {
       if (feature.active) {
         that.geoJsonObjectActive.features.push(feature);
       }

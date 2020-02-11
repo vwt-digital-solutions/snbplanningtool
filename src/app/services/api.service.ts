@@ -20,8 +20,7 @@ export class ApiService {
   }
 
   public apiGetCarsInfo() {
-    const requestUrl = this.env.apiUrl + '/carsinfo';
-    this.httpClient.get(requestUrl).subscribe(
+    this.apiGet('/carsinfo').subscribe(
       result => {
         const rowData = [];
         const newCarInfo = new Object();

@@ -1,0 +1,13 @@
+<div class="filter-container">
+  <h1  class="mb-3">
+    Werk filteren
+  </h1>
+  <div *ngFor="let filter of workItemProviderService.filterService.filters">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">{{filter.name}}</span>
+      </div>
+      <input type="text" class="form-control" (change)="filter.dataChanged.next(true)" [value]="filter.value" (input)="filter.value = $event.target.value" aria-describedby="basic-addon1">
+    </div>
+  </div>
+</div>

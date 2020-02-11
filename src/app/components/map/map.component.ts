@@ -8,6 +8,7 @@ import { MapService } from 'src/app/services/map.service';
 import { LazyMapsAPILoaderConfigLiteral } from '@agm/core';
 import { ClusterManager } from '@agm/js-marker-clusterer';
 import { ControlPosition } from '@agm/core/services/google-maps-types';
+import {WorkItemProviderService} from "../../services/work-item-provider.service";
 
 
 @Component({
@@ -21,6 +22,7 @@ export class MapComponent implements OnInit {
     private location: Location,
     public authRoleService: AuthRoleService,
     public mapService: MapService,
+    public workItemProviderService : WorkItemProviderService,
     public clusterManager: ClusterManager
   ) {}
 
@@ -68,7 +70,7 @@ export class MapComponent implements OnInit {
     this.mapService.markerLayer[layer] = (this.mapService.markerLayer[layer] ? false : true);
     this.location.go('/map');
 
-    this.mapService.geoJsonObjectAll.features.forEach((feature: any) => {
+    this.mapService.geoJsonObjectCars.features.forEach((feature: any) => {
       if (feature.layer === layer) {
         feature.active = that.mapService.markerLayer[layer];
       }
@@ -162,7 +164,7 @@ export class MapsConfig implements LazyMapsAPILoaderConfigLiteral {
   public region: string;
   constructor(env: EnvService) {
     this.apiKey = env.googleMapsKey;
-    this.language = 'nl'
-    this.region = 'NL'
+    this.language = 'nl';
+    this.region = 'NL';
   }
 }

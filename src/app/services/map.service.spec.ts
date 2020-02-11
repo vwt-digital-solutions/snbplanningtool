@@ -20,7 +20,7 @@ describe('MapService', () => {
   it('should define all variables', () => {
     const service: MapService = TestBed.get(MapService);
 
-    expect(service.geoJsonObjectAll).toBeDefined();
+    expect(service.geoJsonObjectCars).toBeDefined();
     expect(service.geoJsonObjectActive).toBeDefined();
     expect(service.refreshUpdate).toBeUndefined();
     expect(service.refreshStatus).toBeDefined();

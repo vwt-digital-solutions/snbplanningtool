@@ -10,13 +10,16 @@ import { MapServiceProvider } from 'src/app/services/map.service.provider';
 
 import { HomeComponent } from './home.component';
 import { MapComponent, MapsConfig } from 'src/app/components/map/map.component';
+import {FilterComponent} from 'src/app/modules/filters/filter.component';
+import {FiltersModule} from '../filters/filters.module';
 
 @NgModule({
   imports: [
     CommonModule,
     AgmCoreModule.forRoot(),
     AgmJsMarkerClustererModule,
-    AgmSnazzyInfoWindowModule
+    AgmSnazzyInfoWindowModule,
+    FiltersModule
   ],
   declarations: [
     HomeComponent,
