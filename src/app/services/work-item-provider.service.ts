@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
-import {ValueFilter} from '../modules/filters/filters/filters';
+import {ChoiceFilter, ChoiceFilterType, DateFilter, ValueFilter} from '../modules/filters/filters/filters';
 import {FilterMap} from '../modules/filters/filter-map';
 
 @Injectable({
@@ -23,7 +23,12 @@ export class WorkItemProviderService {
 
   public filterService = new FilterMap(
     [
-      new ValueFilter('Stad', 'city', 'Utrecht'),
+      new ValueFilter('Beschrijving', 'description'),
+      new ChoiceFilter('Taaktype', 'task_type'),
+      new ChoiceFilter('Status', 'status', ChoiceFilterType.multiple),
+      new ValueFilter('Plaats', 'city', 'Utrecht'),
+      new DateFilter('Begindatum', 'start_timestamp'),
+      new DateFilter('Einddatum', 'end_timestamp'),
     ]
   );
 
