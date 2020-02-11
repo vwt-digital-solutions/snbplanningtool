@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Subject} from "rxjs/index";
+import {Subject} from 'rxjs/index';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,8 @@ export abstract class Filter {
   // An optional default value.
   defaultValue;
 
+  inputType = 'input';
+
   dataChanged = new Subject<any>();
 
   constructor(name: string, field: string, defaultValue = null) {
@@ -29,7 +31,7 @@ export abstract class Filter {
 
   abstract filterElement(element, index, array): boolean;
 
-  filterList(listToFilter:any[]): any[] {
+  filterList(listToFilter: any[], originalList: any[]): any[] {
 
     if (this.value === null || this.value === undefined) {
       return listToFilter;
@@ -70,40 +72,79 @@ export class ValueFilter extends Filter {
 
     return element[this.field] === this.value;
   }
-
 }
 
 /**
  * A filter that allows the user to choose from a list. Can be exclusive (only one choice),
  * or inclusive (multiple choice)
  */
-enum ChoiceFilterType {
-    single,
-    multiple
+export enum ChoiceFilterType {
+    single = 'single-choice',
+    multiple = 'multiple-choice',
+    singleRadio = 'single-choice-radio'
 }
 
 export class ChoiceFilter extends Filter  {
 
-  type: ChoiceFilterType = ChoiceFilterType.single;
-  choices: any[];
+  type = ChoiceFilterType.single
+  options: any[];
+  inferOptionsFromList = false;
 
-  constructor(name: string, field: string, choices: any[], defaultValue = null, type = ChoiceFilterType.single) {
+  constructor(name: string, field: string, type = ChoiceFilterType.single, options: any[] = null, defaultValue = null,) {
     super(name, field, defaultValue);
-    this.choices = choices;
+    if (options == null) {
+      this.inferOptionsFromList = true;
+    } else {
+      this.options = options;
+    }
+
     this.type = type;
+
+    if(type === ChoiceFilterType.multiple) {
+      this.value = [];
+    }
+
+    this.inputType = type.toString();
+  }
+
+  toggleValue(newValue) {
+    const index = this.value.indexOf(newValue);
+
+    if (index > -1) {
+      this.value.splice(index, 1);
+    } else {
+      this.value.push(newValue);
+    }
+
+    this.dataChanged.next(true);
+  }
+
+
+  filterList(listToFilter: any[], originalList: any[]): any[] {
+    if (this.inferOptionsFromList) {
+      this.options = originalList.map(value => value[this.field]).filter((v, i, a) => a.indexOf(v) === i)
+    }
+
+    return super.filterList(listToFilter, originalList);
   }
 
   filterElement(element, index, array): boolean {
+
+    if (this.value === '' || this.value === undefined || this.value.length === 0) {
+      return true;
+    }
+
     switch (this.type) {
       case ChoiceFilterType.single:
         return element[this.field] === this.value;
+      case ChoiceFilterType.singleRadio:
+        return element[this.field] === this.value;
       case ChoiceFilterType.multiple:
-        return this.value.indexOf(element[this.field]) > 0;
+        return this.value.indexOf(element[this.field]) > -1;
       default:
         return true;
     }
   }
-
 }
 
 /**
@@ -138,7 +179,6 @@ export class OffsetFilter extends Filter  {
         return false;
     }
   }
-
 }
 
 /**
@@ -149,5 +189,38 @@ export class RangeFilter extends Filter  {
   filterElement(element, index, array): boolean {
     return element[this.value] >= this.value[0] && element[this.value] <= this.value[1];
   }
+}
 
+
+/**
+ * A filter that allows the user to choose a cutoff value.
+ * Filtered values can be greater than or less than the given value.
+ */
+export class DateFilter extends Filter  {
+
+  inputType = 'date-range';
+
+  value = [null, null];
+
+  filterElement(element, index, array): boolean {
+    const startDate = Date.parse(this.value[0]);
+    const endDate = Date.parse(this.value[1]) + 24 * 60 * 60 * 1000;
+
+    const elementDate = Date.parse(element[this.field]);
+
+    if (isNaN(startDate) && isNaN(endDate)) {
+      return true;
+    }
+
+    if (isNaN(elementDate)) {
+      return false;
+    }
+
+    let elementMatches = isNaN(startDate) || startDate <= elementDate;
+
+    elementMatches = elementMatches && (isNaN(endDate) || endDate >= elementDate);
+
+    return elementMatches;
+
+  }
 }

@@ -19,8 +19,9 @@ export class FilterMap {
   }
 
   public filterList(listToFilter) {
+    const originalList = listToFilter
     this.filters.forEach((filter, _) => {
-      listToFilter = filter.filterList(listToFilter);
+      listToFilter = filter.filterList(listToFilter, originalList);
     });
 
     return listToFilter;
