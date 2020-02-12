@@ -23,6 +23,10 @@ export class HomeComponent implements OnInit {
     workItemProviderService.loadingSubject.subscribe(
       value => {
         this.mapService.geoJsonReady.work = !value;
+
+        if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
+          this.mapService.geoJsonReady.map = true;
+        }
       }
     );
 
