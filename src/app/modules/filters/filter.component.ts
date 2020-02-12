@@ -9,8 +9,10 @@ import {WorkItemProviderService} from '../../services/work-item-provider.service
 })
 export class FilterComponent implements OnInit {
 
+  public workItemProviderService: WorkItemProviderService;
+
   constructor(
-    private workItemProviderService: WorkItemProviderService
+    workItemProviderService: WorkItemProviderService
   ) {
     this.workItemProviderService = workItemProviderService;
   }
