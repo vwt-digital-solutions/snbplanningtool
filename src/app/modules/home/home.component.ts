@@ -25,6 +25,10 @@ export class HomeComponent implements OnInit {
         this.mapService.geoJsonReady.work = !value;
       }
     );
+
+    workItemProviderService.errorSubject.subscribe(error => {
+      this.handleError(error);
+    });
   }
 
   // API CALLS
