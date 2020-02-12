@@ -14,7 +14,20 @@
       </div>
     </div>
 
-    <input *ngSwitchCase="'date-range'" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-from'" [value]="filter.value[0]" (input)="filter.value[0] = $event.target.value">
-    <input *ngSwitchCase="'date-range'" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-to'" [value]="filter.value[1]" (input)="filter.value[1] = $event.target.value">
+
+    <div *ngSwitchCase="'date-range'">
+      <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text">van</span>
+        </div>
+        <input placeholder="JJJJ-MM-DD" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-from'" [value]="filter.value[0]" (input)="filter.value[0] = $event.target.value">
+      </div>
+      <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text">tot</span>
+        </div>
+        <input placeholder="JJJJ-MM-DD" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-to'" [value]="filter.value[1]" (input)="filter.value[1] = $event.target.value">
+      </div>
+    </div>
 
 </div>

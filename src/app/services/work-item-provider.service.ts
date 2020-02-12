@@ -26,7 +26,7 @@ export class WorkItemProviderService {
       new ValueFilter('Beschrijving', 'description'),
       new ChoiceFilter('Taaktype', 'task_type'),
       new ChoiceFilter('Status', 'status', ChoiceFilterType.multiple),
-      new ValueFilter('Plaats', 'city', 'Utrecht'),
+      new ValueFilter('Plaats', 'city'),
       new DateFilter('Begindatum', 'start_timestamp'),
       new DateFilter('Einddatum', 'end_timestamp'),
     ]
