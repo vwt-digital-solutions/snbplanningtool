@@ -41,6 +41,10 @@ export class WorkItemProviderService {
     });
 
     this.getWorkItems();
+
+    setInterval(() => {
+      this.getWorkItems();
+    }, (5 * 60 * 1000));
   }
 
   //
