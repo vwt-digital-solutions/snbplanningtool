@@ -28,7 +28,7 @@ export class ApiService {
         for (const row in result) {
           if (result.hasOwnProperty(row)) {
             const data = result[row];
-            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
+            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.driver_skill, data.token));
           }
         }
 
