@@ -84,7 +84,9 @@ export class HomeComponent implements OnInit {
             for (const item of carInfo.items) {
               if (item.token === feature.properties.token) {
                 feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
+                feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
                 feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
+
               }
             }
           }
