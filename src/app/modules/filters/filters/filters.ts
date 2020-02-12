@@ -1,9 +1,5 @@
-import { Injectable } from '@angular/core';
 import {Subject} from 'rxjs/index';
 
-@Injectable({
-  providedIn: 'root'
-})
 export abstract class Filter {
 
   // The name to display for this filter.
