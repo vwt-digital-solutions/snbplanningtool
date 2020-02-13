@@ -102,15 +102,8 @@ export class HomeComponent implements OnInit {
     }
 
     private featureToMap(features, layer) {
-      const that = this;
-
-      features.forEach((feature) => {
-        that.mapService.geoJsonObjectCars.features.push(feature);
-
-        if (feature.active) {
-          that.mapService.geoJsonObjectActive.features.push(feature);
-        }
-      });
+      this.mapService.geoJsonObjectCars.features.next(features);
+      this.mapService.geoJsonObjectActive.features.next(features.filter(feature => feature.active))
 
       this.mapService.geoJsonReady[layer] = true;
       if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
@@ -121,11 +114,9 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
-    const that = this;
-
     const carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
-    this.mapService.geoJsonObjectCars.features = [];
-    this.mapService.geoJsonObjectActive.features = [];
+    this.mapService.geoJsonObjectCars.features.next([]);
+    this.mapService.geoJsonObjectActive.features.next([]);
     this.mapService.geoJsonReady = { map: false, cars: false, work: !this.workItemProviderService.loading };
 
     this.route.paramMap.subscribe(params => {
@@ -147,8 +138,8 @@ export class HomeComponent implements OnInit {
     this.mapGetCars();
 
     setInterval(() => {
-      this.mapService.geoJsonObjectCars.features = [];
-      this.mapService.geoJsonObjectActive.features = [];
+      this.mapService.geoJsonObjectCars.features.next([]);
+      this.mapService.geoJsonObjectActive.features.next([]);
 
       this.mapGetCars();
     }, (5 * 60 * 1000));

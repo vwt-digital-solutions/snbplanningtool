@@ -67,7 +67,6 @@ export class WorkItemProviderService {
         this.errorSubject.next(error);
       }
     );
-
   }
 
   private filterWorkItems() {
