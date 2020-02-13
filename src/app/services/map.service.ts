@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { WorkItemProviderService } from './work-item-provider.service';
-import { merge, Observable } from 'rxjs';
+import { Observable, Subject, merge } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  geoJsonObjectCars: any = {features: [], type: 'FeatureCollection'};
-  geoJsonObjectActive: any = {features: [], type: 'FeatureCollection'};
+  geoJsonObjectCars: any = { features: new Subject<any[]>(), type: 'FeatureCollection'};
+  geoJsonObjectActive: any = { features: new Subject<any[]>(), type: 'FeatureCollection'};
 
   geoJsonReady = {
     map: false,
@@ -174,7 +174,9 @@ export class MapService {
         stylers: [ { color: '#9e9e9e' } ]
       }
     ],
-    minZoom: 8
+    minZoom: 8,
+    maxZoom: 15,
+    disableClusteringAtZoom: 15
   }
 
 
@@ -191,7 +193,7 @@ export class MapService {
   }
 
   setMapMarkers() {
-    this.geoJsonObjectActive.features = [];
+    this.geoJsonObjectActive.features.next([]);
     this.geoJsonObjectCars.features.forEach((feature) => {
       if (feature.active) {
         this.geoJsonObjectActive.features.push(feature);

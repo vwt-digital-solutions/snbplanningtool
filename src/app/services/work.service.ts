@@ -90,6 +90,7 @@ export class WorkService {
   }
 
   cellTokenLocator(params) {
+    console.log(params)
     if (params.data.geometry && params.value !== '') {
       return '<a href="/kaart/' + params.value + '">Bekijk</a>';
     } else {

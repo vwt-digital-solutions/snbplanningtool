@@ -10,6 +10,10 @@ import "leaflet/dist/images/marker-shadow.png";
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
+import "leaflet.featuregroup.subgroup";
+
+import { map, take, tap } from 'rxjs/operators';
+import { Subject, merge } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -19,16 +23,26 @@ import 'leaflet.gridlayer.googlemutant';
 
 export class MapComponent implements AfterViewInit {
   private map: L.map;
+  private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
+  private parentCluster: L.markerClusterGroup = L.markerClusterGroup({
+    animate: false,
+    chunkedLoading: true,
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: this.mapService.config.disableClusteringAtZoom,
+    iconCreateFunction: (cluster) => this.createClusterIcon(cluster),
+  });
+
   private clusters: object = {};
   
   constructor(
     public authRoleService: AuthRoleService,
     public mapService: MapService,
-    public workItemProviderService : WorkItemProviderService,
+    public workProvider : WorkItemProviderService,
   ) {}
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.layerButtons.addTo(this.map);
     this.addClusters();
   }
 
@@ -52,60 +66,46 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private createEmptyCluster(): L.markerClusterGroup {
-    return L.markerClusterGroup({
-      animate: false,
-      chunkedLoading: true,
-      showCoverageOnHover: false,
-      iconCreateFunction: (cluster) => this.createClusterIcon(cluster),
-    });
-  }
-
   private addClusters(): void {
-    const layers = this.mapService.config.layers;
-    layers.forEach(layer => {
-      const cluster = this.createEmptyCluster();
-      this.clusters[layer] = cluster;
-      this.map.addLayer(cluster);
-    });
-
-    this.addMarkers(layers);
-  }
-
-  private addMarkers(layers: string[]): void {
-    this.mapService.mapFeatures.subscribe(features => {
-      const markers: object = {};
-
-      features.forEach(feature => {
-        if (feature['geometry'] && feature['layer']) {
-          const marker = this.createMarker(feature);
-
-          if (!markers.hasOwnProperty(feature.layer)) {
-            markers[feature.layer] = []
-          }
-
-          markers[feature.layer].push(marker);
-        }
-      });
-
-      for (const layer of Object.keys(markers)) {
-        this.clusters[layer].clearLayers();
-        this.clusters[layer].addLayers(markers[layer]);
-      }
-    });
-  }
-
-  private getCorrespondingIcon(layer: Layer): L.icon {
-    const iconPath = '../../../assets/images'
-    const iconUrl = layer == 'cars' ?
-      `${iconPath}/car-location.png` :
-      `${iconPath}/work-location.png`;
+    this.map.addLayer(this.parentCluster);
     
-    return  L.icon({
-      iconUrl: iconUrl, 
-      iconSize: [32, 33],
-      iconAnchor: null,
-      popupAnchor: [0, 0]
+    this.addWorkSubGroup(),
+    this.addCarSubGroup()
+  }
+  
+  private addWorkSubGroup(): void {
+    this.workProvider.mapWorkItemsSubject.subscribe(features => {
+
+      let markers = features.map(feature => this.createMarker(feature));
+      const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
+      markers = [];
+      
+      if (this.clusters['work']) {
+        this.parentCluster.removeLayer(this.clusters['work']);
+        this.removeLayerButton(this.clusters['work'])
+      }
+
+      this.clusters['work'] = subGroup;
+      this.addLayerButton(subGroup, 'work');
+      this.map.addLayer(subGroup);
+    });
+  }
+  
+  private addCarSubGroup(): void {
+    this.mapService.geoJsonObjectCars.features.subscribe(features => {
+      
+      let markers = features.map(feature => this.createMarker(feature));
+      const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
+      markers = [];
+      
+      if (this.clusters['cars']) {
+        this.parentCluster.removeLayer(this.clusters['cars']);
+        this.layerButtons.removeLayer(this.clusters['cars']);
+      }
+
+      this.clusters['cars'] = subGroup;
+      this.addLayerButton(subGroup, 'cars');
+      this.map.addLayer(subGroup);
     })
   }
 
@@ -124,6 +124,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private createWorkPopup(feature): string {
+    const properties = feature['properties']
     let start_time = null;
     let end_time = null;
     let html = [
@@ -131,34 +132,34 @@ export class MapComponent implements AfterViewInit {
       `<div class="col-12 marker-work-inner">`
     ]
 
-    if ('start_timestamp' in feature) {
-      start_time = new Date(feature['start_timestamp']).toLocaleString().split(',')
+    if ('start_timestamp' in properties) {
+      start_time = new Date(properties['start_timestamp']).toLocaleString().split(',')
     }
 
-    if ('end_timestamp' in feature) {
-      end_time = new Date(feature['end_timestamp']).toLocaleString().split(',')
+    if ('end_timestamp' in properties) {
+      end_time = new Date(properties['end_timestamp']).toLocaleString().split(',')
     }
 
     html.push(`
       <div class="row">
         <div class="col-4 item project_number">
           <p>Projectnummer</p>
-          <span> ${feature['project_number'] || '-'}</span>
+          <span> ${properties['project_number'] || '-'}</span>
         </div>
         <div class="col-4 item task_type">
           <p>Taaktype</p>
-          <span> ${feature['task_type'] || '-'}</span>
+          <span> ${properties['task_type'] || '-'}</span>
         </div>
         <div class="col-4 item status">
           <p>Status</p>
-          <span> ${feature['status'] || '-'}</span>
+          <span> ${properties['status'] || '-'}</span>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12 item description">
           <p>Beschrijving</p>
-          <span> ${feature['description'] || '-'}</span>
+          <span> ${properties['description'] || '-'}</span>
         </div>
       </div>
 
@@ -175,51 +176,65 @@ export class MapComponent implements AfterViewInit {
         </div>
       </div>`);
 
-    if (feature.city || feature.zip || feature.street) {
+    if (properties.city || properties.zip || properties.street) {
       const locationProperties = ['<div class="row">']
       
       // Add city
       locationProperties.push(`
         <div class="col-4 item city">
           <p>Plaats</p>
-          <span> ${feature.city || 'N/B'}</span>
+          <span> ${properties.city || 'N/B'}</span>
         </div>`)
 
       // If exists add zip
-      if (feature['zip']) {
+      if (properties['zip']) {
         locationProperties.push(`
           <div class="col-4 item zip">
             <p>Postcode</p>
-            <span> ${feature.zip}</span>
+            <span> ${properties.zip}</span>
           </div>`);
       }
 
       // If exists add street
-      if (feature['street']) {
+      if (properties['street']) {
         locationProperties.push(`
           <div class="col-4 item street">
             <p>Straat</p>
-            <span> ${feature.street}</span>
+            <span> ${properties.street}</span>
           </div>`);
       }
-
+      locationProperties.push('</div>')
+      
       // If exists add employee name
-      if (feature['employee_name']) {
+      if (properties['employee_name']) {
         locationProperties.push(`
         <div class="row">
           <div class="col-12 item employee_name">
             <p>Naam werknemer</p>
-            <span> ${feature.employee_name}</span>
+            <span> ${properties.employee_name}</span>
           </div>
         </div>`)
       }
-      locationProperties.push('</div>')
 
       html = html.concat(locationProperties)
     }
 
     html.push("</div></div>");
     return html.join('');
+  }
+
+  private getCorrespondingIcon(layer: Layer): L.icon {
+    const iconPath = '../../../assets/images'
+    const iconUrl = layer == 'cars' ?
+      `${iconPath}/car-location.png` :
+      `${iconPath}/work-location.png`;
+
+    return L.icon({
+      iconUrl: iconUrl,
+      iconSize: [32, 33],
+      iconAnchor: null,
+      popupAnchor: [0, 0]
+    })
   }
 
   private createMarker(feature: any): L.marker {
@@ -230,36 +245,35 @@ export class MapComponent implements AfterViewInit {
     };
 
     const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), options);
-
-    // if (feature.layer == 'cars') {
-    //   marker.bindPopup(this.createCarPopup(feature));
-    // }
-
-    // if (feature.layer == 'work') {
-    //   marker.bindPopup(this.createWorkPopup(feature));
-    // }
+    
+    if (feature.layer == 'cars') {
+      const popupOptions = {
+        maxWidth: 300,
+        minWidth: 200,
+      }
+      marker.bindPopup(this.createCarPopup(feature), popupOptions);
+    }
+    
+    if (feature.layer == 'work') {
+      const popupOptions = {
+        maxWidth: 600,
+        minWidth: 400,
+        className: ''
+      }
+      marker.bindPopup(this.createWorkPopup(feature), popupOptions);
+    }
 
     return marker;
   }
 
-  private initMap(): void {
-    this.map = L.map('map', {
-      center: [
-        this.mapService.config.defaults.lat,
-        this.mapService.config.defaults.lng
-      ],
-      zoom: this.mapService.config.defaults.zoomLevel,
-      minZoom: this.mapService.config.minZoom,
-    });
+  private addLayerButton(layer, name) {
+    this.layerButtons.addOverlay(layer, name);
+  }
 
-    // Add google maps tiling
-    const tiles = L.gridLayer.googleMutant({
-      type: 'roadmap',
-      styles: this.mapService.config.styles
-    })
-
-    tiles.addTo(this.map);
-    this.addResetZoomButton().addTo(this.map);
+  private removeLayerButton(layer) {
+    if (layer) {
+      this.layerButtons.removeLayer(layer)
+    }
   }
 
   private addResetZoomButton(): L.Control {
@@ -277,6 +291,27 @@ export class MapComponent implements AfterViewInit {
       return azoom;
     };
     return control;
+  }
+
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: [
+        this.mapService.config.defaults.lat,
+        this.mapService.config.defaults.lng
+      ],
+      zoom: this.mapService.config.defaults.zoomLevel,
+      minZoom: this.mapService.config.minZoom,
+      // maxZoom: this.mapService.config.maxZoom
+    });
+
+    // Add google maps tiling
+    const tiles = L.gridLayer.googleMutant({
+      type: 'roadmap',
+      styles: this.mapService.config.styles
+    })
+
+    tiles.addTo(this.map);
+    this.addResetZoomButton().addTo(this.map);
   }
 
   // private setActiveMarker() {
