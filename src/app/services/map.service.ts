@@ -1,5 +1,8 @@
-import { ControlPosition } from '@agm/core/services/google-maps-types';
+import { Injectable } from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class MapService {
   geoJsonObjectCars: any = {features: [], type: 'FeatureCollection'};
   geoJsonObjectActive: any = {features: [], type: 'FeatureCollection'};

@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MapService } from './map.service';
-import { MapServiceProvider } from './map.service.provider';
 
 describe('MapService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        MapServiceProvider
+        MapService
       ]
     });
   });
@@ -28,12 +27,11 @@ describe('MapService', () => {
     expect(service.iconUrlCar).toBeDefined();
     expect(service.iconUrlWork).toBeDefined();
     expect(service.markerLayer).toBeDefined();
-    expect(service.clusterUrl).toBeDefined();
-    expect(service.clusterStyles).toBeDefined();
-    expect(service.lat).toBeDefined();
-    expect(service.lng).toBeDefined();
-    expect(service.minZoom).toBeDefined();
-    expect(service.rotateControlOptions).toBeDefined();
-    expect(service.styles).toBeDefined();
+    expect(service.config.defaults.lat).toBeDefined();
+    expect(service.config.defaults.lng).toBeDefined();
+    expect(service.config.defaults.zoomLevel).toBeDefined();
+    expect(service.config.minZoom).toBeDefined();
+    expect(service.config.styles).toBeDefined();
+    expect(service.config.layers).toBeDefined();
   });
 });
