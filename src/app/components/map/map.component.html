@@ -10,7 +10,8 @@
       <strong>Laden</strong> De applicatie is de locaties aan het ophalen, een moment geduld alstublieft.
     </div>
 
-    <agm-map
+    <div id="map"></div>
+    <!-- <agm-map
       *ngIf="this.mapService.geoJsonReady.map"
       [ngClass]="['col-12']"
       [disableDefaultUI]="true"
@@ -44,15 +45,6 @@
         </button>
       </div>
 
-      <button
-        id="resetZoom"
-        title="Herstel zoom"
-        [ngClass]="['mapControlOuter', 'toggle-button', 'controls', 'button']"
-        [attr.disabled]="this.mapService.zoomLevel <= 8 ? true : null"
-        (click)="resetZoom()" >
-        <i class="fas fa-redo-alt"></i>
-      </button>
-
       <agm-marker-cluster
         [styles]="this.mapService.clusterStyles"
         [minimumClusterSize]="3"
@@ -76,83 +68,6 @@
             (beforeOpen)="infoWindowBeforeOpen(m)"
             (afterClose)="infoWindowAfterClose(m)"
             #infoWindow >
-            <ng-template>
-              <div [ngClass]="['row', 'marker-car']" *ngIf="m.layer == 'cars'">
-                <div [ngClass]="['col-12', 'item', 'driver_name']">
-                  <p>Naam bestuurder</p>
-                  <span>{{m.properties.driver_name || '-'}}</span>
-                </div>
-                <div [ngClass]="['col-12', 'item', 'driver_skill']">
-                  <p>Rol bestuurder</p>
-                  <span>{{m.properties.driver_skill || '-'}}</span>
-                </div>
-                <div [ngClass]="['col-12', 'item', 'license_plate']">
-                  <p>Kentekenplaat</p>
-                  <span class="license-plate license-nl">{{m.properties.license_plate || 'N/B'}}</span>
-                </div>
-              </div>
-
-              <div [ngClass]="['row', 'marker-work', 'no-gutters']" *ngIf="m.layer == 'work'">
-                <div [ngClass]="['col-12', 'marker-work-inner']">
-                  <div [ngClass]="['row']">
-                    <div [ngClass]="['col-4', 'item', 'project_number']">
-                      <p>Projectnummer</p>
-                      <span>{{m.properties.project_number || '-'}}</span>
-                    </div>
-                    <div [ngClass]="['col-4', 'item', 'task_type']">
-                      <p>Taaktype</p>
-                      <span>{{m.properties.task_type || '-'}}</span>
-                    </div>
-                    <div [ngClass]="['col-4', 'item', 'status']">
-                      <p>Status</p>
-                      <span>{{m.properties.status || '-'}}</span>
-                    </div>
-                  </div>
-
-                  <div [ngClass]="['row']">
-                    <div [ngClass]="['col-12', 'item', 'description']">
-                      <p>Beschrijving</p>
-                      <span>{{m.properties.description || '-'}}</span>
-                    </div>
-                  </div>
-
-                  <div [ngClass]="['row']">
-                    <div [ngClass]="['col-6', 'item', 'date']">
-                      <p>Startdatum</p>
-                      <span>{{m.properties.start_timestamp | date:'dd-MM-yyyy' || 'N/B'}}</span>
-                      <span>{{m.properties.start_timestamp | date:'HH:mm' || 'N/B'}}</span>
-                    </div>
-                    <div [ngClass]="['col-6', 'item', 'date']">
-                      <p>Einddatum</p>
-                      <span>{{m.properties.end_timestamp | date:'dd-MM-yyyy' || '-'}}</span>
-                      <span>{{m.properties.end_timestamp | date:'HH:mm' || '-'}}</span>
-                    </div>
-                  </div>
-
-                  <div [ngClass]="['row']" *ngIf="m.properties.city || m.properties.zip || m.properties.street">
-                    <div [ngClass]="['col-4', 'item', 'city']">
-                      <p>Plaats</p>
-                      <span>{{m.properties.city || 'N/B'}}</span>
-                    </div>
-                    <div [ngClass]="['col-4', 'item', 'zip']" *ngIf="m.properties.zip">
-                      <p>Postcode</p>
-                      <span>{{m.properties.zip}}</span>
-                    </div>
-                    <div [ngClass]="['col-4', 'item', 'street']" *ngIf="m.properties.street">
-                      <p>Straat</p>
-                      <span>{{m.properties.street}}</span>
-                    </div>
-                  </div>
-
-                  <div [ngClass]="['row']"  *ngIf="m.properties.employee_name">
-                    <div [ngClass]="['col-12', 'item', 'employee_name']">
-                      <p>Naam werknemer</p>
-                      <span>{{m.properties.employee_name}}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
           </agm-snazzy-info-window>
         </agm-marker>
         </ng-container>
@@ -255,5 +170,5 @@
           </agm-snazzy-info-window>
         </agm-marker>
       </agm-marker-cluster>
-    </agm-map>
+    </agm-map> -->
   </div>

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import { WorkItemProviderService } from './work-item-provider.service';
+import { merge, Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,211 +21,180 @@ export class MapService {
   refreshUpdate: number;
   refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass = false;
-  zoomLevel = 8;
-
+  
   iconUrlCar = 'assets/images/car-location.png';
-  iconUrlCarOpen = 'assets/images/car-location-open.png';
   iconUrlWork = 'assets/images/work-location.png';
-  iconUrlWorkOpen = 'assets/images/work-location-open.png';
-
+  
   markerLayer = {
     cars: true,
     work: true
   };
 
-  clusterUrl = 'assets/images/clusters/m';
-  clusterStyles = [
-    {
-      textColor: '#FFFFFF',
-      url: 'assets/images/clusters/m1.png',
-      height: 52,
-      width: 53,
-      backgroundPosition: '0 -1px'
+  config = {
+    layers: ['cars', 'work'],
+    defaults: {
+      lat: 52.155285,
+      lng: 5.387219,
+      zoomLevel: 8
     },
-    {
-      textColor: '#FFFFFF',
-      url: 'assets/images/clusters/m2.png',
-      height: 55,
-      width: 56,
-      backgroundPosition: '0 -1px'
-    },
-    {
-      textColor: '#FFFFFF',
-      url: 'assets/images/clusters/m3.png',
-      height: 65,
-      width: 66,
-      backgroundPosition: '0 -1px'
-    },
-    {
-      textColor: '#FFFFFF',
-      url: 'assets/images/clusters/m4.png',
-      height: 77,
-      width: 78,
-      backgroundPosition: '0 -1px'
-    },
-    {
-      textColor: '#FFFFFF',
-      url: 'assets/images/clusters/m5.png',
-      height: 89,
-      width: 90,
-      backgroundPosition: '0 -1px'
-    }
-  ];
+    styles: [
+      {
+        elementType: 'geometry',
+        stylers: [ { color: '#cccccc' } ]
+      },
+      {
+        elementType: 'labels.icon',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#000000' } ]
+      },
+      {
+        elementType: 'labels.text.stroke',
+        stylers: [ { color: '#f5f5f5' } ]
+      },
+      {
+        featureType: 'administrative',
+        elementType: 'geometry',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'administrative.country',
+        elementType: 'geometry.stroke',
+        stylers: [ { color: '#000000' }, { visibility: 'on' }, { weight: 0.5 } ]
+      },
+      {
+        featureType: 'administrative.land_parcel',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'administrative.land_parcel',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#bdbdbd' } ]
+      },
+      {
+        featureType: 'administrative.neighborhood',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'landscape.man_made',
+        stylers: [ { color: '#d3b091' } ]
+      },
+      {
+        featureType: 'landscape.natural.terrain',
+        stylers: [ { color: '#b4b4b4' } ]
+      },
+      {
+        featureType: 'poi',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'poi',
+        elementType: 'geometry',
+        stylers: [ { color: '#eeeeee' } ]
+      },
+      {
+        featureType: 'poi',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#757575' } ]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'geometry',
+        stylers: [ { color: '#a1c2af' } ]
+      },
+      {
+        featureType: 'poi.park',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#9e9e9e' } ]
+      },
+      {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [ { color: '#d4d8d8' } ]
+      },
+      {
+        featureType: 'road',
+        elementType: 'labels',
+        stylers: [ { visibility: 'on' } ]
+      },
+      {
+        featureType: 'road',
+        elementType: 'labels.icon',
+        stylers: [ { visibility: 'on' } ]
+      },
+      {
+        featureType: 'road.arterial',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#000000' } ]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [ { color: '#ecf0f1' } ]
+      },
+      {
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#000000' } ]
+      },
+      {
+        featureType: 'road.local',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#000000' } ]
+      },
+      {
+        featureType: 'transit',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'transit.line',
+        elementType: 'geometry',
+        stylers: [ { color: '#e5e5e5' } ]
+      },
+      {
+        featureType: 'transit.station',
+        elementType: 'geometry',
+        stylers: [ { color: '#eeeeee' } ]
+      },
+      {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [ { color: '#cce7f0' } ]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text',
+        stylers: [ { visibility: 'off' } ]
+      },
+      {
+        featureType: 'water',
+        elementType: 'labels.text.fill',
+        stylers: [ { color: '#9e9e9e' } ]
+      }
+    ],
+    minZoom: 8
+  }
 
-  lat = 52.155285;
-  lng = 5.387219;
-  minZoom = 7;
 
-  rotateControlOptions = {
-    position: ControlPosition.LEFT_CENTER
-  };
+  mapFeatures: Observable<any>;
 
-  styles = [
-    {
-      elementType: 'geometry',
-      stylers: [ { color: '#cccccc' } ]
-    },
-    {
-      elementType: 'labels.icon',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#000000' } ]
-    },
-    {
-      elementType: 'labels.text.stroke',
-      stylers: [ { color: '#f5f5f5' } ]
-    },
-    {
-      featureType: 'administrative',
-      elementType: 'geometry',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'administrative.country',
-      elementType: 'geometry.stroke',
-      stylers: [ { color: '#000000' }, { visibility: 'on' }, { weight: 0.5 } ]
-    },
-    {
-      featureType: 'administrative.land_parcel',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'administrative.land_parcel',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#bdbdbd' } ]
-    },
-    {
-      featureType: 'administrative.neighborhood',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'landscape.man_made',
-      stylers: [ { color: '#d3b091' } ]
-    },
-    {
-      featureType: 'landscape.natural.terrain',
-      stylers: [ { color: '#b4b4b4' } ]
-    },
-    {
-      featureType: 'poi',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'poi',
-      elementType: 'geometry',
-      stylers: [ { color: '#eeeeee' } ]
-    },
-    {
-      featureType: 'poi',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#757575' } ]
-    },
-    {
-      featureType: 'poi.park',
-      elementType: 'geometry',
-      stylers: [ { color: '#a1c2af' } ]
-    },
-    {
-      featureType: 'poi.park',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#9e9e9e' } ]
-    },
-    {
-      featureType: 'road',
-      elementType: 'geometry',
-      stylers: [ { color: '#d4d8d8' } ]
-    },
-    {
-      featureType: 'road',
-      elementType: 'labels',
-      stylers: [ { visibility: 'on' } ]
-    },
-    {
-      featureType: 'road',
-      elementType: 'labels.icon',
-      stylers: [ { visibility: 'on' } ]
-    },
-    {
-      featureType: 'road.arterial',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#000000' } ]
-    },
-    {
-      featureType: 'road.highway',
-      elementType: 'geometry',
-      stylers: [ { color: '#ecf0f1' } ]
-    },
-    {
-      featureType: 'road.highway',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#000000' } ]
-    },
-    {
-      featureType: 'road.local',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#000000' } ]
-    },
-    {
-      featureType: 'transit',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'transit.line',
-      elementType: 'geometry',
-      stylers: [ { color: '#e5e5e5' } ]
-    },
-    {
-      featureType: 'transit.station',
-      elementType: 'geometry',
-      stylers: [ { color: '#eeeeee' } ]
-    },
-    {
-      featureType: 'water',
-      elementType: 'geometry',
-      stylers: [ { color: '#cce7f0' } ]
-    },
-    {
-      featureType: 'water',
-      elementType: 'labels.text',
-      stylers: [ { visibility: 'off' } ]
-    },
-    {
-      featureType: 'water',
-      elementType: 'labels.text.fill',
-      stylers: [ { color: '#9e9e9e' } ]
-    }
-  ];
-
-  constructor() { }
+  constructor(
+    private workProvider: WorkItemProviderService
+  ) {
+    this.setMapMarkers()
+    this.mapFeatures = merge(
+      this.workProvider.mapWorkItemsSubject,
+      this.geoJsonObjectCars.features
+    )
+  }
 
   setMapMarkers() {
-    const that = this;
     this.geoJsonObjectActive.features = [];
     this.geoJsonObjectCars.features.forEach((feature) => {
       if (feature.active) {
-        that.geoJsonObjectActive.features.push(feature);
+        this.geoJsonObjectActive.features.push(feature);
       }
     });
   }
