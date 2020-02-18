@@ -65,7 +65,7 @@ export class WorkComponent {
           data.geometry, data.project_number,
           data.start_timestamp, data.status,
           data.street, data.task_type,
-          data.zip, data.L2GUID
+          data.zip, data.l2_guid
         ));
       }
     }
