@@ -23,7 +23,7 @@ export abstract class Filter {
     this.field = field;
     this.defaultValue = defaultValue;
     this.value = defaultValue;
-  };
+  }
 
   abstract filterElement(element, index, array): boolean;
 
@@ -59,9 +59,9 @@ export class ValueFilter extends Filter {
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case ValueFilterType.contains:
-        return (element[this.field].toLowerCase().indexOf(this.value.toLowerCase()) !== -1)
+        return (element[this.field].toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
       case ValueFilterType.matches:
-        return (element[this.field].toLowerCase() === this.value.toLowerCase())
+        return (element[this.field].toLowerCase() === this.value.toLowerCase());
       default:
         return true;
     }
@@ -82,11 +82,11 @@ export enum ChoiceFilterType {
 
 export class ChoiceFilter extends Filter  {
 
-  type = ChoiceFilterType.single
+  type = ChoiceFilterType.single;
   options: any[];
   inferOptionsFromList = false;
 
-  constructor(name: string, field: string, type = ChoiceFilterType.single, options: any[] = null, defaultValue = null,) {
+  constructor(name: string, field: string, type = ChoiceFilterType.single, options: any[] = null, defaultValue = null, ) {
     super(name, field, defaultValue);
     if (options == null) {
       this.inferOptionsFromList = true;
@@ -96,7 +96,7 @@ export class ChoiceFilter extends Filter  {
 
     this.type = type;
 
-    if(type === ChoiceFilterType.multiple) {
+    if (type === ChoiceFilterType.multiple) {
       this.value = [];
     }
 
@@ -118,7 +118,7 @@ export class ChoiceFilter extends Filter  {
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
     if (this.inferOptionsFromList) {
-      this.options = originalList.map(value => value[this.field]).filter((v, i, a) => a.indexOf(v) === i)
+      this.options = originalList.map(value => value[this.field]).filter((v, i, a) => a.indexOf(v) === i);
     }
 
     return super.filterList(listToFilter, originalList);
@@ -157,10 +157,10 @@ enum OffsetFilterType {
 
 export class OffsetFilter extends Filter  {
 
-  type: OffsetFilterType = OffsetFilterType.greaterThan
+  type: OffsetFilterType = OffsetFilterType.greaterThan;
 
   filterElement(element, index, array): boolean {
-    switch(this.type) {
+    switch (this.type) {
       case OffsetFilterType.greaterThan:
         return element[this.field] > this.value;
       case OffsetFilterType.lessThan:

@@ -90,8 +90,8 @@ export class HomeComponent implements OnInit {
               }
             }
           }
-          that.featureToMap(result.features, layer);
 
+          that.featureToMap(result.features, layer);
         } else {
           that.featureToMap(result.features, layer);
         }
@@ -103,10 +103,10 @@ export class HomeComponent implements OnInit {
 
     private featureToMap(features, layer) {
       this.mapService.geoJsonObjectCars.features.next(features);
-      this.mapService.geoJsonObjectActive.features.next(features.filter(feature => feature.active))
-
+      this.mapService.geoJsonObjectActive.features.next(features.filter(feature => feature.active));
       this.mapService.geoJsonReady[layer] = true;
-      if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
+
+      if (this.mapService.geoJsonReady.cars) {
         this.mapService.geoJsonReady.map = true;
       }
     }
@@ -115,19 +115,16 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     const carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
-    this.mapService.geoJsonObjectCars.features.next([]);
-    this.mapService.geoJsonObjectActive.features.next([]);
-    this.mapService.geoJsonReady = { map: false, cars: false, work: !this.workItemProviderService.loading };
 
-    this.route.paramMap.subscribe(params => {
-      if (params.get('trackerId')) {
-        if (params.get('trackerId').indexOf('vwt') > -1) {
-          this.mapService.activeTokenId = params.get('trackerId').replace(/-/g, '/');
+    this.route.params.subscribe(params => {
+      if (params.trackerId) {
+        if (params.trackerId.indexOf('vwt') > -1) {
+          this.mapService.activeTokenId.next(params.trackerId.replace(/-/g, '/'));
         } else {
-          this.mapService.activeTokenId = params.get('trackerId');
+          this.mapService.activeTokenId.next(params.trackerId);
         }
       } else {
-        this.mapService.activeTokenId = '';
+        this.mapService.activeTokenId.next('');
       }
     });
 
@@ -138,9 +135,6 @@ export class HomeComponent implements OnInit {
     this.mapGetCars();
 
     setInterval(() => {
-      this.mapService.geoJsonObjectCars.features.next([]);
-      this.mapService.geoJsonObjectActive.features.next([]);
-
       this.mapGetCars();
     }, (5 * 60 * 1000));
   }

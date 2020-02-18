@@ -100,10 +100,10 @@ describe('SnB Planning Tool', () => {
       let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         browser.params.carInfoRow.token = text[0];
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         browser.params.carInfoRow.driverName = text[0];
       });
 
@@ -121,10 +121,10 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.token);
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         expect(text[0]).toContain('Pietje Puk');
       });
     });
@@ -152,10 +152,10 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.token);
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.driverName);
       });
     });

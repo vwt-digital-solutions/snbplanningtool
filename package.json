@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Service en Beheer Planning Tool",
   "author": "VolkerWessels Digital Ambition Team <dat@vwt.digital>",
-  "contributors": {
+  "contributors": [{
     "name": "Daimy van Rhenen",
     "email": "d.vanrhenen@vwt.digital"
-  },
+  }],
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "leaflet.markercluster": "^1.4.1",
     "rxjs": "~6.3.3",
     "snazzy-info-window": "~1.1.1",
-    "tslib": "~1.9.0",
+    "tslib": "^1.10.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

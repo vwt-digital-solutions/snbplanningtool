@@ -37,24 +37,11 @@
   }
 
   .alert {
-    top: 60px;
-    left: 10px;
+    top: 118px;
+    right: 10px;
     position: absolute;
-    z-index: 10;
+    z-index: 10000;
     font-size: 12px;
-  }
-
-  .map-loading {
-    padding: 40px;
-    width: 100%;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 12px;
-    line-height: 12px;
-
-    i {
-      margin-left: 5px;
-    }
   }
 
   #map {

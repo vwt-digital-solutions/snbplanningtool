@@ -71,10 +71,10 @@ export class WorkService {
   }
 
   dateComparator(filterDate, cellValue) {
-    if (cellValue == null) return 0;
+    if (cellValue == null) { return 0; }
 
-    const old_date = new Date(cellValue).setHours(0,0,0,0);
-    const new_date = new Date(filterDate).setHours(0,0,0,0);
+    const old_date = new Date(cellValue).setHours(0, 0, 0, 0);
+    const new_date = new Date(filterDate).setHours(0, 0, 0, 0);
 
     if (old_date < new_date) {
       return -1;
@@ -90,7 +90,6 @@ export class WorkService {
   }
 
   cellTokenLocator(params) {
-    console.log(params)
     if (params.data.geometry && params.value !== '') {
       return '<a href="/kaart/' + params.value + '">Bekijk</a>';
     } else {

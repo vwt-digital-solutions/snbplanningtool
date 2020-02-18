@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
 import {ChoiceFilter, ChoiceFilterType, DateFilter, ValueFilter} from '../modules/filters/filters/filters';
@@ -16,9 +16,9 @@ export class WorkItemProviderService {
   workItemsFeatureCollection: any[] = [];
   loading = true;
 
-  workItemsSubject = new Subject<any[]>();
-  mapWorkItemsSubject = new Subject<any[]>();
-  loadingSubject = new Subject<boolean>();
+  workItemsSubject = new BehaviorSubject<any[]>([]);
+  mapWorkItemsSubject = new BehaviorSubject<any[]>([]);
+  loadingSubject = new BehaviorSubject<boolean>(true);
   errorSubject  = new Subject<any>();
 
   public filterService = new FilterMap(

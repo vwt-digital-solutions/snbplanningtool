@@ -177,6 +177,7 @@ export class CarsComponent {
 
   private handleError(error) {
     this.buttonSaveInner = 'Er is een fout opgetreden';
+    console.error(error);
     return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { WorkItemProviderService } from './work-item-provider.service';
-import { Observable, Subject, merge } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  geoJsonObjectCars: any = { features: new Subject<any[]>(), type: 'FeatureCollection'};
-  geoJsonObjectActive: any = { features: new Subject<any[]>(), type: 'FeatureCollection'};
+  geoJsonObjectCars = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
+  geoJsonObjectActive = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
+  activeTokenId = new BehaviorSubject<string>(null);
 
   geoJsonReady = {
     map: false,
@@ -16,15 +17,13 @@ export class MapService {
     work: false
   };
 
-  activeTokenId: string;
-
   refreshUpdate: number;
   refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass = false;
-  
+
   iconUrlCar = 'assets/images/car-location.png';
   iconUrlWork = 'assets/images/work-location.png';
-  
+
   markerLayer = {
     cars: true,
     work: true
@@ -175,29 +174,19 @@ export class MapService {
       }
     ],
     minZoom: 8,
-    maxZoom: 15,
     disableClusteringAtZoom: 15
-  }
+  };
 
-
-  mapFeatures: Observable<any>;
-
-  constructor(
-    private workProvider: WorkItemProviderService
-  ) {
-    this.setMapMarkers()
-    this.mapFeatures = merge(
-      this.workProvider.mapWorkItemsSubject,
-      this.geoJsonObjectCars.features
-    )
+  constructor() {
+    this.setMapMarkers();
   }
 
   setMapMarkers() {
     this.geoJsonObjectActive.features.next([]);
-    this.geoJsonObjectCars.features.forEach((feature) => {
-      if (feature.active) {
-        this.geoJsonObjectActive.features.push(feature);
-      }
-    });
+    this.geoJsonObjectCars.features
+      .pipe(
+        map(features => features.filter(feature => feature.active))
+      )
+      .subscribe(features => this.geoJsonObjectActive.features.next(features));
   }
 }
