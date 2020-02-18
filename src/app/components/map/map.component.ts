@@ -4,7 +4,7 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { MapService } from 'src/app/services/map.service';
 
 import { WorkItemProviderService } from '../../services/work-item-provider.service';
-import { Layer } from '../../models/layer';
+import { Layer } from '../../models/layer';
 
 import 'leaflet/dist/images/marker-shadow.png';
 import * as L from 'leaflet';
@@ -37,7 +37,7 @@ export class MapComponent implements AfterViewInit {
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public workProvider: WorkItemProviderService,
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -76,7 +76,7 @@ export class MapComponent implements AfterViewInit {
     this.map.addLayer(this.parentCluster);
 
     this.addWorkSubGroup(),
-    this.addCarSubGroup();
+      this.addCarSubGroup();
   }
 
   private addWorkSubGroup(): void {
@@ -181,8 +181,8 @@ export class MapComponent implements AfterViewInit {
         </div>
         <div class="col-6 item date">
           <p>Einddatum</p>
-          <span> ${ end_time[0]  || '-'}</span>
-          <span> ${ end_time[1]  || '-'}</span>
+          <span> ${ end_time[0] || '-'}</span>
+          <span> ${ end_time[1] || '-'}</span>
         </div>
       </div>`);
 
@@ -385,18 +385,18 @@ export class MapComponent implements AfterViewInit {
     } else {
       let mapIntervalCount = 0;
       const mapInterval = setInterval(((self) => {
-          return () => {
-            if (self.mapService.geoJsonReady.map) {
-              clearInterval(mapInterval);
-              self.mapIsReady();
-            }
-            if (mapIntervalCount >= 8) {
-              clearInterval(mapInterval);
-              self.mapService.refreshStatus = 'Er is een fout opgetreden.';
-            }
-            mapIntervalCount++;
-          };
-        })(this), 1000);
+        return () => {
+          if (self.mapService.geoJsonReady.map) {
+            clearInterval(mapInterval);
+            self.mapIsReady();
+          }
+          if (mapIntervalCount >= 8) {
+            clearInterval(mapInterval);
+            self.mapService.refreshStatus = 'Er is een fout opgetreden.';
+          }
+          mapIntervalCount++;
+        };
+      })(this), 1000);
     }
   }
 
