@@ -118,7 +118,9 @@ export class MapComponent implements AfterViewInit {
         </div>
         <div class="col-12 item license_plate">
           <p>Kentekenplaat</p>
-          <span class="license-plate license-nl">${feature['properties']['license_plate'] || 'N/B'}</span>
+          <div class="license-plate license-nl">
+            <span>${feature['properties']['license_plate'] || 'N/B'}</span>
+          </div>
         </div>
       </div>`;
   }

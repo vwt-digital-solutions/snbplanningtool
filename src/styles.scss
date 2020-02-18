@@ -16,6 +16,8 @@ $fa-font-path: "/assets/fonts/font-awesome";
 @import "~leaflet.markercluster/dist/MarkerCluster.css";
 @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
 
+@import "./assets/scss/leaflet-styles.scss";
+
 @font-face {
   font-family: "license-plate";
   src: url('assets/fonts/license-plate/license-plate.eot');
@@ -58,6 +60,7 @@ h1{
       box-shadow: none !important;
 
       -webkit-transition: background-color .5s;
+      transition: background-color .5s;
     }
     label{
       font-family: 'Poppins', sans-serif !important;
@@ -77,16 +80,18 @@ h1{
   }
 }
 
-.license-plate{
+.license-plate {
+  display: flex;
+  align-items: center;
   border: 1px solid #000;
   border-radius: 3px;
   box-sizing: border-box;
-  height: 30px;
+  height: 24px;
   font-family: 'License Plate', Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: normal;
-  max-width: 120px;
+  width: max-content;
   padding: 2px 5px 2px 12.5px;
   text-transform: uppercase;
   -webkit-transition: background-color .3s ease, text-shadow .3s ease;
@@ -98,77 +103,23 @@ h1{
 
   &.license-nl{
     background: #f2ba00 url('assets/images/license-plate-nl.svg') no-repeat top left;
-    color: #222;
-    text-shadow: 1px 1px #ffe153;
+
+    span {
+      color: #222 !important;
+      text-shadow: 1px 1px #ffe153 !important;
+      display: inline !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      padding: 0 !important;
+      margin: 5px !important;
+
+      &:focus {
+        text-shadow: 0 0 #ffe153 !important;
+      }
+    }
 
     &:focus {
       background-color: #ffc70d;
-      text-shadow: 0 0 #ffe153;
     }
   }
 
-}
-
-.marker-car, .marker-work {
-  span {
-    background-color: #008bb8;
-    border-radius: 5px;
-    display: inline-block;
-    color: white;
-    box-sizing: border-box;
-    padding: 5px;
-    margin-bottom: 5px;
-
-    &.license-nl {
-      padding: 0;
-      margin-bottom: 0;
-    }
-  }
-}
-
-// Leaflet Styling
-.cluster {
-  text-align: center;
-  color: white;
-  background-position: -1px 0;
-
-  &.size-1 {
-    background-image: url('assets/images/clusters/m1.png');
-    line-height: 53px;
-  }
-  
-  &.size-2 {
-    background-image: url('assets/images/clusters/m2.png');
-    line-height: 56px;
-  }
-  
-  &.size-3 {
-    background-image: url('assets/images/clusters/m3.png');
-    line-height: 66px;
-  }
-  
-  &.size-4 { 
-    background-image: url('assets/images/clusters/m4.png');
-    line-height: 78px;
-  }
-  
-  &.size-5 {
-    background-image: url('assets/images/clusters/m5.png');
-    line-height: 90px;
-  }
-}
-
-.resetzoom-btn {
-    background-color: #fff;
-    border-bottom: 1px solid #ccc;
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    color: black;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    border-radius: 4px;
-    cursor: pointer;
 }
