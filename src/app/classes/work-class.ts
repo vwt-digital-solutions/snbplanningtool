@@ -11,6 +11,6 @@ export class WorkClass {
     public street: string,
     public task_type: string,
     public zip: string,
-    public l2_guid: string
+    public L2GUID: string
   ) {}
 }
