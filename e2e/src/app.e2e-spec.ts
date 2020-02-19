@@ -57,7 +57,7 @@ describe('SnB Planning Tool', () => {
 
         request(options, (error, message) => {
           if (error || message.statusCode >= 400) {
-            defer.reject({ error, message });
+            defer.reject(message);
           } else {
             defer.fulfill(message);
           }
@@ -79,8 +79,8 @@ describe('SnB Planning Tool', () => {
       browser.get('/');
       browser.sleep(30000);
 
-      const mapContainer = element(by.css('.sebm-google-map-container'));
-      const imageCount = mapContainer.all(by.tagName('agm-marker')).count();
+      const mapContainer = element(by.css('#map'));
+      const imageCount = mapContainer.all(by.css('.leaflet-marker-icon.cluster')).count();
       expect(imageCount).toBeGreaterThan(0);
     });
 
