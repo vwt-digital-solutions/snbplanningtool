@@ -76,8 +76,42 @@
   }
 }
 
-/* Custom map styles */
+.div-icon-leaflet {
+  background: none;
+  border: 0;
+  height: 33px !important;
+  width: 30px !important;
+  
+  div {
+    height: inherit;
+    width: inherit;
+    background-position: -1px 0;
+    display: flex;
+    justify-content: center;
+  
+    span {
+      &:before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        border-radius: 50%;
+      }
 
+      color: black;
+      text-align: center;
+      position: relative;
+      height: max-content;
+      left: 40px;
+      background-color: #fff;
+      padding: 4px;
+      border-radius: 3px;
+    }
+  }
+}
+
+
+/* Custom map styles */
 // Cluster styling
 .cluster {
   text-align: center;

@@ -233,47 +233,87 @@ export class MapComponent implements AfterViewInit {
     return html.join('');
   }
 
-  private getCorrespondingIcon(layer: Layer): L.icon {
+  private getCorrespondingIconUrl(layer: Layer): string {
     const iconPath = '../../../assets/images';
     const iconUrl = layer === 'cars' ?
       `${iconPath}/car-location.png` :
       `${iconPath}/work-location.png`;
 
-    return L.icon({
-      iconUrl,
-      iconSize: [32, 33],
-      iconAnchor: null,
-      popupAnchor: [0, 0]
+    return iconUrl
+  }
+
+  private createWorkMarker(feature: any, options: any, coordinates: number[]): L.marker {
+    const icon = this.getCorrespondingIconUrl('work')
+    const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), {
+      ...options.marker,
+      icon: new L.Icon({
+        ...options.icon,
+        iconUrl: icon
+      })
     });
+
+    const popupOptions = {
+      maxWidth: 600,
+      minWidth: 400,
+    };
+    marker.bindPopup(this.createWorkPopup(feature), popupOptions);
+
+    return marker;
+  }
+
+  private createCarMarker(feature: any, options: any, coordinates: number[]): L.marker {
+    const iconUrl = this.getCorrespondingIconUrl('cars')
+    let icon;
+
+    if (feature.properties && feature.properties.driver_name) {
+      icon = new L.divIcon({
+        html: `
+          <div style="background-image: url(${iconUrl})">
+            <span>${ feature.properties.driver_name}</span>
+          </div>
+        `,
+        className: 'div-icon-leaflet',
+        ...options.icon
+      })
+    } else {
+      icon = new L.Icon({
+        ...options.icon,
+        iconUrl: iconUrl
+      })
+    }
+
+    const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), {
+      ...options.marker,
+      icon: icon
+    });
+
+    const popupOptions = {
+      maxWidth: 300,
+      minWidth: 200,
+    };
+    marker.bindPopup(this.createCarPopup(feature), popupOptions);
+
+    return marker;
   }
 
   private createMarker(feature: any): L.marker {
     const coordinates = feature.geometry.coordinates;
-
     const options = {
-      icon: this.getCorrespondingIcon(feature.layer)
+      marker: {
+        keyboard: false,
+      },
+      icon: {
+        iconSize: [32, 33],
+        iconAnchor: null,
+        popupAnchor: [0, 0]
+      }
     };
 
-    const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), options);
-
-    if (feature.layer === 'cars') {
-      const popupOptions = {
-        maxWidth: 300,
-        minWidth: 200,
-      };
-      marker.bindPopup(this.createCarPopup(feature), popupOptions);
+    if (feature.layer == 'cars') {
+      return this.createCarMarker(feature, options, coordinates)
+    } else if (feature.layer == 'work') {
+      return this.createWorkMarker(feature, options, coordinates)
     }
-
-    if (feature.layer === 'work') {
-      const popupOptions = {
-        maxWidth: 600,
-        minWidth: 400,
-        className: ''
-      };
-      marker.bindPopup(this.createWorkPopup(feature), popupOptions);
-    }
-
-    return marker;
   }
 
   private addLayerButton(layer, name) {
@@ -330,6 +370,10 @@ export class MapComponent implements AfterViewInit {
 
   private initMap(): void {
     this.map = L.map('map', {
+      preferCanvas: true,
+      // zoomAnimation: false, // If the map ever ends up lagging disable zoom animations entirely (zoomAnimationThreshold could then be removed)
+      zoomAnimationThreshold: 1,
+      markerZoomAnimation: false,
       center: [
         this.mapService.config.defaults.lat,
         this.mapService.config.defaults.lng
