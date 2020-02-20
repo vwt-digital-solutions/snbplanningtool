@@ -43,7 +43,7 @@ export class WorkService {
         },
         {
           headerName: 'Locatie',
-          field: 'l2_guid',
+          field: 'L2GUID',
           cellRenderer: this.cellTokenLocator,
           sortable: false,
           filter: false,

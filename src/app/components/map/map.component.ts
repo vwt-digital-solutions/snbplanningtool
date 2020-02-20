@@ -362,7 +362,7 @@ export class MapComponent implements AfterViewInit {
         ),
         // Find features with this tokenId
         map(([activeTokenId, cars, work]) => [...cars, ...work].filter(feature =>
-          (feature.properties.token === activeTokenId || feature.properties.l2_guid === activeTokenId))
+          (feature.properties.token === activeTokenId || feature.properties.L2GUID === activeTokenId))
         ),
       )
       .subscribe(features => {
