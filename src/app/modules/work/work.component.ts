@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { WorkService } from 'src/app/services/work.service';
 
 import { WorkClass } from 'src/app/classes/work-class';
+import {WorkItemProviderService} from '../../services/work-item-provider.service';
 
 @Component({
   selector: 'app-work',
@@ -16,42 +17,61 @@ export class WorkComponent {
   buttonExport = 'Exporten naar Excel';
   callProcessing: string;
 
+  workItems = [];
+  gridReady = false;
+  grid;
+
   constructor(
-    private apiService: ApiService,
-    public workService: WorkService
-  ) { }
+    public workService: WorkService,
+    public workItemProviderService: WorkItemProviderService
+  ) {
+
+    this.callProcessing = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
+
+    this.workItems = workItemProviderService.filteredWorkItems;
+
+    workItemProviderService.workItemsSubject.subscribe(
+      value => {
+        this.workItems = value;
+        this.workItemsToGrid();
+      }
+    );
+
+  }
 
   onBtExport() {
     this.workService.gridOptions.api.exportDataAsExcel();
   }
 
   onGridReady(event: any) {
-    this.callProcessing = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
-    this.apiService.apiGet('/workitems/all').subscribe(
-      result => {
-        const rowData = [];
+    this.gridReady = true;
+    this.grid = event;
+    this.workItemsToGrid();
+  }
 
-        for (const row in result) {
-          if (result.hasOwnProperty(row)) {
-            const data = result[row];
-            rowData.push(new WorkClass(
-              data.city, data.description,
-              data.employee_name, data.end_timestamp,
-              data.geometry, data.project_number,
-              data.start_timestamp, data.status,
-              data.street, data.task_type,
-              data.zip, data.L2GUID
-            ));
-          }
-        }
+  workItemsToGrid() {
+    if (!this.gridReady) {
+      return;
+    }
 
-        event.api.setRowData(rowData);
-        this.callProcessing = '';
-      },
-      error => {
-        this.handleError(error);
+    const rowData = [];
+
+    for (const row in this.workItems) {
+      if (this.workItems.hasOwnProperty(row)) {
+        const data = this.workItems[row];
+        rowData.push(new WorkClass(
+          data.city, data.description,
+          data.employee_name, data.end_timestamp,
+          data.geometry, data.project_number,
+          data.start_timestamp, data.status,
+          data.street, data.task_type,
+          data.zip, data.L2GUID
+        ));
       }
-    );
+    }
+
+    this.grid.api.setRowData(rowData);
+    this.callProcessing = '';
   }
 
   private handleError(error) {

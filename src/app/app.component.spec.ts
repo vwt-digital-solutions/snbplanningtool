@@ -10,6 +10,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Component } from '@angular/core';
 
+@Component({
+  selector: 'app-header',
+  template: ''
+})
+class MockHeaderComponent { }
+
+@Component({
+  selector: 'router-outlet',
+  template: ''
+})
+class MockRouterOutlet { }
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -44,15 +56,3 @@ describe('AppComponent', () => {
     expect(component).toBeDefined();
   });
 });
-
-@Component({
-  selector: 'app-header',
-  template: ''
-})
-class MockHeaderComponent {}
-
-@Component({
-  selector: 'router-outlet',
-  template: ''
-})
-class MockRouterOutlet {}

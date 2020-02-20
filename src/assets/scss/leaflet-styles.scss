@@ -1,0 +1,156 @@
+/* Leaflet Overrides */
+// Leaflet popup close button override
+.leaflet-popup-close-button {
+  right: -24px !important;
+  padding: 12px !important;
+  color: black !important;
+  background: rgba(0,0,0,.4) !important;
+  border-radius: 0 3px 3px 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Pull layer buttons closer to border of screen
+.leaflet-control-layers-expanded {
+  padding: 0 !important;
+}
+
+// Leaflet marker popup styling override
+.leaflet-popup-content-wrapper {
+  border-radius: 3px 0 3px 3px;
+  
+  .leaflet-popup-content {
+    margin: 10px;
+  
+    p {
+      margin: .33rem 0;
+    }
+  
+    .row {
+      padding: 0 5px;
+      border-radius: 5px;
+    }
+  }
+}
+
+// Layer control override
+.leaflet-control-layers {
+  background-color: rgba(0, 0, 0, 0);
+  box-shadow: none;
+  margin: 0;
+
+  label {
+    display: inline-block !important;
+    padding: 8px 15px;
+    margin: 5px;
+
+    div input[type='checkbox'] {
+      visibility: hidden;
+
+      &:before {
+        content:"";
+        visibility: visible;
+        display:inline-block;
+        width: 3px;
+        height: 34px;
+        border-radius: 3px 0 0 3px;
+        top: -12px;
+        left: -15px;
+        background: red;
+        position: absolute;
+      }
+      &:checked {
+        &:before {
+          visibility: visible;
+          background-color: green;
+        }
+      }
+    }
+
+    div span {
+      user-select: none;
+      position: relative;
+      left: -12px;
+    }
+  }
+}
+
+/* Custom map styles */
+
+// Cluster styling
+.cluster {
+  text-align: center;
+  color: white;
+  background-position: -1px 0;
+
+  &.size-1 {
+    background-image: url('assets/images/clusters/m1.png');
+    line-height: 53px;
+  }
+  
+  &.size-2 {
+    background-image: url('assets/images/clusters/m2.png');
+    line-height: 56px;
+  }
+  
+  &.size-3 {
+    background-image: url('assets/images/clusters/m3.png');
+    line-height: 66px;
+  }
+  
+  &.size-4 { 
+    background-image: url('assets/images/clusters/m4.png');
+    line-height: 78px;
+  }
+  
+  &.size-5 {
+    background-image: url('assets/images/clusters/m5.png');
+    line-height: 90px;
+  }
+}
+
+// Colors for map ui elements such as buttons and layer controls
+.map-ui-element, .leaflet-control-layers label {
+  border-radius: 3px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.847);
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;;
+  background-color: #fff;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+
+  &.zoom-btns {
+    height: 80px;
+    width: 40px;
+    z-index: 1000;
+  }
+}
+
+// Default sizes for buttons on the map
+.map-btn {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  font-size: 18px;
+}
+
+// Popup styling
+.marker-car, .marker-work {
+  span {
+    background-color: #008bb8;
+    border-radius: 5px;
+    display: inline-block;
+    color: white;
+    box-sizing: border-box;
+    padding: 5px;
+    margin-bottom: 5px;
+
+    &.license-nl {
+      padding: 0;
+      margin-bottom: 0;
+
+    }
+  }
+}

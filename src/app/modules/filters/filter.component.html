@@ -1,0 +1,8 @@
+<div class="filter-container">
+  <h1  class="mb-3">
+    Werk filteren
+  </h1>
+  <div *ngFor="let filter of workItemProviderService.filterService.filters">
+    <app-filter-input [filter]="filter"></app-filter-input>
+  </div>
+</div>

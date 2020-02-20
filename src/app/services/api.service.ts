@@ -20,8 +20,7 @@ export class ApiService {
   }
 
   public apiGetCarsInfo() {
-    const requestUrl = this.env.apiUrl + '/carsinfo';
-    this.httpClient.get(requestUrl).subscribe(
+    this.apiGet('/carsinfo').subscribe(
       result => {
         const rowData = [];
         const newCarInfo = new Object();
@@ -29,7 +28,7 @@ export class ApiService {
         for (const row in result) {
           if (result.hasOwnProperty(row)) {
             const data = result[row];
-            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
+            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.driver_skill, data.token));
           }
         }
 

@@ -53,6 +53,10 @@ export class CarsComponent {
     this.buttonSaveInner = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
     this.editedColumns.forEach((item) => {
+      if (item.driver_skill == null) {
+        item.driver_skill = '';
+      }
+
       that.apiService.postCarInfo(item).subscribe(
         result => {
           let newRow = [];
@@ -147,7 +151,7 @@ export class CarsComponent {
           for (const row in result) {
             if (result.hasOwnProperty(row)) {
               const data = result[row];
-              rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.token));
+              rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.driver_skill, data.token));
             }
           }
 
@@ -173,6 +177,7 @@ export class CarsComponent {
 
   private handleError(error) {
     this.buttonSaveInner = 'Er is een fout opgetreden';
+    console.error(error);
     return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

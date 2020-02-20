@@ -57,7 +57,7 @@ describe('SnB Planning Tool', () => {
 
         request(options, (error, message) => {
           if (error || message.statusCode >= 400) {
-            defer.reject({ error, message });
+            defer.reject(message);
           } else {
             defer.fulfill(message);
           }
@@ -75,13 +75,20 @@ describe('SnB Planning Tool', () => {
       });
     });
 
-    it('should show more than 0 location(s)', () => {
+    it('should load the map and create clusters', () => {
       browser.get('/');
-      browser.sleep(30000);
+      browser.sleep(15000);
 
-      const mapContainer = element(by.css('.sebm-google-map-container'));
-      const imageCount = mapContainer.all(by.tagName('agm-marker')).count();
-      expect(imageCount).toBeGreaterThan(0);
+      const clusters = element.all(by.css('.cluster')).count();
+      expect(clusters).toBeGreaterThan(0);
+    })
+
+    it('should show more than 0 location(s)', () => {
+      browser.get('/werk');
+      browser.sleep(2000);
+
+      const workRows = element.all(by.css('.ag-row')).count();
+      expect(workRows).toBeGreaterThan(0);
     });
 
     it('should show more than 0 carInfo rows', () => {
@@ -100,10 +107,10 @@ describe('SnB Planning Tool', () => {
       let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         browser.params.carInfoRow.token = text[0];
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         browser.params.carInfoRow.driverName = text[0];
       });
 
@@ -121,10 +128,10 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.token);
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         expect(text[0]).toContain('Pietje Puk');
       });
     });
@@ -152,10 +159,10 @@ describe('SnB Planning Tool', () => {
       firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
       firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
 
-      firstRowTokenColumn.getText().then(function (text) {
+      firstRowTokenColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.token);
       });
-      firstRowDriverColumn.getText().then(function (text) {
+      firstRowDriverColumn.getText().then((text) => {
         expect(text[0]).toContain(browser.params.carInfoRow.driverName);
       });
     });

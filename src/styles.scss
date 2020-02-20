@@ -12,6 +12,11 @@ $fa-font-path: "/assets/fonts/font-awesome";
 @import "/assets/fontawesome/scss/solid.scss";
 @import "/assets/fontawesome/scss/brands.scss";
 
+@import "~leaflet/dist/leaflet.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+@import "./assets/scss/leaflet-styles.scss";
 
 @font-face {
   font-family: "license-plate";
@@ -55,6 +60,7 @@ h1{
       box-shadow: none !important;
 
       -webkit-transition: background-color .5s;
+      transition: background-color .5s;
     }
     label{
       font-family: 'Poppins', sans-serif !important;
@@ -74,15 +80,18 @@ h1{
   }
 }
 
-.license-plate{
+.license-plate {
+  display: flex;
+  align-items: center;
   border: 1px solid #000;
   border-radius: 3px;
   box-sizing: border-box;
+  height: 24px;
   font-family: 'License Plate', Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: normal;
-  max-width: 120px;
+  width: max-content;
   padding: 2px 5px 2px 12.5px;
   text-transform: uppercase;
   -webkit-transition: background-color .3s ease, text-shadow .3s ease;
@@ -94,12 +103,22 @@ h1{
 
   &.license-nl{
     background: #f2ba00 url('assets/images/license-plate-nl.svg') no-repeat top left;
-    color: #222;
-    text-shadow: 1px 1px #ffe153;
+
+    span {
+      color: #222 !important;
+      text-shadow: 1px 1px #ffe153 !important;
+      display: inline !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+      padding: 0 !important;
+      margin: 5px !important;
+
+      &:focus {
+        text-shadow: 0 0 #ffe153 !important;
+      }
+    }
 
     &:focus {
       background-color: #ffc70d;
-      text-shadow: 0 0 #ffe153;
     }
   }
 
