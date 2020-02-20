@@ -15,7 +15,6 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     this.oauthService.tryLogin()
       .catch(err => {
-        console.error(err);
       })
       .then(() => {
         if (!this.oauthService.hasValidAccessToken()) {
