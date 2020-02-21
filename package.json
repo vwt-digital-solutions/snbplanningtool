@@ -47,6 +47,7 @@
     "leaflet.featuregroup.subgroup": "^1.0.2",
     "leaflet.gridlayer.googlemutant": "^0.8.0",
     "leaflet.markercluster": "^1.4.1",
+    "moment": "^2.24.0",
     "rxjs": "~6.3.3",
     "snazzy-info-window": "~1.1.1",
     "tslib": "^1.10.0",
