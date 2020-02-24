@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "description": "Service en Beheer Planning Tool",
   "author": "VolkerWessels Digital Ambition Team <dat@vwt.digital>",
-  "contributors": [{
-    "name": "Daimy van Rhenen",
-    "email": "d.vanrhenen@vwt.digital"
-  }],
+  "contributors": [
+    {
+      "name": "Daimy van Rhenen",
+      "email": "d.vanrhenen@vwt.digital"
+    }
+  ],
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
@@ -45,6 +47,7 @@
     "leaflet.featuregroup.subgroup": "^1.0.2",
     "leaflet.gridlayer.googlemutant": "^0.8.0",
     "leaflet.markercluster": "^1.4.1",
+    "moment": "^2.24.0",
     "rxjs": "~6.3.3",
     "snazzy-info-window": "~1.1.1",
     "tslib": "^1.10.0",
@@ -67,7 +70,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "~0.2.2",
-    "protractor": "~5.4.0",
+    "protractor": "^5.4.2",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"

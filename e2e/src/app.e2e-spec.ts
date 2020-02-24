@@ -75,13 +75,20 @@ describe('SnB Planning Tool', () => {
       });
     });
 
-    it('should show more than 0 location(s)', () => {
+    it('should load the map and create clusters', () => {
       browser.get('/');
-      browser.sleep(30000);
+      browser.sleep(15000);
 
-      const mapContainer = element(by.css('#map'));
-      const imageCount = mapContainer.all(by.css('.leaflet-marker-icon.cluster')).count();
-      expect(imageCount).toBeGreaterThan(0);
+      const clusters = element.all(by.css('.cluster')).count();
+      expect(clusters).toBeGreaterThan(0);
+    })
+
+    it('should show more than 0 location(s)', () => {
+      browser.get('/werk');
+      browser.sleep(2000);
+
+      const workRows = element.all(by.css('.ag-row')).count();
+      expect(workRows).toBeGreaterThan(0);
     });
 
     it('should show more than 0 carInfo rows', () => {
