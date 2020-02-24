@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import { OAuthService } from 'angular-oauth2-oidc';
 import { AuthRoleService } from 'src/app/services/auth-role.service';
@@ -15,6 +15,9 @@ export class HeaderComponent {
     private oauthService: OAuthService,
     public authRoleService: AuthRoleService
   ) {}
+
+  @Input() showSidebar: boolean;
+  @Output() onSidebarButtonClicked: EventEmitter<any> = new EventEmitter();
 
   logout() {
     this.oauthService.logOut();
