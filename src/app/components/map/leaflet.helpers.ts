@@ -33,16 +33,23 @@ function getCorrespondingIconUrl(layer: Layer): string {
 
 function featureUrgencyClass(feature: any): string {
   const shouldResolveTime = feature.properties.resolve_before_timestamp;
-  const then = moment(shouldResolveTime, 'YYYY-MM-DD');
+  const then = moment(shouldResolveTime, moment.ISO_8601);
+
+  if (feature.properties.status.toLowerCase() !== 'te plannen'.toLowerCase()) {
+    return '';
+  }
 
   if (then.isValid()) {
-    if (moment().isBefore(then)) {
-      return 'urgent';
-    } else {
+    if (moment().add(1, 'days').isBefore(then)) {
+      console.log(shouldResolveTime + ' on-schedule');
       return 'on-schedule';
+    } else {
+      console.log(shouldResolveTime + ' urgent');
+      return 'urgent';
     }
   }
 
+  console.log('invalid');
   return '';
 }
 
