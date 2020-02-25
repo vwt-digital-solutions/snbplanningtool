@@ -41,15 +41,12 @@ function featureUrgencyClass(feature: any): string {
 
   if (then.isValid()) {
     if (moment().add(1, 'days').isBefore(then)) {
-      console.log(shouldResolveTime + ' on-schedule');
       return 'on-schedule';
     } else {
-      console.log(shouldResolveTime + ' urgent');
       return 'urgent';
     }
   }
-
-  console.log('invalid');
+  
   return '';
 }
 
