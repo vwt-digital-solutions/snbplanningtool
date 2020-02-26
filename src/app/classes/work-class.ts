@@ -1,5 +1,10 @@
 export class WorkClass {
   constructor(
+    public administration: string,
+    public category: string,
+    public resolve_before_timestamp: string,
+    public stagnation: boolean,
+    public project: string,
     public city: string,
     public description: string,
     public employee_name: string,

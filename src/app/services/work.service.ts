@@ -14,10 +14,24 @@ export class WorkService {
     const that = this;
     this.gridOptions = {
       columnDefs: [
-        { headerName: 'Projectnummer', field: 'project_number', pinned: 'left', width: 100 },
+        { headerName: 'Administratie (klantteam)', field: 'administration', pinned: 'left', width: 200 },
         { headerName: 'Status', field: 'status', pinned: 'left', width: 100 },
+        { headerName: 'Categorie', field: 'category', width: 100 },
+        { headerName: 'Projectnummer', field: 'project_number', width: 100 },
+        { headerName: 'Project', field: 'project', width: 100 },
+        {
+          headerName: 'Uiterstehersteltijd',
+          field: 'resolve_before_timestamp',
+          cellRenderer: this.dateRenderer,
+          filter: 'agDateColumnFilter',
+          filterParams: { comparator: this.dateComparator }
+        },
         { headerName: 'Taaktype', field: 'task_type' },
         { headerName: 'Beschrijving', field: 'description' },
+        { headerName: 'Stagnatie', field: 'stagnation',
+          editable: false,
+          cellRenderer: this.boolRenderer,
+        },
         {
           headerName: 'Startdatum',
           field: 'start_timestamp',
@@ -87,6 +101,10 @@ export class WorkService {
 
   dateRenderer(params) {
     return (params.value ? formatDate(params.value, 'dd-MM-yyyy hh:mm', 'nl') : '');
+  }
+
+  boolRenderer(params) {
+    return `<input type='checkbox' disabled="true" ${params.value ? 'checked' : ''} />`;
   }
 
   cellTokenLocator(params) {

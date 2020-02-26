@@ -205,47 +205,76 @@ function createWorkPopup(feature): string {
   const properties = feature.properties;
   let start_time = null;
   let end_time = null;
+  let resolve_before_time = null;
   let html = [
     `<div class="row popup-work no-gutters">`,
     `<div class="col-12 marker-work-inner">`
   ];
 
   if ('start_timestamp' in properties) {
-    start_time = new Date(properties.start_timestamp).toLocaleString().split(',');
+    const momentDate = moment(properties.start_timestamp)
+    start_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : '-';
   }
 
   if ('end_timestamp' in properties) {
-    end_time = new Date(properties.end_timestamp).toLocaleString().split(',');
+    const momentDate = moment(properties.end_timestamp)
+    end_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : '-';
+  }
+
+  if ('end_timestamp' in properties) {
+    const momentDate = moment(properties.resolve_before_timestamp)
+    resolve_before_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm') ] : '-';
   }
 
   html.push(`
     <div class="row">
-      <div class="col-4 item project_number">
+      <div class="col-6 item administration">
+        <p>Administratie</p>
+        <span> ${properties.administration || '-'}</span>
+      </div>
+      <div class="col-6 item task_type">
+        <p>Taaktype</p>
+        <span> ${properties.task_type || '-'}</span>
+      </div>
+      <div class="col-6 item project">
+        <p>Project</p>
+        <span> ${properties.project || '-'}</span>
+      </div>
+      <div class="col-6 item project_number">
         <p>Projectnummer</p>
         <span> ${properties.project_number || '-'}</span>
       </div>
-      <div class="col-4 item task_type">
-        <p>Taaktype</p>
-        <span> ${properties.task_type || '-'}</span>
+      <div class="col-4 item category">
+        <p>Categorie</p>
+        <span> ${properties.category || '-'}</span>
       </div>
       <div class="col-4 item status">
         <p>Status</p>
         <span> ${properties.status || '-'}</span>
       </div>
+      <div class="col-4 item stagnation">
+        <p>Stagnatie</p>
+        <span> ${properties.stagnation ? 'Ja' : 'Nee'}</span>
+      </div>
     </div>
 
     <div class="row">
-      <div class="col-12 item description">
+      <div class="col-6 item description">
         <p>Beschrijving</p>
         <span> ${properties.description || '-'}</span>
+      </div>
+      <div class="col-6 item description">
+        <p>Uiterste hersteltijd</p>
+        <span> ${ resolve_before_time[0] || '-'}</span>
+        <span> ${ resolve_before_time[1] || '-'}</span>
       </div>
     </div>
 
     <div class="row">
       <div class="col-6 item date">
         <p>Startdatum</p>
-        <span> ${ start_time[0] || 'N/B'}</span>
-        <span> ${ start_time[1] || 'N/B'}</span>
+        <span> ${ start_time[0] || '-'}</span>
+        <span> ${ start_time[1] || '-'}</span>
       </div>
       <div class="col-6 item date">
         <p>Einddatum</p>
@@ -257,30 +286,31 @@ function createWorkPopup(feature): string {
   if (properties.city || properties.zip || properties.street) {
     const locationProperties = ['<div class="row">'];
 
-    // Add city
-    locationProperties.push(`
-        <div class="col-4 item city">
-          <p>Plaats</p>
-          <span> ${properties.city || 'N/B'}</span>
-        </div>`);
+    // If exists add street
+    if (properties.street) {
+      locationProperties.push(`
+          <div class="col-6 item street">
+            <p>Straat</p>
+            <span> ${properties.street} ${properties.house || ''} ${properties.extra || ''}</span>
+          </div>`);
+    }
 
     // If exists add zip
     if (properties.zip) {
       locationProperties.push(`
-          <div class="col-4 item zip">
+          <div class="col-3 item zip">
             <p>Postcode</p>
             <span> ${properties.zip}</span>
           </div>`);
     }
 
-    // If exists add street
-    if (properties.street) {
-      locationProperties.push(`
-          <div class="col-4 item street">
-            <p>Straat</p>
-            <span> ${properties.street}</span>
-          </div>`);
-    }
+    // Add city
+    locationProperties.push(`
+        <div class="col-3 item city">
+          <p>Plaats</p>
+          <span> ${properties.city || 'N/B'}</span>
+        </div>`);
+
     locationProperties.push('</div>');
 
     // If exists add employee name

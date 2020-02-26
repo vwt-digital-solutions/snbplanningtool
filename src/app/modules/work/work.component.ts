@@ -60,6 +60,8 @@ export class WorkComponent {
       if (this.workItems.hasOwnProperty(row)) {
         const data = this.workItems[row];
         rowData.push(new WorkClass(
+          data.administration, data.category, data.resolve_before_timestamp,
+          data.stagnation, data.project,
           data.city, data.description,
           data.employee_name, data.end_timestamp,
           data.geometry, data.project_number,
