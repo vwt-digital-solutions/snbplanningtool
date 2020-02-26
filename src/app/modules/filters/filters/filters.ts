@@ -207,7 +207,6 @@ export class DateFilter extends Filter  {
 
   fromDate = null;
   toDate = null;
-  value: moment[] = [null, null];
 
   dateChanged(dateField, date: NgbDate) {
     this[dateField] = date;
@@ -225,11 +224,14 @@ export class DateFilter extends Filter  {
       return false;
     }
 
+    let fromMoment;
+    let toMoment;
+
     if (!isNullOrUndefined(this.fromDate)) {
-      const fromMoment = moment([this.fromDate.year, this.fromDate.month - 1, this.fromDate.day]);
+      fromMoment = moment([this.fromDate.year, this.fromDate.month - 1, this.fromDate.day]);
     }
     if (!isNullOrUndefined(this.toDate)) {
-      const toMoment = moment([this.toDate.year, this.toDate.month - 1, this.toDate.day]).add(1, 'days');
+      toMoment = moment([this.toDate.year, this.toDate.month - 1, this.toDate.day]).add(1, 'days');
     }
 
     let elementMatches = isNullOrUndefined(this.fromDate) || fromMoment.isBefore(elementMoment);
