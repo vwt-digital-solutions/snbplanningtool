@@ -4,15 +4,20 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { MapService } from 'src/app/services/map.service';
 
 import { WorkItemProviderService } from '../../services/work-item-provider.service';
-import { Layer } from '../../models/layer';
 
-import 'leaflet/dist/images/marker-shadow.png';
+import { map, take, withLatestFrom } from 'rxjs/operators';
+
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
-
-import { map, take, withLatestFrom } from 'rxjs/operators';
+import {
+  createClusterIcon,
+  createCarMarker,
+  createWorkMarker,
+  addResetZoomButton,
+  addZoomButtons
+} from './leaflet.helpers';
 
 @Component({
   selector: 'app-map',
@@ -28,7 +33,7 @@ export class MapComponent implements AfterViewInit {
     chunkedLoading: true,
     showCoverageOnHover: false,
     disableClusteringAtZoom: this.mapService.config.disableClusteringAtZoom,
-    iconCreateFunction: (cluster) => this.createClusterIcon(cluster),
+    iconCreateFunction: (cluster) => createClusterIcon(cluster),
   });
 
   private clusters: any = {};
@@ -52,31 +57,11 @@ export class MapComponent implements AfterViewInit {
     };
   }
 
-  private createClusterIcon(cluster: any): L.divIcon {
-    const count = cluster.getChildCount();
-    const size = (count + '').length;
-
-    const iconSizes = {
-      1: [52, 53],
-      2: [55, 56],
-      3: [65, 66],
-      4: [77, 78],
-      5: [89, 90]
-    };
-
-    return L.divIcon({
-      html: count,
-      iconUrl: `../../assets/images/clusters/m${size}.png`,
-      className: `cluster size-${size}`,
-      iconSize: iconSizes[size]
-    });
-  }
-
   private addClusters(): void {
     this.map.addLayer(this.parentCluster);
 
-    this.addWorkSubGroup(),
-      this.addCarSubGroup();
+    this.addWorkSubGroup();
+    this.addCarSubGroup();
   }
 
   private addWorkSubGroup(): void {
@@ -104,7 +89,7 @@ export class MapComponent implements AfterViewInit {
 
       if (this.clusters.cars) {
         this.parentCluster.removeLayer(this.clusters.cars);
-        this.layerButtons.removeLayer(this.clusters.cars);
+        this.removeLayerButton(this.clusters.cars);
       }
 
       this.clusters.cars = subGroup;
@@ -113,167 +98,24 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private createCarPopup(feature): string {
-    return `
-      <div class="row marker-car">
-        <div class="col-12 item driver_name">
-          <p>Naam bestuurder</p>
-          <span>${feature.properties.driver_name || '-'}</span>
-        </div>
-        <div class="col-12 item driver_skill">
-          <p>Rol bestuurder</p>
-          <span>${feature.properties.driver_skill || '-'}</span>
-        </div>
-        <div class="col-12 item license_plate">
-          <p>Kentekenplaat</p>
-          <div class="license-plate license-nl">
-            <span>${feature.properties.license_plate || 'N/B'}</span>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  private createWorkPopup(feature): string {
-    const properties = feature.properties;
-    let start_time = null;
-    let end_time = null;
-    let html = [
-      `<div class="row marker-work no-gutters">`,
-      `<div class="col-12 marker-work-inner">`
-    ];
-
-    if ('start_timestamp' in properties) {
-      start_time = new Date(properties.start_timestamp).toLocaleString().split(',');
-    }
-
-    if ('end_timestamp' in properties) {
-      end_time = new Date(properties.end_timestamp).toLocaleString().split(',');
-    }
-
-    html.push(`
-      <div class="row">
-        <div class="col-4 item project_number">
-          <p>Projectnummer</p>
-          <span> ${properties.project_number || '-'}</span>
-        </div>
-        <div class="col-4 item task_type">
-          <p>Taaktype</p>
-          <span> ${properties.task_type || '-'}</span>
-        </div>
-        <div class="col-4 item status">
-          <p>Status</p>
-          <span> ${properties.status || '-'}</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12 item description">
-          <p>Beschrijving</p>
-          <span> ${properties.description || '-'}</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6 item date">
-          <p>Startdatum</p>
-          <span> ${ start_time[0] || 'N/B'}</span>
-          <span> ${ start_time[1] || 'N/B'}</span>
-        </div>
-        <div class="col-6 item date">
-          <p>Einddatum</p>
-          <span> ${ end_time[0] || '-'}</span>
-          <span> ${ end_time[1] || '-'}</span>
-        </div>
-      </div>`);
-
-    if (properties.city || properties.zip || properties.street) {
-      const locationProperties = ['<div class="row">'];
-
-      // Add city
-      locationProperties.push(`
-        <div class="col-4 item city">
-          <p>Plaats</p>
-          <span> ${properties.city || 'N/B'}</span>
-        </div>`);
-
-      // If exists add zip
-      if (properties.zip) {
-        locationProperties.push(`
-          <div class="col-4 item zip">
-            <p>Postcode</p>
-            <span> ${properties.zip}</span>
-          </div>`);
-      }
-
-      // If exists add street
-      if (properties.street) {
-        locationProperties.push(`
-          <div class="col-4 item street">
-            <p>Straat</p>
-            <span> ${properties.street}</span>
-          </div>`);
-      }
-      locationProperties.push('</div>');
-
-      // If exists add employee name
-      if (properties.employee_name) {
-        locationProperties.push(`
-        <div class="row">
-          <div class="col-12 item employee_name">
-            <p>Naam werknemer</p>
-            <span> ${properties.employee_name}</span>
-          </div>
-        </div>`);
-      }
-
-      html = html.concat(locationProperties);
-    }
-
-    html.push('</div></div>');
-    return html.join('');
-  }
-
-  private getCorrespondingIcon(layer: Layer): L.icon {
-    const iconPath = '../../../assets/images';
-    const iconUrl = layer === 'cars' ?
-      `${iconPath}/car-location.png` :
-      `${iconPath}/work-location.png`;
-
-    return L.icon({
-      iconUrl,
-      iconSize: [32, 33],
-      iconAnchor: null,
-      popupAnchor: [0, 0]
-    });
-  }
-
   private createMarker(feature: any): L.marker {
     const coordinates = feature.geometry.coordinates;
-
     const options = {
-      icon: this.getCorrespondingIcon(feature.layer)
+      marker: {
+        keyboard: false,
+      },
+      icon: {
+        iconSize: [32, 33],
+        iconAnchor: null,
+        popupAnchor: [0, 0]
+      }
     };
 
-    const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), options);
-
     if (feature.layer === 'cars') {
-      const popupOptions = {
-        maxWidth: 300,
-        minWidth: 200,
-      };
-      marker.bindPopup(this.createCarPopup(feature), popupOptions);
+      return createCarMarker(feature, options, coordinates);
+    } else if (feature.layer === 'work') {
+      return createWorkMarker(feature, options, coordinates);
     }
-
-    if (feature.layer === 'work') {
-      const popupOptions = {
-        maxWidth: 600,
-        minWidth: 400,
-        className: ''
-      };
-      marker.bindPopup(this.createWorkPopup(feature), popupOptions);
-    }
-
-    return marker;
   }
 
   private addLayerButton(layer, name) {
@@ -286,50 +128,12 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  private addResetZoomButton(): L.Control {
-    const control = new L.Control({ position: 'bottomright' });
-    control.onAdd = (map: L.map) => {
-      const resetZoom = L.DomUtil.create('a', 'map-ui-element map-btn');
-      resetZoom.innerHTML = '<i class="fas fa-home"></i>';
-
-      L.DomEvent
-        .disableClickPropagation(resetZoom)
-        .addListener(resetZoom, 'click', () => {
-          map.setView(map.options.center, map.options.zoom);
-        }, resetZoom);
-      return resetZoom;
-    };
-    return control;
-  }
-
-  private addZoomButtons(): L.Control {
-    const control = new L.Control({ position: 'bottomright' });
-    control.onAdd = (map: L.map) => {
-      const wrapper = L.DomUtil.create('div', 'map-ui-element zoom-btns');
-      const zoomIn = L.DomUtil.create('div', 'map-btn');
-      const zoomOut = L.DomUtil.create('div', 'map-btn');
-      zoomIn.innerHTML = '<i class="fas fa-plus"></i>';
-      zoomOut.innerHTML = '<i class="fas fa-minus"></i>';
-
-      L.DomEvent.disableClickPropagation(wrapper);
-
-      L.DomEvent.addListener(zoomIn, 'click', () => {
-        map.setZoom(map.getZoom() + 1);
-      }, zoomIn);
-      L.DomEvent.addListener(zoomOut, 'click', () => {
-        map.setZoom(map.getZoom() - 1);
-      }, zoomOut);
-
-      wrapper.appendChild(zoomIn);
-      wrapper.appendChild(zoomOut);
-
-      return wrapper;
-    };
-    return control;
-  }
-
   private initMap(): void {
     this.map = L.map('map', {
+      preferCanvas: true,
+      // zoomAnimation: false, // If the map ever ends up lagging disable zoom animations entirely (zoomAnimationThreshold could then be removed)
+      zoomAnimationThreshold: 1,
+      markerZoomAnimation: false,
       center: [
         this.mapService.config.defaults.lat,
         this.mapService.config.defaults.lng
@@ -347,8 +151,8 @@ export class MapComponent implements AfterViewInit {
     });
 
     tiles.addTo(this.map);
-    this.addResetZoomButton().addTo(this.map);
-    this.addZoomButtons().addTo(this.map);
+    addResetZoomButton().addTo(this.map);
+    addZoomButtons().addTo(this.map);
     this.mapReady();
   }
 

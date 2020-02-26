@@ -1,5 +1,4 @@
-<div class="container-fluid">
-  <div class="row app-work">
+<div class="row app-work">
     <div [ngClass]="['col-6', 'title']">
       <h1>{{title}}</h1>
     </div>
@@ -14,9 +13,4 @@
         [gridOptions]="this.workService.gridOptions"
         (gridReady)="onGridReady($event)" >
      </ag-grid-angular>
-    <div class="col-sm-12 col-md-auto">
-      <app-filter></app-filter>
-    </div>
-  </div>
 </div>
-

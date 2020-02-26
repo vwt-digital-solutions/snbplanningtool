@@ -36,4 +36,10 @@ export class AppComponent {
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tryLogin({});
   }
+
+  showFilters = true;
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
 }

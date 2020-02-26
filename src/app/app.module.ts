@@ -18,8 +18,7 @@ import { HeaderComponent } from './components/header/header.component';
 
 import { EnvServiceProvider } from './services/env.service.provider';
 import { AuthComponent } from './auth/auth.component';
-import {FilterComponent} from './modules/filters/filter.component';
-import { FilterInputComponent } from './modules/filters/filters/filter-input.component';
+import {FiltersModule} from './modules/filters/filters.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +34,8 @@ import { FilterInputComponent } from './modules/filters/filters/filter-input.com
     NgbModule,
     HomeModule,
     CarsModule,
-    WorkModule
+    WorkModule,
+    FiltersModule
   ],
   exports: [
     AppComponent,

@@ -168,7 +168,6 @@ export class CarsComponent {
         }
       );
     } else {
-      console.log('Local');
       event.api.setRowData((carInfo as any).items);
       event.api.sizeColumnsToFit();
       this.callProcessing = '';
@@ -177,7 +176,6 @@ export class CarsComponent {
 
   private handleError(error) {
     this.buttonSaveInner = 'Er is een fout opgetreden';
-    console.error(error);
     return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }
