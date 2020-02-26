@@ -1,5 +1,6 @@
 <div class="form-group mb-3" [ngSwitch]="filter.inputType">
     <label [for]="filter.field">{{filter.name}}</label>
+  <div [id]="filter.field + 'filter-div'"></div>
 
     <input *ngSwitchCase="'input'" type="text" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field" [value]="filter.value" (input)="filter.value = $event.target.value">
 
@@ -10,24 +11,37 @@
 
     <div *ngSwitchCase="'multiple-choice'">
       <div class="form-check" *ngFor="let opt of filter.options">
-        <label class="form-check-label" [for]="opt"> <input [id]="opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
+        <label class="form-check-label" [for]="filter.field + '-' + opt"> <input [id]="filter.field + '-' + opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
       </div>
     </div>
-
 
     <div *ngSwitchCase="'date-range'">
       <div class="input-group mb-1">
         <div class="input-group-prepend">
           <span class="input-group-text">van</span>
         </div>
-        <input placeholder="JJJJ-MM-DD" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-from'" [value]="filter.value[0]" (input)="filter.value[0] = $event.target.value">
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerFrom="ngbDatepicker" [(ngModel)]="filter.fromDate" [id]="filter.field + '-from'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('fromDate', $event)"/>
+        <div class="input-group-append">
+          <button (click)="filter.dateChanged('fromDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
+          <button (click)="datepickerFrom.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
+        </div>
       </div>
       <div class="input-group mb-1">
         <div class="input-group-prepend">
           <span class="input-group-text">tot</span>
         </div>
-        <input placeholder="JJJJ-MM-DD" type="date" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field + '-to'" [value]="filter.value[1]" (input)="filter.value[1] = $event.target.value">
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerTo="ngbDatepicker" [(ngModel)]="filter.toDate" [id]="filter.field + '-to'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('toDate', $event)"/>
+        <div class="input-group-append">
+          <button (click)="filter.dateChanged('toDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
+          <button (click)="datepickerTo.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
+        </div>
       </div>
     </div>
+
+  <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
+    <option value="">--</option>
+    <option value="true">Ja</option>
+    <option value="false">Nee</option>
+  </select>
 
 </div>

@@ -1,4 +1,7 @@
 import {Subject} from 'rxjs/index';
+import {isNullOrUndefined} from 'util';
+import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 
 export abstract class Filter {
 
@@ -118,7 +121,10 @@ export class ChoiceFilter extends Filter  {
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
     if (this.inferOptionsFromList) {
-      this.options = originalList.map(value => value[this.field]).filter((v, i, a) => a.indexOf(v) === i);
+      this.options = originalList
+        .map(value => value !== undefined && value !== '' && value !== null ? value[this.field] : '')
+        .filter((v, i, a) => a.indexOf(v) === i && v !== '' && v !== undefined && v !== null)
+        .sort();
     }
 
     return super.filterList(listToFilter, originalList);
@@ -182,8 +188,11 @@ export class OffsetFilter extends Filter  {
  * Filtered values can be greater than or less than the given value.
  */
 export class RangeFilter extends Filter  {
+
+  inputType = 'range';
+
   filterElement(element, index, array): boolean {
-    return element[this.value] >= this.value[0] && element[this.value] <= this.value[1];
+    return element[this.field] >= this.value[0] && element[this.value] <= this.value[1];
   }
 }
 
@@ -196,27 +205,55 @@ export class DateFilter extends Filter  {
 
   inputType = 'date-range';
 
-  value = [null, null];
+  fromDate = null;
+  toDate = null;
+
+  dateChanged(dateField, date: NgbDate) {
+    this[dateField] = date;
+
+    this.dataChanged.next(true);
+  }
 
   filterElement(element, index, array): boolean {
-    const startDate = Date.parse(this.value[0]);
-    const endDate = Date.parse(this.value[1]) + 24 * 60 * 60 * 1000;
-
-    const elementDate = Date.parse(element[this.field]);
-
-    if (isNaN(startDate) && isNaN(endDate)) {
+    if (isNullOrUndefined(this.fromDate) && isNullOrUndefined(this.toDate)) {
       return true;
     }
 
-    if (isNaN(elementDate)) {
+    const elementMoment = moment(element[this.field]);
+    if (isNullOrUndefined(elementMoment)) {
       return false;
     }
 
-    let elementMatches = isNaN(startDate) || startDate <= elementDate;
+    let fromMoment;
+    let toMoment;
 
-    elementMatches = elementMatches && (isNaN(endDate) || endDate >= elementDate);
+    if (!isNullOrUndefined(this.fromDate)) {
+      fromMoment = moment([this.fromDate.year, this.fromDate.month - 1, this.fromDate.day]);
+    }
+    if (!isNullOrUndefined(this.toDate)) {
+      toMoment = moment([this.toDate.year, this.toDate.month - 1, this.toDate.day]).add(1, 'days');
+    }
+
+    let elementMatches = isNullOrUndefined(this.fromDate) || fromMoment.isBefore(elementMoment);
+
+    elementMatches = elementMatches && (isNullOrUndefined(this.toDate) || toMoment.isAfter(elementMoment));
 
     return elementMatches;
 
+  }
+}
+
+export class BooleanFilter extends Filter {
+
+  inputType = 'optional-boolean';
+
+  filterElement(element, index, array): boolean {
+    if (this.value === '') {
+      return true;
+    }
+
+    const value = this.value === 'true';
+
+    return element[this.field] === value;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, HostBinding} from '@angular/core';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { MapService } from 'src/app/services/map.service';
@@ -26,6 +26,8 @@ import {
 })
 
 export class MapComponent implements AfterViewInit {
+  @HostBinding('class.map-component')
+
   private map: L.map;
   private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
   private parentCluster: L.markerClusterGroup = L.markerClusterGroup({
@@ -153,6 +155,9 @@ export class MapComponent implements AfterViewInit {
     tiles.addTo(this.map);
     addResetZoomButton().addTo(this.map);
     addZoomButtons().addTo(this.map);
+
+    this.mapService.mapResized.subscribe(() => {setTimeout(() => {this.map.invalidateSize(true);}, 50);});
+
     this.mapReady();
   }
 
