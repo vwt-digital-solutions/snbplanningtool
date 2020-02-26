@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -28,6 +28,8 @@ export class MapService {
     cars: true,
     work: true
   };
+
+  mapResized = new Subject<any>();
 
   config = {
     layers: ['cars', 'work'],

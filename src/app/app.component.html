@@ -1,10 +1,10 @@
 <app-header (onSidebarButtonClicked)="toggleFilters()" [showSidebar]="this.showFilters" *ngIf="this.authRoleService.hasValidAccessToken"></app-header>
 <div class="container-fluid">
   <div class="row">
-    <div class="col">
+    <div [class.col-md-9]="this.showFilters"  [class.col-12]="!this.showFilters"  class="col">
         <router-outlet></router-outlet>
     </div>
-    <div [class.d-sm-none]="!this.showFilters" class="col-sm-12 col-md-auto sidebar">
+    <div [class.d-sm-none]="!this.showFilters" class="col-sm-12 col-md-3 sidebar">
       <app-filter></app-filter>
     </div>
   </div>

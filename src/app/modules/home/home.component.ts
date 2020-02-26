@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 
@@ -9,7 +9,7 @@ import {WorkItemProviderService} from 'src/app/services/work-item-provider.servi
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
   constructor(
@@ -34,6 +34,8 @@ export class HomeComponent implements OnInit {
       this.handleError(error);
     });
   }
+
+  @HostBinding('class.home-component')
 
   // API CALLS
     private mapGetCars() {

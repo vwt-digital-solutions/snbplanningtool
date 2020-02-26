@@ -8,6 +8,7 @@ import { LicenseManager } from 'ag-grid-enterprise';
 
 import { registerLocaleData } from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
+import {MapService} from './services/map.service';
 
 registerLocaleData(localeNl);
 
@@ -19,7 +20,8 @@ export class AppComponent {
   constructor(
     private env: EnvService,
     private oauthService: OAuthService,
-    public authRoleService: AuthRoleService
+    public authRoleService: AuthRoleService,
+    public mapService: MapService,
   ) {
     LicenseManager.setLicenseKey(env.agGridKey);
 
@@ -41,5 +43,8 @@ export class AppComponent {
 
   toggleFilters() {
     this.showFilters = !this.showFilters;
+
+    this.mapService.mapResized.next()
+
   }
 }
