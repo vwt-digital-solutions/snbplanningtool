@@ -210,8 +210,16 @@ export class DateFilter extends Filter  {
 
   dateChanged(dateField, date: NgbDate) {
     this[dateField] = date;
-
+    this.value = [null,null];
     this.dataChanged.next(true);
+  }
+
+  filterList(listToFilter: any[], originalList: any[]): any[] {
+    if (this.value === [null, null]) {
+      return listToFilter;
+    }
+
+    return super.filterList(listToFilter, originalList)
   }
 
   filterElement(element, index, array): boolean {
