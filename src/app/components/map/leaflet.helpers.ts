@@ -22,13 +22,23 @@ function createClusterIcon(cluster: any): L.divIcon {
   });
 }
 
-function getCorrespondingIconUrl(layer: Layer): string {
-  const iconPath = '../../../assets/images';
-  const iconUrl = layer === 'cars' ?
-    `${iconPath}/car-location.png` :
-    `${iconPath}/work-location.png`;
+function getIconPath(iconType?: string): string {
+  let iconPath = '../../../assets/images';
 
-  return iconUrl;
+  switch (iconType) {
+    case 'cars':
+      iconPath += '/car-location.png';
+      break;
+
+    case 'work':
+      iconPath += '/work-location.png';
+      break;
+
+    default:
+      iconPath += '/marker.png';
+  }
+
+  return iconPath;
 }
 
 function featureUrgencyClass(feature: any): string {
@@ -46,18 +56,40 @@ function featureUrgencyClass(feature: any): string {
       return 'urgent';
     }
   }
-  
+
   return '';
 }
 
-function createWorkMarker(feature: any, options: any, coordinates: number[]): L.marker {
-  const iconUrl = getCorrespondingIconUrl('work');
-  const icon = new L.divIcon({
-    html: `<div style="background-image: url(${iconUrl})"></div>`,
-    className: `div-icon work-marker ${featureUrgencyClass(feature)}`,
-    ...options.icon
-  });
+function getWorkIcon(feature: any, options: any): L.divIcon {
+  const urgencyClass = featureUrgencyClass(feature);
+  const category = feature.properties['category'];
+  const categories = {
+    'bulkuitvoering': 'fa-pallet',
+    'netwerkkwaliteit': 'fa-signal',
+    'schade': 'fa-exclamation',
+    'storing': 'fa-unlink',
+  };
 
+  if (category && categories.hasOwnProperty(category.toLowerCase())) {
+    return new L.divIcon({
+      html: `
+        <div style="background-image: url(${getIconPath('marker')})">
+          <i class="glyph-icon fas ${categories[category.toLowerCase()]}"></i>
+        </div>`,
+      className: `div-icon work-marker ${urgencyClass}`,
+      ...options.icon
+    });
+  } else {
+    return new L.divIcon({
+      html: `<div style="background-image: url(${getIconPath('work')})"></div>`,
+      className: `div-icon work-marker ${urgencyClass}`,
+      ...options.icon
+    });
+  }
+}
+
+function createWorkMarker(feature: any, options: any, coordinates: number[]): L.marker {
+  const icon = getWorkIcon(feature, options);
   const marker = L.marker(L.latLng(coordinates[1], coordinates[0]), {
     ...options.marker,
     icon
@@ -73,7 +105,7 @@ function createWorkMarker(feature: any, options: any, coordinates: number[]): L.
 }
 
 function createCarMarker(feature: any, options: any, coordinates: number[]): L.marker {
-  const iconUrl = getCorrespondingIconUrl('cars');
+  const iconUrl = getIconPath('cars');
   let icon;
 
   if (feature.properties && feature.properties.driver_name) {

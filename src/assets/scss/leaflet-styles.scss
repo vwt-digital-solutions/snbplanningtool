@@ -192,8 +192,13 @@
   }
 }
 
+.glyph-icon {
+  color: white;
+  line-height: 2;
+}
+
 .work-marker {
-  &::before {
+  &::after {
     content: "";
     display: block;
     position: absolute;
@@ -205,12 +210,12 @@
   }
 
   &.urgent {
-    &::before {
+    &::after {
       background-color: var(--red);
     }
   }
   &.semi-urgent {
-    &::before {
+    &::after {
       background-color: var(--orange);
     }
   }
