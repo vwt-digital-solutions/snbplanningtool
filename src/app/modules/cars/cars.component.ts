@@ -143,7 +143,7 @@ export class CarsComponent {
     }
 
     if (!isLocalStorage && this.authRoleService.isAuthorized) {
-      this.apiService.apiGet('/carsinfo').subscribe(
+      this.apiService.apiGet('/cars').subscribe(
         result => {
           const rowData = [];
           const newCarInfo = new Object();

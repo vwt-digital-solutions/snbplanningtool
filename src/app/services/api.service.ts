@@ -19,8 +19,8 @@ export class ApiService {
     return this.httpClient.get(requestUrl);
   }
 
-  public apiGetCarsInfo() {
-    this.apiGet('/carsinfo').subscribe(
+  public apiGetCars() {
+    this.apiGet('/cars').subscribe(
       result => {
         const rowData = [];
         const newCarInfo = new Object();
@@ -62,6 +62,6 @@ export class ApiService {
   }
 
   postCarInfo(carClass: CarClass): Observable<CarClass> {
-    return this.httpClient.post<CarClass>(`${this.env.apiUrl}/carsinfo`, carClass);
+    return this.httpClient.post<CarClass>(`${this.env.apiUrl}/cars`, carClass);
   }
 }

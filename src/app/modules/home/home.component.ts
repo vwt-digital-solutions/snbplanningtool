@@ -38,10 +38,10 @@ export class HomeComponent implements OnInit {
   @HostBinding('class.home-component')
 
   // API CALLS
-    private mapGetCars() {
+    private getCarLocations() {
       const that = this;
 
-      this.apiService.apiGet('/cars').subscribe(
+      this.apiService.apiGet('/cars/locations').subscribe(
         result => {
           (result as any).features.forEach((feature) => {
             (feature as any).layer = 'cars';
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
       let carsIntervalTimer = 0;
 
       if (!carInfo || carInfo.items.length <= 0) {
-        this.apiService.apiGetCarsInfo();
+        this.apiService.apiGetCars();
       }
 
       const carsInterval = setInterval(() => {
@@ -131,13 +131,13 @@ export class HomeComponent implements OnInit {
     });
 
     if (!carInfo || carInfo.items.length <= 0) {
-      this.apiService.apiGetCarsInfo();
+      this.apiService.apiGetCars();
     }
 
-    this.mapGetCars();
+    this.getCarLocations();
 
     setInterval(() => {
-      this.mapGetCars();
+      this.getCarLocations();
     }, (5 * 60 * 1000));
   }
 }
