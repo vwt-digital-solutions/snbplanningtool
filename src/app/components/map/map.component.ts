@@ -133,7 +133,8 @@ export class MapComponent implements AfterViewInit {
   private initMap(): void {
     this.map = L.map('map', {
       preferCanvas: true,
-      // zoomAnimation: false, // If the map ever ends up lagging disable zoom animations entirely (zoomAnimationThreshold could then be removed)
+      // If the map ever ends up lagging disable zoom animations entirely (zoomAnimationThreshold could then be removed)
+      // zoomAnimation: false,
       zoomAnimationThreshold: 1,
       markerZoomAnimation: false,
       center: [
@@ -171,7 +172,7 @@ export class MapComponent implements AfterViewInit {
         ),
         // Find features with this tokenId
         map(([activeTokenId, cars, work]) => [...cars, ...work].filter(feature =>
-          (feature.properties.token === activeTokenId || feature.properties.L2GUID === activeTokenId))
+          (feature.properties.token === activeTokenId || feature.properties.l2_guid === activeTokenId))
         ),
       )
       .subscribe(features => {

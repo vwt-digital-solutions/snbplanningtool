@@ -57,7 +57,7 @@ export class WorkService {
         },
         {
           headerName: 'Locatie',
-          field: 'L2GUID',
+          field: 'l2_guid',
           cellRenderer: this.cellTokenLocator,
           sortable: false,
           filter: false,
@@ -108,7 +108,7 @@ export class WorkService {
   }
 
   cellTokenLocator(params) {
-    if (params.data.geometry && params.data.geometry['coordinates'].length && params.value !== '') {
+    if (params.data.geometry && params.data.geometry.coordinates.length && params.value !== '') {
       return '<a href="/kaart/' + params.value + '">Bekijk</a>';
     } else {
       return '-';
