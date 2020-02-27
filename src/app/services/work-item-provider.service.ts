@@ -58,7 +58,7 @@ export class WorkItemProviderService {
     this.loading = true;
     this.loadingSubject.next(true);
 
-    this.apiService.apiGet('/workitems/all').subscribe(
+    this.apiService.apiGet('/workitems').subscribe(
       (result: any[]) => {
         this.rawWorkItems = result;
 
