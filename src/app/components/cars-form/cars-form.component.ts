@@ -19,7 +19,7 @@ export class CarsFormComponent implements OnInit {
 
   carsTokens: object;
 
-  model = new CarClass(null, '', '', '', null);
+  model = new CarClass(null, '', '', '', '', null);
 
   constructor(
     private apiService: ApiService,

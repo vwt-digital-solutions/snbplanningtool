@@ -22,6 +22,7 @@ export class CarsService {
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
         { headerName: 'Naam bestuurder', field: 'driver_name', },
+        { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
         { headerName: 'Rol bestuurder', field: 'driver_skill'},
         {
           headerName: 'Locatie',
@@ -75,8 +76,8 @@ export class CarsService {
   }
 
   cellTokenLocator(params) {
-    if (params.value !== '') {
-      return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
+    if (params.value !== '' ) {
+      return '<a href="/kaart/' + /*params.value.replace(/\//g, '-') +*/ '">Bekijk</a>';
     } else {
       return '';
     }

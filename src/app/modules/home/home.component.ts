@@ -88,6 +88,7 @@ export class HomeComponent implements OnInit {
                 feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
                 feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
                 feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
+                feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
 
               }
             }

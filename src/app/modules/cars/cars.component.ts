@@ -56,6 +56,9 @@ export class CarsComponent {
       if (item.driver_skill == null) {
         item.driver_skill = '';
       }
+      if (item.driver_employee_number == null) {
+        item.driver_employee_number = '';
+      }
 
       that.apiService.postCarInfo(item).subscribe(
         result => {
@@ -151,7 +154,8 @@ export class CarsComponent {
           for (const row in result) {
             if (result.hasOwnProperty(row)) {
               const data = result[row];
-              rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.driver_skill, data.token));
+              rowData.push(new CarClass(data.id, data.license_plate, data.driver_name,
+                data.driver_skill, data.driver_employee_number, data.token));
             }
           }
 

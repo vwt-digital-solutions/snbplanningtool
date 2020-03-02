@@ -62,12 +62,12 @@ function featureUrgencyClass(feature: any): string {
 
 function getWorkIcon(feature: any, options: any): L.divIcon {
   const urgencyClass = featureUrgencyClass(feature);
-  const category = feature.properties['category'];
+  const category = feature.properties.category;
   const categories = {
-    'bulkuitvoering': 'fa-pallet',
-    'netwerkkwaliteit': 'fa-signal',
-    'schade': 'fa-exclamation',
-    'storing': 'fa-unlink',
+    bulkuitvoering: 'fa-pallet',
+    netwerkkwaliteit: 'fa-signal',
+    schade: 'fa-exclamation',
+    storing: 'fa-unlink',
   };
 
   if (category && categories.hasOwnProperty(category.toLowerCase())) {
@@ -191,6 +191,10 @@ function createCarPopup(feature): string {
         <div class="col-12 item driver_skill">
           <p>Rol bestuurder</p>
           <span>${feature.properties.driver_skill || '-'}</span>
+        </div>
+        <div class="col-12 item driver_employee_number">
+          <p>Medewerkernr. bestuurder</p>
+          <span>${feature.properties.driver_employee_number || '-'}</span>
         </div>
         <div class="col-12 item license_plate">
           <p>Kentekenplaat</p>
