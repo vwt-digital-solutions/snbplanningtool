@@ -19,8 +19,8 @@ export class ApiService {
     return this.httpClient.get(requestUrl);
   }
 
-  public apiGetCarsInfo() {
-    this.apiGet('/carsinfo').subscribe(
+  public apiGetCars() {
+    this.apiGet('/cars').subscribe(
       result => {
         const rowData = [];
         const newCarInfo = new Object();
@@ -28,7 +28,8 @@ export class ApiService {
         for (const row in result) {
           if (result.hasOwnProperty(row)) {
             const data = result[row];
-            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name, data.driver_skill, data.token));
+            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name,
+              data.driver_skill, data.driver_employee_number, data.token));
           }
         }
 
@@ -62,6 +63,6 @@ export class ApiService {
   }
 
   postCarInfo(carClass: CarClass): Observable<CarClass> {
-    return this.httpClient.post<CarClass>(`${this.env.apiUrl}/carsinfo`, carClass);
+    return this.httpClient.post<CarClass>(`${this.env.apiUrl}/cars`, carClass);
   }
 }

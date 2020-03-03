@@ -128,14 +128,12 @@ export class Helpers {
     const urgencyClass = Helpers.featureUrgencyCSS(feature);
     const category = feature.properties.category;
 
-    // tslint:disable:object-literal-key-quotes
     const categories = {
-      'bulkuitvoering': 'fa-pallet',
-      'netwerkkwaliteit': 'fa-signal',
-      'schade': 'fa-exclamation',
-      'storing': 'fa-unlink',
+      bulkuitvoering: 'fa-pallet',
+      netwerkkwaliteit: 'fa-signal',
+      schade: 'fa-exclamation',
+      storing: 'fa-unlink',
     };
-    // tslint:enable:object-literal-key-quotes
 
     if (category && categories.hasOwnProperty(category.toLowerCase())) {
       return new L.divIcon({
@@ -242,6 +240,10 @@ export class Helpers {
           <div class="col-12 item driver_skill">
             <p>Rol bestuurder</p>
             <span>${feature.properties.driver_skill || '-'}</span>
+          </div>
+          <div class="col-12 item driver_employee_number">
+            <p>Medewerkernr. bestuurder</p>
+            <span>${feature.properties.driver_employee_number || '-'}</span>
           </div>
           <div class="col-12 item license_plate">
             <p>Kentekenplaat</p>

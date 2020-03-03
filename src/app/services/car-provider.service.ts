@@ -19,7 +19,7 @@ export class CarProviderService {
               private apiService: ApiService) {
     this.loading.next(true);
 
-    this.apiService.apiGetCarsInfo();
+    this.apiService.apiGetCars();
 
     this.apiService.apiGetTokens();
 
