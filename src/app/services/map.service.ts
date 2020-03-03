@@ -10,6 +10,7 @@ export class MapService {
   geoJsonObjectCars = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
   geoJsonObjectActive = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
   activeTokenId = new BehaviorSubject<string>(null);
+  clickedMarker = false;
 
   geoJsonReady = {
     map: false,
@@ -176,7 +177,8 @@ export class MapService {
       }
     ],
     minZoom: 8,
-    disableClusteringAtZoom: 15
+    disableClusteringAtZoom: 15,
+    markerPopupOnHover: false,
   };
 
   constructor() {
