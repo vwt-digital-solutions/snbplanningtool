@@ -1,0 +1,97 @@
+<div class="row popup-work no-gutters">
+  <div class="col-12 marker-work-inner">
+    <div class="row">
+      <div class="col-6 item administration">
+        <p>Administratie</p>
+        <span>{{properties.administration || '-'}}</span>
+      </div>
+      <div class="col-6 item task_type">
+        <p>Taaktype</p>
+        <span>{{properties.task_type || '-'}}</span>
+      </div>
+      <div class="col-6 item project">
+        <p>Project</p>
+        <span>{{properties.project || '-'}}</span>
+      </div>
+      <div class="col-6 item project_number">
+        <p>Projectnummer</p>
+        <span>{{properties.project_number || '-'}}</span>
+      </div>
+      <div class="col-4 item category">
+        <p>Categorie</p>
+        <span>{{properties.category || '-'}}</span>
+      </div>
+      <div class="col-4 item status">
+        <p>Status</p>
+        <span>{{properties.status || '-'}}</span>
+      </div>
+      <div class="col-4 item stagnation">
+        <p>Stagnatie</p>
+        <span>{{properties.stagnation ? 'Ja' : 'Nee'}}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 item description">
+        <p>Beschrijving</p>
+        <span>{{properties.description || '-'}}</span>
+      </div>
+      <div class="col-6 item description">
+        <p>Uiterste hersteltijd</p>
+        <span>{{ resolve_before_time[0] || '-'}} </span>
+        <span>{{ resolve_before_time[1] || '-'}} </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 item date">
+        <p>Startdatum</p>
+        <span>{{ start_time[0] || '-'}} </span>
+        <span>{{ start_time[1] || '-'}} </span>
+      </div>
+      <div class="col-6 item date">
+        <p>Einddatum</p>
+        <span>{{ end_time[0] || '-'}} </span>
+        <span>{{ end_time[1] || '-'}} </span>
+      </div>
+    </div>
+
+    <hr>
+    <div class="row" *ngIf="properties.city || properties.zip || properties.street">
+      <div class="col-6 item street">
+        <p>Straat</p>
+        <span> {{properties.street}} {{properties.house || ''}} {{properties.extra || ''}} </span>
+      </div>
+      <div class="col-3 item zip">
+        <p>Postcode</p>
+        <span> {{properties.zip}}</span>
+      </div>
+      <div class="col-3 item city">
+        <p>Plaats</p>
+        <span> {{properties.city || 'N/B'}}</span>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-6 item employee_name">
+        <p>Naam werknemer</p>
+        <span> {{properties.employee_name || '-'}}</span>
+      </div>
+      <div class="col-6 item employee_number">
+        <p>Medewerkersnr.</p>
+        <span> {{properties.employee_number || '-'}}</span>
+      </div>
+    </div>
+
+    <hr>
+    <h6 class="text-center">Gelinkte auto</h6>
+    {{linkedCar}}
+    <div class="row align-items-center">
+      <div class="col-auto"><img src="http://localhost:4200/assets/images/car-location.png"/></div>
+      <div class="col-auto"><span class="license-plate license-nl">X-109-BB</span></div>
+      <div class="col">Jantje (Lassende)</div>
+      <div class="col-auto text-right"><a href="http://localhost:4200/kaart/vwt-hyrde-token-170386">Bekijk</a></div>
+    </div>
+  </div>
+</div>

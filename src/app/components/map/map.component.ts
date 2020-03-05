@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, HostBinding} from '@angular/core';
+import {Component, AfterViewInit, HostBinding, ComponentFactoryResolver, Injector} from '@angular/core';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { MapService } from 'src/app/services/map.service';
@@ -11,7 +11,11 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
+
 import { Helpers } from './leaflet.helpers';
+
+import {WorkItemPopupComponent} from './popup/workitem/work-item-popup.component';
+import {CarInfoPopupComponent} from './popup/carinfo/car-info-popup.component';
 
 @Component({
   selector: 'app-map',
@@ -29,17 +33,21 @@ export class MapComponent implements AfterViewInit {
     chunkedLoading: true,
     showCoverageOnHover: false,
     disableClusteringAtZoom: this.mapService.config.disableClusteringAtZoom,
-    iconCreateFunction: (cluster) => Helpers.createClusterIcon(cluster),
+    iconCreateFunction: (cluster) => this.helpers.createClusterIcon(cluster),
   });
 
   private clusters: any = {};
-  private helpers = new Helpers(this.mapService);
+  private helpers: Helpers;
 
   constructor(
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public workProvider: WorkItemProviderService,
-  ) { }
+    public resolver: ComponentFactoryResolver,
+    public injector: Injector
+  ) {
+    this.helpers = new Helpers(this.mapService, resolver, injector);
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -108,11 +116,36 @@ export class MapComponent implements AfterViewInit {
       }
     };
 
+    let marker;
+    let componentClass;
+    let popupOptions;
+
     if (feature.layer === 'cars') {
-      return Helpers.createCarMarker(feature, options, coordinates);
+
+      marker =  this.helpers.createCarMarker(feature, options, coordinates);
+
+      popupOptions = {
+        maxWidth: 300,
+        minWidth: 200,
+      };
+
+      componentClass = CarInfoPopupComponent;
+
     } else if (feature.layer === 'work') {
-      return this.helpers.createWorkMarker(feature, options, coordinates);
+
+      marker = this.helpers.createWorkMarker(feature, options, coordinates);
+
+      popupOptions = {
+        maxWidth: 600,
+        minWidth: 400,
+      };
+
+      componentClass = WorkItemPopupComponent;
     }
+
+    marker = this.helpers.bindPopupToMarker(componentClass, feature,  marker, popupOptions);
+
+    return marker;
   }
 
   private addLayerButton(layer, name) {
@@ -151,8 +184,8 @@ export class MapComponent implements AfterViewInit {
     tiles.addTo(this.map);
 
     // Add map UI
-    Helpers.resetZoomButton().addTo(this.map);
-    Helpers.zoomButtons().addTo(this.map);
+    this.helpers.resetZoomButton().addTo(this.map);
+    this.helpers.zoomButtons().addTo(this.map);
     this.helpers.hoverModeSwitch().addTo(this.map);
 
     // Add hover over popup

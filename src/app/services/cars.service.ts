@@ -77,7 +77,7 @@ export class CarsService {
 
   cellTokenLocator(params) {
     if (params.value !== '' ) {
-      return '<a href="/kaart/' + /*params.value.replace(/\//g, '-') +*/ '">Bekijk</a>';
+      return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
       return '';
     }
