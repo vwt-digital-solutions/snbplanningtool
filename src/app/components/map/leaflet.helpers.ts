@@ -218,14 +218,14 @@ export class Helpers {
 
     return L.divIcon({
       html: count,
-      iconUrl: `../../assets/images/clusters/m${size}.png`,
+      iconUrl: `/assets/images/clusters/m${size}.png`,
       className: `cluster size-${size}`,
       iconSize: iconSizes[size]
     });
   }
 
   public getIconPath(iconType?: string): string {
-    let iconPath = '../../../assets/images';
+    let iconPath = '/assets/images';
 
     switch (iconType) {
       case 'cars':
