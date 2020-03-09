@@ -47,6 +47,7 @@ export class WorkService {
           filterParams: { comparator: this.dateComparator }
         },
         { headerName: 'Naam medewerker', field: 'employee_name' },
+        { headerName: 'Medewerkernr.', field: 'employee_number' },
         {
           headerName: 'Adres',
           children: [

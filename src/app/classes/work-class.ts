@@ -8,6 +8,7 @@ export class WorkClass {
     public city: string,
     public description: string,
     public employee_name: string,
+    public employee_number: string,
     public end_timestamp: string,
     public geometry: object,
     public project_number: number,
