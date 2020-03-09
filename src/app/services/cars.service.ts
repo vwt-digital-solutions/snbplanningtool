@@ -24,7 +24,7 @@ export class CarsService {
         { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
         { headerName: 'Naam bestuurder', field: 'driver_name', },
         { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
-        { headerName: 'Rol bestuurder', field: 'driver_skill'},
+        { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector:this.cellEditorDriverSkill },
         {
           headerName: 'Locatie',
           field: 'token',
@@ -72,6 +72,15 @@ export class CarsService {
     return {
       component: 'agRichSelectCellEditor',
       params: { values: carTokens.concat([params.value]) }
+    };
+  }
+
+  cellEditorDriverSkill(params) {
+    const values = ['Metende', 'Lasser', 'Leerling', 'Kraanmachinist', 'Overig', 'NLS', 'Cluster'];
+
+    return {
+      component: 'agRichSelectCellEditor',
+      params: { values: values }
     };
   }
 
