@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import {PopUpComponent} from '../popup';
 import {MapService} from '../../../../services/map.service';
+import {CarProviderService} from '../../../../services/car-provider.service';
 
 @Component({
   selector: 'app-work-item-popup',
@@ -9,7 +10,8 @@ import {MapService} from '../../../../services/map.service';
   styleUrls: ['./work-item-popup.component.scss']
 })
 export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService,
+              private carProviderService: CarProviderService) {
     super();
   }
 
@@ -18,6 +20,8 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   public resolve_before_time: [string, string];
 
   public linkedCar;
+  public linkedCarLocation;
+  public linkedCarToken;
 
   ngOnInit() {
     if ('start_timestamp' in this.properties) {
@@ -35,11 +39,14 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
       this.resolve_before_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : ['-', '-'];
     }
 
-    if ('driver_employee_number' in this.properties) {
-      this.linkedCar = JSON.parse(localStorage.getItem('carInfo'))[0];
+    if (this.properties.employee_number) {
+      this.linkedCar = this.carProviderService.getCarWithEmployeeNumber(this.properties.employee_number);
+
+      if (this.linkedCar) {
+        this.linkedCarLocation = this.carProviderService.getCarLocationForToken(this.linkedCar.token);
+        this.linkedCarToken = this.linkedCar.token.replace(/\//g, '-')
+      }
+
     }
   }
-
-
-
 }

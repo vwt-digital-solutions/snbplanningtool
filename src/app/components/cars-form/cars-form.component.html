@@ -13,7 +13,7 @@
           #token="ngModel"
           required >
           <option [ngValue]="null" selected disabled hidden>-- Selecteer een token --</option>
-          <option *ngFor="let token of carsTokens.items" [value]="token">{{token}}</option>
+          <option *ngFor="let token of carsTokens" [value]="token">{{token}}</option>
         </select>
       </div>
       <div class="form-group">

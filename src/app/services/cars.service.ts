@@ -4,6 +4,7 @@ import { throwError } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { AuthRoleService } from './auth-role.service';
+import {CarProviderService} from './car-provider.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class CarsService {
 
   constructor(
     public authRoleService: AuthRoleService,
-    private apiService: ApiService
+    public carProviderService: CarProviderService
   ) {
     this.gridOptions = {
       columnDefs: [
@@ -66,12 +67,11 @@ export class CarsService {
   }
 
   cellEditorToken(params) {
-    const carTokens = JSON.parse(localStorage.getItem('carTokens'));
-    carTokens.items.push(params.value);
+    const carTokens = this.carProviderService.carsInfoSubject.value;
 
     return {
       component: 'agRichSelectCellEditor',
-      params: { values: carTokens.items }
+      params: { values: carTokens.concat([params.value]) }
     };
   }
 

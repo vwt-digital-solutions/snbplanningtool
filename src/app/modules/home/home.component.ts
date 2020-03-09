@@ -6,18 +6,23 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
 import {WorkItemProviderService} from 'src/app/services/work-item-provider.service';
+import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
+
 export class HomeComponent implements OnInit {
+  @HostBinding('class.home-component') true;
+
   constructor(
     private route: ActivatedRoute,
     private authRoleService: AuthRoleService,
     private apiService: ApiService,
     private mapService: MapService,
-    private workItemProviderService: WorkItemProviderService
+    private workItemProviderService: WorkItemProviderService,
+    private carProviderService: CarProviderService
   ) {
 
     workItemProviderService.loadingSubject.subscribe(
@@ -30,34 +35,25 @@ export class HomeComponent implements OnInit {
       }
     );
 
+    this.carProviderService.loadingSubject.subscribe(
+      value => {
+        this.mapService.geoJsonReady.cars = !value;
+
+        if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
+          this.mapService.geoJsonReady.map = true;
+        }
+      }
+    );
+
     workItemProviderService.errorSubject.subscribe(error => {
       this.handleError(error);
     });
   }
 
-  @HostBinding('class.home-component')
+
 
   // API CALLS
-    private getCarLocations() {
-      const that = this;
-
-      this.apiService.apiGet('/cars/locations').subscribe(
-        result => {
-          (result as any).features.forEach((feature) => {
-            (feature as any).layer = 'cars';
-            (feature as any).active = that.mapService.markerLayer.cars;
-          });
-
-          this.handleResult(result, 'cars');
-        },
-        error => {
-          this.mapService.geoJsonReady.cars = true;
-          this.handleError(error);
-        }
-      );
-    }
-
-    private handleError(error) {
+  private handleError(error) {
       if (error.status !== 403) {
         this.mapService.refreshStatusClass = true;
         this.mapService.refreshStatus = 'Er is een fout opgetreden';
@@ -67,58 +63,7 @@ export class HomeComponent implements OnInit {
   // END API CALLS
 
 
-  // HANDLE RESULTS
-    private handleResult(result, layer) {
-      const that = this;
-
-      let carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
-      let carsIntervalTimer = 0;
-
-      if (!carInfo || carInfo.items.length <= 0) {
-        this.apiService.apiGetCars();
-      }
-
-      const carsInterval = setInterval(() => {
-        carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
-
-        if (carInfo && carInfo.items.length > 0) {
-          for (const feature of result.features) {
-            for (const item of carInfo.items) {
-              if (item.token === feature.properties.token) {
-                feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
-                feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
-                feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
-                feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
-
-              }
-            }
-          }
-
-          that.featureToMap(result.features, layer);
-        } else {
-          that.featureToMap(result.features, layer);
-        }
-
-        if (carsIntervalTimer <= 10) { clearInterval(carsInterval); }
-        carsIntervalTimer++;
-      }, 500);
-    }
-
-    private featureToMap(features, layer) {
-      this.mapService.geoJsonObjectCars.features.next(features);
-      this.mapService.geoJsonObjectActive.features.next(features.filter(feature => feature.active));
-      this.mapService.geoJsonReady[layer] = true;
-
-      if (this.mapService.geoJsonReady.cars) {
-        this.mapService.geoJsonReady.map = true;
-      }
-    }
-  // END HANDLE RESULTS
-
-
   ngOnInit() {
-    const carInfo = (localStorage.getItem('carInfo') ? JSON.parse(localStorage.getItem('carInfo')) : null);
-
     this.route.params.subscribe(params => {
       if (params.trackerId) {
         if (params.trackerId.indexOf('vwt') > -1) {
@@ -130,15 +75,5 @@ export class HomeComponent implements OnInit {
         this.mapService.activeTokenId.next('');
       }
     });
-
-    if (!carInfo || carInfo.items.length <= 0) {
-      this.apiService.apiGetCars();
-    }
-
-    this.getCarLocations();
-
-    setInterval(() => {
-      this.getCarLocations();
-    }, (5 * 60 * 1000));
   }
 }

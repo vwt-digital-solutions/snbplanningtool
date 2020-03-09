@@ -16,6 +16,7 @@ import { Helpers } from './leaflet.helpers';
 
 import {WorkItemPopupComponent} from './popup/workitem/work-item-popup.component';
 import {CarInfoPopupComponent} from './popup/carinfo/car-info-popup.component';
+import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({
   selector: 'app-map',
@@ -24,7 +25,7 @@ import {CarInfoPopupComponent} from './popup/carinfo/car-info-popup.component';
 })
 
 export class MapComponent implements AfterViewInit {
-  @HostBinding('class.map-component')
+  @HostBinding('class.map-component') true;
 
   private map: L.map;
   private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
@@ -43,6 +44,7 @@ export class MapComponent implements AfterViewInit {
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public workProvider: WorkItemProviderService,
+    public carProvider: CarProviderService,
     public resolver: ComponentFactoryResolver,
     public injector: Injector
   ) {
@@ -87,7 +89,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private addCarSubGroup(): void {
-    this.mapService.geoJsonObjectCars.features.subscribe(features => {
+    this.carProvider.carsLocationsSubject.subscribe(features => {
       let markers = features.map(feature => this.createMarker(feature));
       const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
       markers = [];
@@ -209,7 +211,7 @@ export class MapComponent implements AfterViewInit {
       .pipe(
         // Get latest features
         withLatestFrom(
-          this.mapService.geoJsonObjectCars.features,
+          this.carProvider.carsLocationsSubject,
           this.workProvider.mapWorkItemsSubject
         ),
         // Find features with this tokenId

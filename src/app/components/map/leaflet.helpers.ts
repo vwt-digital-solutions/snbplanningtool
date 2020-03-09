@@ -58,9 +58,7 @@ export class Helpers {
     control.onAdd = () => {
       const hovermode = L.DomUtil.create('a', 'map-ui-element map-btn');
       const hovermodeEnabled = this.mapService.config.markerPopupOnHover;
-      hovermode.innerHTML = `
-        <i class="fas ${ hovermodeEnabled ? 'fa-eye' : 'fa-eye-slash'}"></i>
-      `;
+      hovermode.innerHTML = `<i class="fas ${ hovermodeEnabled ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
 
       L.DomEvent
         .disableClickPropagation(hovermode)
@@ -85,20 +83,21 @@ export class Helpers {
 
   public bindPopupToMarker(componentClass, feature, marker, options) {
 
-    const component = this.resolver.resolveComponentFactory(componentClass).create(this.injector);
-    component.instance.properties = feature.properties;
-    component.changeDetectorRef.detectChanges();
-
-    marker.bindPopup(component.location.nativeElement, options);
-
     marker.on({
-      mouseover: (event) => {
+      mouseover: () => {
+
+        const component = this.resolver.resolveComponentFactory(componentClass).create(this.injector);
+        component.instance.properties = feature.properties;
+        component.changeDetectorRef.detectChanges();
+
+        marker.bindPopup(component.location.nativeElement, options);
+
         if (this.mapService.config.markerPopupOnHover && !this.mapService.clickedMarker) {
           marker.openPopup();
         }
 
       },
-      mouseout: (event) => {
+      mouseout: () => {
         if (this.mapService.config.markerPopupOnHover && !this.mapService.clickedMarker) {
           setTimeout(() => marker.closePopup(), 250);
         }
@@ -106,6 +105,7 @@ export class Helpers {
       click: (event) => {
         this.mapService.clickedMarker = true;
         marker.openPopup();
+
         event.preventDefault();
       },
     });
@@ -242,12 +242,5 @@ export class Helpers {
 
     return iconPath;
   }
-
-
-
-
-
-
-
 
 }
