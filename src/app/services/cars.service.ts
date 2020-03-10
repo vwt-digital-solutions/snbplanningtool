@@ -4,6 +4,7 @@ import { throwError } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { AuthRoleService } from './auth-role.service';
+import {CarProviderService} from './car-provider.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,15 @@ export class CarsService {
 
   constructor(
     public authRoleService: AuthRoleService,
-    private apiService: ApiService
+    public carProviderService: CarProviderService
   ) {
     this.gridOptions = {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
         { headerName: 'Naam bestuurder', field: 'driver_name', },
-        { headerName: 'Rol bestuurder', field: 'driver_skill'},
+        { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
+        { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector:this.cellEditorDriverSkill },
         {
           headerName: 'Locatie',
           field: 'token',
@@ -65,17 +67,25 @@ export class CarsService {
   }
 
   cellEditorToken(params) {
-    const carTokens = JSON.parse(localStorage.getItem('carTokens'));
-    carTokens.items.push(params.value);
+    const carTokens = this.carProviderService.carsInfoSubject.value;
 
     return {
       component: 'agRichSelectCellEditor',
-      params: { values: carTokens.items }
+      params: { values: carTokens.concat([params.value]) }
+    };
+  }
+
+  cellEditorDriverSkill(params) {
+    const values = ['Metende', 'Lasser', 'Leerling', 'Kraanmachinist', 'Overig', 'NLS', 'Cluster'];
+
+    return {
+      component: 'agRichSelectCellEditor',
+      params: { values: values }
     };
   }
 
   cellTokenLocator(params) {
-    if (params.value !== '') {
+    if (params.value !== '' ) {
       return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
       return '';

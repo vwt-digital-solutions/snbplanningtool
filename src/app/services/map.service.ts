@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class MapService {
   geoJsonObjectCars = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
   geoJsonObjectActive = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
   activeTokenId = new BehaviorSubject<string>(null);
+  clickedMarker = false;
 
   geoJsonReady = {
     map: false,
@@ -28,6 +29,8 @@ export class MapService {
     cars: true,
     work: true
   };
+
+  mapResized = new Subject<any>();
 
   config = {
     layers: ['cars', 'work'],
@@ -174,7 +177,8 @@ export class MapService {
       }
     ],
     minZoom: 8,
-    disableClusteringAtZoom: 15
+    disableClusteringAtZoom: 15,
+    markerPopupOnHover: false,
   };
 
   constructor() {

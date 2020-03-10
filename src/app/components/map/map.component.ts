@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import {Component, AfterViewInit, HostBinding, ComponentFactoryResolver, Injector} from '@angular/core';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
 import { MapService } from 'src/app/services/map.service';
@@ -11,13 +11,12 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
-import {
-  createClusterIcon,
-  createCarMarker,
-  createWorkMarker,
-  addResetZoomButton,
-  addZoomButtons
-} from './leaflet.helpers';
+
+import { Helpers } from './leaflet.helpers';
+
+import {WorkItemPopupComponent} from './popup/workitem/work-item-popup.component';
+import {CarInfoPopupComponent} from './popup/carinfo/car-info-popup.component';
+import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({
   selector: 'app-map',
@@ -26,6 +25,8 @@ import {
 })
 
 export class MapComponent implements AfterViewInit {
+  @HostBinding('class.map-component') true;
+
   private map: L.map;
   private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
   private parentCluster: L.markerClusterGroup = L.markerClusterGroup({
@@ -33,16 +34,22 @@ export class MapComponent implements AfterViewInit {
     chunkedLoading: true,
     showCoverageOnHover: false,
     disableClusteringAtZoom: this.mapService.config.disableClusteringAtZoom,
-    iconCreateFunction: (cluster) => createClusterIcon(cluster),
+    iconCreateFunction: (cluster) => this.helpers.createClusterIcon(cluster),
   });
 
   private clusters: any = {};
+  private helpers: Helpers;
 
   constructor(
     public authRoleService: AuthRoleService,
     public mapService: MapService,
     public workProvider: WorkItemProviderService,
-  ) { }
+    public carProvider: CarProviderService,
+    public resolver: ComponentFactoryResolver,
+    public injector: Injector
+  ) {
+    this.helpers = new Helpers(this.mapService, resolver, injector);
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -82,7 +89,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private addCarSubGroup(): void {
-    this.mapService.geoJsonObjectCars.features.subscribe(features => {
+    this.carProvider.carsLocationsSubject.subscribe(features => {
       let markers = features.map(feature => this.createMarker(feature));
       const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
       markers = [];
@@ -111,11 +118,36 @@ export class MapComponent implements AfterViewInit {
       }
     };
 
+    let marker;
+    let componentClass;
+    let popupOptions;
+
     if (feature.layer === 'cars') {
-      return createCarMarker(feature, options, coordinates);
+
+      marker =  this.helpers.createCarMarker(feature, options, coordinates);
+
+      popupOptions = {
+        maxWidth: 300,
+        minWidth: 200,
+      };
+
+      componentClass = CarInfoPopupComponent;
+
     } else if (feature.layer === 'work') {
-      return createWorkMarker(feature, options, coordinates);
+
+      marker = this.helpers.createWorkMarker(feature, options, coordinates);
+
+      popupOptions = {
+        maxWidth: 600,
+        minWidth: 400,
+      };
+
+      componentClass = WorkItemPopupComponent;
     }
+
+    marker = this.helpers.bindPopupToMarker(componentClass, feature,  marker, popupOptions);
+
+    return marker;
   }
 
   private addLayerButton(layer, name) {
@@ -131,7 +163,8 @@ export class MapComponent implements AfterViewInit {
   private initMap(): void {
     this.map = L.map('map', {
       preferCanvas: true,
-      // zoomAnimation: false, // If the map ever ends up lagging disable zoom animations entirely (zoomAnimationThreshold could then be removed)
+      // If map lags disable zoom animations (zoomAnimationThreshold could then be removed)
+      // zoomAnimation: false,
       zoomAnimationThreshold: 1,
       markerZoomAnimation: false,
       center: [
@@ -141,7 +174,7 @@ export class MapComponent implements AfterViewInit {
       attributionControl: false,
       zoomControl: false,
       zoom: this.mapService.config.defaults.zoomLevel,
-      minZoom: this.mapService.config.minZoom
+      minZoom: this.mapService.config.minZoom,
     });
 
     // Add google maps tiling
@@ -151,8 +184,25 @@ export class MapComponent implements AfterViewInit {
     });
 
     tiles.addTo(this.map);
-    addResetZoomButton().addTo(this.map);
-    addZoomButtons().addTo(this.map);
+
+    // Add map UI
+    this.helpers.resetZoomButton().addTo(this.map);
+    this.helpers.zoomButtons().addTo(this.map);
+    this.helpers.hoverModeSwitch().addTo(this.map);
+
+    // Add hover over popup
+    this.map.on({
+      click: () => {
+        this.mapService.clickedMarker = false;
+      },
+      popupclose: () => {
+        this.mapService.clickedMarker = false;
+      }
+    });
+
+    // Resize map on filter close
+    this.mapService.mapResized.subscribe(() => setTimeout(() => this.map.invalidateSize(true), 50));
+
     this.mapReady();
   }
 
@@ -161,12 +211,12 @@ export class MapComponent implements AfterViewInit {
       .pipe(
         // Get latest features
         withLatestFrom(
-          this.mapService.geoJsonObjectCars.features,
+          this.carProvider.carsLocationsSubject,
           this.workProvider.mapWorkItemsSubject
         ),
         // Find features with this tokenId
         map(([activeTokenId, cars, work]) => [...cars, ...work].filter(feature =>
-          (feature.properties.token === activeTokenId || feature.properties.L2GUID === activeTokenId))
+          (feature.properties.token === activeTokenId || feature.properties.l2_guid === activeTokenId))
         ),
       )
       .subscribe(features => {

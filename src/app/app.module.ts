@@ -19,12 +19,18 @@ import { HeaderComponent } from './components/header/header.component';
 import { EnvServiceProvider } from './services/env.service.provider';
 import { AuthComponent } from './auth/auth.component';
 import {FiltersModule} from './modules/filters/filters.module';
+import { WorkItemPopupComponent } from './components/map/popup/workitem/work-item-popup.component';
+import { CarInfoPopupComponent } from './components/map/popup/carinfo/car-info-popup.component';
+import { PopUpComponent } from './components/map/popup/popup';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    AuthComponent
+    AuthComponent,
+    WorkItemPopupComponent,
+    CarInfoPopupComponent,
+    PopUpComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +57,10 @@ import {FiltersModule} from './modules/filters/filters.module';
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    WorkItemPopupComponent,
+    CarInfoPopupComponent
+  ]
 })
 export class AppModule { }

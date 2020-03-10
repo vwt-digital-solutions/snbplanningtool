@@ -1,5 +1,7 @@
 /* Leaflet Overrides */
 .leaflet-popup {
+  margin-bottom: 35px;
+
   // Leaflet marker popup styling override
   .leaflet-popup-content-wrapper {
     border-radius: 3px 0 3px 3px;
@@ -136,7 +138,7 @@
 
 // Popup styling
 .popup-car, .popup-work {
-  span {
+  span:not(.license-plate) {
     background-color: #008bb8;
     border-radius: 5px;
     display: inline-block;
@@ -192,8 +194,13 @@
   }
 }
 
+.glyph-icon {
+  color: white;
+  line-height: 2;
+}
+
 .work-marker {
-  &::before {
+  &::after {
     content: "";
     display: block;
     position: absolute;
@@ -205,12 +212,12 @@
   }
 
   &.urgent {
-    &::before {
+    &::after {
       background-color: var(--red);
     }
   }
   &.semi-urgent {
-    &::before {
+    &::after {
       background-color: var(--orange);
     }
   }

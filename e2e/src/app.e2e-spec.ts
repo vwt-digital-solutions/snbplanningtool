@@ -46,7 +46,7 @@ describe('SnB Planning Tool', () => {
     it('should connect to the API', () => {
       const requestOptions = {
         method: 'GET',
-        url: browser.params.apiUrl,
+        url: browser.params.apiUrl + '/cars',
         headers: {
           Authorization: 'Bearer ' + browser.params.login.accessToken
         }

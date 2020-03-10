@@ -43,7 +43,41 @@ h1{
   color: #008BB8;
 }
 
+.btn-primary {
+  background-color: #008BB8;
+  border-color: #008BB8;
+}
+
 // MAP STYLING
+@media (min-width: 768px) {
+  .home-component {
+    width: inherit;
+    max-width: inherit;
+  }
+
+  .map-component {
+    position : fixed;
+    height: 100vh;
+    width: inherit;
+    max-width: inherit;
+  }
+
+
+  .map-container {
+      margin-right: 15px;
+  }
+
+
+  .map-container .alert {
+    margin-right: 2em;
+  }
+
+  .overlay {
+    right: 4em !important;
+  }
+
+}
+
 .gmnoprint{
   box-shadow: rgba(0, 0, 0, .3) 0 1px 4px -1px;
 

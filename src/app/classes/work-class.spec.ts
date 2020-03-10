@@ -6,6 +6,7 @@ describe('WorkClass', () => {
       'Amersfoort',
       'A description',
       'Pietje Puk',
+      '102415',
       '1970-01-01T00:00:00+00:00',
       {},
       123,

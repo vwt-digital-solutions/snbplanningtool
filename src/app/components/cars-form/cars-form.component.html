@@ -13,7 +13,7 @@
           #token="ngModel"
           required >
           <option [ngValue]="null" selected disabled hidden>-- Selecteer een token --</option>
-          <option *ngFor="let token of carsTokens.items" [value]="token">{{token}}</option>
+          <option *ngFor="let token of carsTokens" [value]="token">{{token}}</option>
         </select>
       </div>
       <div class="form-group">
@@ -40,12 +40,28 @@
       </div>
       <div class="form-group">
         <label for="driver_skill">Rol bestuurder</label>
+        <select
+          class="form-control"
+          id="driver_skill"
+          [(ngModel)]="model.driver_skill"
+          name="driver_skill">
+          <option value="Metende">Metende</option>
+          <option value="Lasser">Lasser</option>
+          <option value="Leerling">Leerling</option>
+          <option value="Kraanmachinist">Kraanmachinist</option>
+          <option value="Overig">Overig</option>
+          <option value="NLS">NLS</option>
+          <option value="Cluster">Cluster</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="driver_employee_number">Medewerkernummer bestuurder</label>
         <input
           type="text"
           class="form-control"
-          id="driver_name"
-          [(ngModel)]="model.driver_skill"
-          name="driver_name" >
+          id="driver_employee_number"
+          [(ngModel)]="model.driver_employee_number"
+          name="driver_employee_number" >
       </div>
 
       <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Annuleren</button>

@@ -5,6 +5,7 @@ import { CarClass } from 'src/app/classes/car-class';
 
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
+import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({
   selector: 'app-cars-form',
@@ -19,43 +20,40 @@ export class CarsFormComponent implements OnInit {
 
   carsTokens: object;
 
-  model = new CarClass(null, '', '', '', null);
+  model = new CarClass(null, '', '', '', '', null);
 
   constructor(
     private apiService: ApiService,
-    private carsService: CarsService
+    private carsService: CarsService,
+    private carProviderService: CarProviderService
   ) { }
 
   ngOnInit() {
-    this.apiService.apiGetTokens();
-    this.carsTokens = JSON.parse(localStorage.getItem('carTokens'));
+    this.carsTokens = this.carProviderService.tokensSubject.value;
+
+    this.carProviderService.tokensSubject.subscribe(value => {
+      this.carsTokens = value;
+    });
   }
 
   onSubmit() {
-    const that = this;
 
     delete this.model.id;
     this.model.license_plate = this.model.license_plate.toUpperCase();
+
     this.buttonSave = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
-    this.apiService.postCarInfo(this.model).subscribe(
-      result => {
-        that.model.id = Number((result as any)._carinfo_id);
-        that.carsService.gridOptions.api.updateRowData({add: [that.model]});
-
-        const oldRows = JSON.parse(localStorage.getItem('carInfo'));
-        oldRows.items.push(that.model);
-        localStorage.setItem('carInfo', JSON.stringify(oldRows));
-
+    this.carProviderService.savingSubject.subscribe(loading => {
+      if (!loading) {
         this.buttonSave = 'Opgeslagen <i class="fas fa-check"></i>';
         setTimeout(() => {
-          that.carsService.isHidden = true;
+          this.carsService.isHidden = true;
         }, 2000);
-      },
-      error => {
-        this.handleError(error);
       }
-    );
+    });
+
+    this.carProviderService.postCarInfo([this.model]);
+
   }
 
   private handleError(error) {

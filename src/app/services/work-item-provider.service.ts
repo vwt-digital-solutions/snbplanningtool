@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
-import {ChoiceFilter, ChoiceFilterType, DateFilter, ValueFilter} from '../modules/filters/filters/filters';
+import {
+  BooleanFilter, ChoiceFilter, ChoiceFilterType, DateFilter,
+  ValueFilter
+} from '../modules/filters/filters/filters';
 import {FilterMap} from '../modules/filters/filter-map';
 
 @Injectable({
@@ -24,11 +27,14 @@ export class WorkItemProviderService {
   public filterService = new FilterMap(
     [
       new ValueFilter('Beschrijving', 'description'),
-      new ChoiceFilter('Taaktype', 'task_type'),
+      new ChoiceFilter('Administratie (klantteam)', 'administration', ChoiceFilterType.multiple),
+      new ChoiceFilter('Taaktype', 'task_type', ChoiceFilterType.multiple),
       new ChoiceFilter('Status', 'status', ChoiceFilterType.multiple),
-      new ValueFilter('Plaats', 'city'),
-      new DateFilter('Begindatum', 'start_timestamp'),
+      new DateFilter('Startdatum', 'start_timestamp'),
       new DateFilter('Einddatum', 'end_timestamp'),
+      new ChoiceFilter('Categorie', 'category', ChoiceFilterType.multiple),
+      new BooleanFilter('Stagnatie', 'stagnation'),
+      new DateFilter('Uiterstehersteltijd', 'resolve_before_timestamp'),
     ]
   );
 
@@ -52,7 +58,7 @@ export class WorkItemProviderService {
     this.loading = true;
     this.loadingSubject.next(true);
 
-    this.apiService.apiGet('/workitems/all').subscribe(
+    this.apiService.apiGet('/workitems').subscribe(
       (result: any[]) => {
         this.rawWorkItems = result;
 
