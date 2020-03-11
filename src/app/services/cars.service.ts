@@ -80,7 +80,7 @@ export class CarsService {
 
     return {
       component: 'agRichSelectCellEditor',
-      params: { values: values }
+      params: { values }
     };
   }
 

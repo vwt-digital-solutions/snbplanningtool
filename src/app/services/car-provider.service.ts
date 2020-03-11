@@ -16,16 +16,24 @@ export class CarProviderService {
 
   carsLocationsSubject = new BehaviorSubject<any[]>([]);
   carsInfoSubject = new BehaviorSubject<any[]>([]);
+  carsTokenSubject = new BehaviorSubject<any[]>([]);
   tokensSubject = new BehaviorSubject<any []>([]);
 
   constructor(public authRoleService: AuthRoleService,
               private apiService: ApiService) {
-    this.getCars();
-    this.getTokens();
-    this.getCarLocations();
+
+    setTimeout(() => {
+      this.getCars();
+      this.getTokens();
+      this.getCarTokens();
+    }, 200);
+
+
+    this.carsInfoSubject.subscribe((value) => this.updateCarLocations());
+    this.carsTokenSubject.subscribe((value) => this.updateCarLocations());
 
     setInterval(() => {
-      this.getCarLocations();
+      this.getCarTokens();
     }, (5 * 60 * 1000));
 
   }
@@ -95,7 +103,7 @@ export class CarProviderService {
 
   }
 
-  public getCarLocations() {
+  public getCarTokens() {
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/cars/locations').subscribe(
@@ -103,28 +111,34 @@ export class CarProviderService {
 
         const featuresList: [any] = result.features;
 
-        const carInfo = this.carsInfoSubject.value;
-
-        for (const feature of featuresList) {
-          feature.layer = 'cars';
-
-          for (const item of carInfo) {
-            if (item.token === feature.properties.token) {
-              feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
-              feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
-              feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
-              feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
-            }
-          }
-        }
         this.loadingSubject.next(false);
-        this.carsLocationsSubject.next(featuresList);
+        this.carsTokenSubject.next(featuresList);
       },
       error => {
         this.errorSubject.next(error);
         this.loadingSubject.next(false);
       }
     );
+  }
+
+  public updateCarLocations() {
+    const featuresList = this.carsTokenSubject.value || [];
+    const carInfo = this.carsInfoSubject.value || [];
+
+    for (const feature of featuresList) {
+      feature.layer = 'cars';
+
+      for (const item of carInfo) {
+        if (item.token === feature.properties.token) {
+          feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
+          feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
+          feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
+          feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
+        }
+      }
+    }
+
+    this.carsLocationsSubject.next(featuresList);
   }
 
   public postCarInfo(items: any[]) {
