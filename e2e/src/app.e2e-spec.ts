@@ -178,16 +178,18 @@ describe('SnB Planning Tool', () => {
     it('should show more than 0 nearby cars on the workitem-popup', () => {
 
     browser.get('/werk');
+    browser.sleep(5000);
 
-    const workItemLink = element.all(by.css('.work-item-view-link')).first()
+    const workItemLink = element.all(by.css('.work-item-view-link')).first();
 
-    browser.wait(protractor.ExpectedConditions.presenceOf(workItemLink))
+    browser.wait(protractor.ExpectedConditions.presenceOf(workItemLink));
 
     workItemLink.click();
 
-    browser.sleep(5000);
-
     const workMarkers = element.all(by.css('.work-marker'));
+
+    browser.wait(protractor.ExpectedConditions.presenceOf(workMarkers.first()));
+    browser.sleep(1000);
 
     const displayedMarkers = workMarkers.filter((elem) => {
       return elem.isDisplayed();

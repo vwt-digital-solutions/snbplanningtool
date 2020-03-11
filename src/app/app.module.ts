@@ -22,6 +22,7 @@ import {FiltersModule} from './modules/filters/filters.module';
 import { WorkItemPopupComponent } from './components/map/popup/workitem/work-item-popup.component';
 import { CarInfoPopupComponent } from './components/map/popup/carinfo/car-info-popup.component';
 import { PopUpComponent } from './components/map/popup/popup';
+import {TokenURLPipe} from './pipes/TokenURLPipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { PopUpComponent } from './components/map/popup/popup';
     AuthComponent,
     WorkItemPopupComponent,
     CarInfoPopupComponent,
-    PopUpComponent
+    PopUpComponent,
+    TokenURLPipe
   ],
   imports: [
     BrowserModule,

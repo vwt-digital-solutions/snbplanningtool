@@ -92,7 +92,7 @@
         <div class="col">{{linkedCar.driver_name}} ({{linkedCar.driver_skill || '-'}})</div>
         <div class="col-auto text-right">
           <a *ngIf="linkedCarLocation" datatype=""
-             href="/kaart/{{linkedCarToken}}">
+             href="/kaart/{{linkedCar.token | token_url_encode }}">
             Bekijk
           </a>
         </div>
@@ -130,7 +130,7 @@
           <br/>
         </div>
         <div class="col-auto text-right">
-          <a href="/kaart/{{nearbyCar.carInfo.token}}">
+          <a href="/kaart/{{nearbyCar.carInfo.token | token_url_encode }}">
             Bekijk
           </a>
         </div>

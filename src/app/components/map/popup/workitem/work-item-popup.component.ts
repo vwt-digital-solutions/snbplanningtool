@@ -72,7 +72,6 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
 
       if (this.linkedCar) {
         this.linkedCarLocation = this.carProviderService.getCarLocationForToken(this.linkedCar.token);
-        this.linkedCarToken = this.linkedCar.token.replace(/\//g, '-');
       }
     }
   }

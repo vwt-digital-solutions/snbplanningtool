@@ -88,7 +88,7 @@ export class CarsService {
     if (params.value !== '' ) {
       return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
-      return '';
+      return '-';
     }
   }
 
