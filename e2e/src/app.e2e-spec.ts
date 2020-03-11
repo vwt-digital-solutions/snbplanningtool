@@ -174,4 +174,36 @@ describe('SnB Planning Tool', () => {
       const carsRows = element.all(by.css('.ag-row')).count();
       expect(carsRows).toBeGreaterThan(0);
     });
+
+    it('should show more than 0 nearby cars on the workitem-popup', () => {
+
+    browser.get('/werk');
+
+    const workItemLink = element.all(by.css('.work-item-view-link')).first()
+
+    browser.wait(protractor.ExpectedConditions.presenceOf(workItemLink))
+
+    workItemLink.click();
+
+    browser.sleep(5000);
+
+    const workMarkers = element.all(by.css('.work-marker'));
+
+    const displayedMarkers = workMarkers.filter((elem) => {
+      return elem.isDisplayed();
+    });
+
+
+
+    displayedMarkers.first().click();
+    browser.sleep(500);
+
+    element.all(by.css('.nearby-cars-link')).first().click();
+    browser.sleep(5000);
+
+    const carsRows = element.all(by.css('.nearby-car')).count();
+
+    expect(carsRows).toBeGreaterThan(0);
+  });
+
 });

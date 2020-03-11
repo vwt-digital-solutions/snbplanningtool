@@ -83,24 +83,65 @@
         <span> {{properties.employee_number || '-'}}</span>
       </div>
     </div>
-
-    <hr>
-    <h6 class="text-center">Gelinkte auto</h6>
-    <div *ngIf="linkedCar" class="row align-items-center">
-      <div class="col-auto"><img src="/assets/images/car-location.png"/></div>
-      <div class="col-auto"><span class="license-plate license-nl">{{linkedCar.license_plate}}</span></div>
-      <div class="col">{{linkedCar.driver_name}} ({{linkedCar.driver_skill || '-'}})</div>
-      <div class="col-auto text-right">
-        <a *ngIf="linkedCarLocation" datatype=""
-           href="/kaart/{{linkedCarToken}}">
-          Bekijk
-        </a>
+    <div *ngIf="properties.employee_number">
+      <hr>
+      <h6 class="text-center">Gelinkte auto</h6>
+      <div *ngIf="linkedCar" class="row align-items-center">
+        <div class="col-auto"><img src="/assets/images/car-location.png"/></div>
+        <div class="col-auto"><span class="license-plate license-nl">{{linkedCar.license_plate}}</span></div>
+        <div class="col">{{linkedCar.driver_name}} ({{linkedCar.driver_skill || '-'}})</div>
+        <div class="col-auto text-right">
+          <a *ngIf="linkedCarLocation" datatype=""
+             href="/kaart/{{linkedCarToken}}">
+            Bekijk
+          </a>
+        </div>
+      </div>
+      <div *ngIf="!linkedCar" class="row">
+        <div class="col-12 text-center">
+          Geen auto gevonden.
+        </div>
       </div>
     </div>
-    <div *ngIf="!linkedCar" class="row">
-      <div class="col-12 text-center">
-        Geen auto gevonden.
+    <div *ngIf="shouldShowNearbyCars">
+      <hr>
+      <h6 class="text-center">Dichtbijzijnde auto's</h6>
+      <div class="row justify-content-center" *ngIf="shouldShowNearbyCars && !nearbyCars && !nearbyCarsError && !loadingNearbyCars">
+        <div class="col-auto my-3">
+          <a class="nearby-cars-link" href="javascript:void(0);" (click)="downloadNearbyCars()">Toon auto's in de buurt</a>
+        </div>
       </div>
+      <div class="row" *ngIf="loadingNearbyCars">
+        <div class="col-12 text-center my-3">
+          <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+        </div>
+      </div>
+      <div class="row" *ngIf="nearbyCarsError">
+        <div class="col">
+          Er is een fout opgetreden.
+        </div>
+      </div>
+      <div class="row align-items-center pt-2 nearby-car" *ngFor="let nearbyCar of nearbyCars">
+        <div class="col">
+          <strong>{{(nearbyCar.travel_time / 60) | number:'1.0-0' }} min <br/> {{nearbyCar.distance}} km</strong>
+        </div>
+        <div class="col-auto"><span class="license-plate license-nl">{{nearbyCar.carInfo.license_plate}}</span></div>
+        <div class="col">{{nearbyCar.carInfo.driver_name}} <br/> ({{nearbyCar.carInfo.driver_skill || '-'}})
+          <br/>
+        </div>
+        <div class="col-auto text-right">
+          <a href="/kaart/{{nearbyCar.carInfo.token}}">
+            Bekijk
+          </a>
+        </div>
+        <hr/>
+      </div>
+
+      <div>
+
+
+      </div>
+
     </div>
 
   </div>

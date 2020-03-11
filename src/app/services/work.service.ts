@@ -110,7 +110,7 @@ export class WorkService {
 
   cellTokenLocator(params) {
     if (params.data.geometry && params.data.geometry.coordinates.length && params.value !== '') {
-      return '<a href="/kaart/' + params.value + '">Bekijk</a>';
+      return '<a class="work-item-view-link" href="/kaart/' + params.value + '">Bekijk</a>';
     } else {
       return '-';
     }

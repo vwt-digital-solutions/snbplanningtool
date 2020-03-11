@@ -5,6 +5,8 @@ import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
 import {CarClass} from '../classes/car-class';
 
+import {map} from 'rxjs/internal/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -199,7 +201,32 @@ export class CarProviderService {
   }
 
   public getCarLocationForToken(token: string) {
+    if (!token) {
+      return null;
+    }
+
     return this.carsLocationsSubject.value.filter(feature => feature.properties.token === token)[0];
+  }
+
+  public getCarInfoForToken(token: string) {
+    if (!token) {
+      return null;
+    }
+
+    return this.carsInfoSubject.value.filter(carInfo => carInfo.token === token)[0];
+  }
+
+  public getCarDistances(workItem: string) {
+
+    return this.apiService.apiGet('/cars/distances?work_item=' + workItem).pipe(
+      map((result: any) => {
+        for (const item of result.items) {
+          item.carInfo = this.getCarInfoForToken(item.token);
+        }
+
+        return result.items;
+      }
+    ));
   }
 }
 
