@@ -81,7 +81,7 @@ describe('SnB Planning Tool', () => {
 
       const clusters = element.all(by.css('.cluster')).count();
       expect(clusters).toBeGreaterThan(0);
-    })
+    });
 
     it('should show more than 0 location(s)', () => {
       browser.get('/werk');

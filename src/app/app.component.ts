@@ -26,7 +26,7 @@ export class AppComponent {
     public mapService: MapService,
   ) {
     // Save our URL so we can restore it after AD login
-    if (!window.location.href.includes('access_token')) {
+    if (!window.location.href.includes('access_token') && window.location.href.includes('localhost')) {
       sessionStorage.setItem('url', window.location.href);
     }
 
@@ -46,7 +46,8 @@ export class AppComponent {
     this.oauthService.tryLogin({});
 
     // Load our saved URL
-    if (sessionStorage.getItem('url').includes('?')) {
+    const savedURL = sessionStorage.getItem('url');
+    if (savedURL && savedURL.includes('?')) {
       const queryParams = this.queryParamService.getRouteParams(sessionStorage.getItem('url'));
       this.queryParamService.setRouteParams(queryParams);
     }
