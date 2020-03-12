@@ -2,7 +2,7 @@
   <label [for]="filter.field">{{filter.name}}</label>
   <div [id]="filter.field + 'filter-div'"></div>
 
-  <input *ngSwitchCase="'input'" type="text" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field" [value]="filter.value" (input)="filter.value = $event.target.value">
+  <input *ngSwitchCase="'input'" type="text" class="form-control" (ngModelChange)="filter.dataChange($event)" [ngModel]="filter.value" [id]="filter.field">
 
   <select *ngSwitchCase="'single-choice'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
     <option value="">--</option>

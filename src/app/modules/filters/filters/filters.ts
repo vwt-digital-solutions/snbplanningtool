@@ -63,6 +63,11 @@ export class ValueFilter extends Filter {
     this.value = newValue;
   }
 
+  dataChange(value) {
+    this.value = value;
+    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+  }
+
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case ValueFilterType.contains:
