@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import {AuthRoleService} from './auth-role.service';
-import {ApiService} from './api.service';
+import { AuthRoleService } from './auth-role.service';
+import { ApiService } from './api.service';
 import {
-  BooleanFilter, ChoiceFilter, ChoiceFilterType, DateFilter,
+  BooleanFilter,
+  ChoiceFilter,
+  ChoiceFilterType,
+  DateFilter,
   ValueFilter
 } from '../modules/filters/filters/filters';
 import {FilterMap} from '../modules/filters/filter-map';
+import { QueryParameterService } from './query-parameter.service';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -38,15 +43,23 @@ export class WorkItemProviderService {
     ]
   );
 
-  constructor(public authRoleService: AuthRoleService,
-              private apiService: ApiService,
-              ) {
+  constructor(
+    public authRoleService: AuthRoleService,
+    private apiService: ApiService,
+    private queryParameterService: QueryParameterService
+  ) {
     this.filterService.filterChanged.subscribe(value => {
+      this.queryParameterService.setRouteParams(value);
       this.filterWorkItems();
       this.workItemsToFeatureCollection();
     });
 
     this.getWorkItems();
+
+    // Only take 2 subscriptions the initial empty route and the routeparams that are initialised later.
+    this.queryParameterService.route.queryParams.pipe(take(2)).subscribe(params => {
+      this.filterService.setFilterValues(params);
+    });
 
     setInterval(() => {
       this.getWorkItems();
