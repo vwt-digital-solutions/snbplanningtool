@@ -224,6 +224,8 @@ export class DateFilter extends Filter  {
 
   setValue(newValue) {
     this.value = JSON.parse(newValue);
+    this.fromDate = this.value.fromDate;
+    this.toDate = this.value.toDate;
   }
 
   dateChanged(dateField, date: NgbDate) {
