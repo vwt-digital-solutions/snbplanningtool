@@ -226,7 +226,8 @@ export class MapComponent implements AfterViewInit {
           const coordinates = feature.geometry.coordinates;
 
           // Zoom marker into center of view
-          this.map.setZoomAround(L.latLng(coordinates[1], coordinates[0]), 16);
+          this.map.setZoom(15);
+          this.map.panTo(L.latLng(coordinates[1], coordinates[0]));
         }
       });
 
