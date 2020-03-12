@@ -38,7 +38,7 @@ export class WorkItemProviderService {
       new DateFilter('Startdatum', 'start_timestamp'),
       new DateFilter('Einddatum', 'end_timestamp'),
       new ChoiceFilter('Categorie', 'category', ChoiceFilterType.multiple),
-      new BooleanFilter('Stagnatie', 'stagnation'),
+      new BooleanFilter('Stagnatie', 'stagnation', ''),
       new DateFilter('Uiterstehersteltijd', 'resolve_before_timestamp'),
     ]
   );

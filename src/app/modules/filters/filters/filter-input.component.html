@@ -38,10 +38,10 @@
     </div>
   </div>
 
-  <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(filter.value)" (input)="filter.value = $event.target.value">
-    <option value="">--</option>
-    <option value="true">Ja</option>
-    <option value="false">Nee</option>
+  <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" [ngModel]="filter.value" (ngModelChange)="filter.dataChange($event)">
+    <option [ngValue]="''">--</option>
+    <option [ngValue]="true">Ja</option>
+    <option [ngValue]="false">Nee</option>
   </select>
 
 </div>

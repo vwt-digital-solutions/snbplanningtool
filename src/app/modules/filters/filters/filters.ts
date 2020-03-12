@@ -277,7 +277,15 @@ export class BooleanFilter extends Filter {
   inputType = 'optional-boolean';
 
   setValue(newValue) {
-    this.value = newValue;
+    if (newValue != null) {
+      this.value = newValue;
+    }
+  }
+
+  dataChange(value) {
+    this.value = value;
+
+    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
   }
 
   filterElement(element, index, array): boolean {
@@ -285,8 +293,6 @@ export class BooleanFilter extends Filter {
       return true;
     }
 
-    const value = this.value === 'true';
-
-    return element[this.field] === value;
+    return element[this.field] === this.value;
   }
 }
