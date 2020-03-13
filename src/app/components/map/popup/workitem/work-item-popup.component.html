@@ -3,38 +3,45 @@
     <div class="row">
       <div class="col-6 item administration">
         <p>Administratie</p>
-        <span>{{properties.administration || '-'}}</span>
+        <span>{{ properties.administration || '-' }}</span>
       </div>
       <div class="col-6 item task_type">
         <p>Taaktype</p>
-        <span>{{properties.task_type || '-'}}</span>
+        <span>{{ properties.task_type || '-' }}</span>
       </div>
       <div class="col-6 item project">
         <p>Project</p>
-        <span>{{properties.project || '-'}}</span>
+        <span>{{ properties.project || '-' }}</span>
       </div>
       <div class="col-6 item project_number">
         <p>Projectnummer</p>
-        <span>{{properties.project_number || '-'}}</span>
+        <span>{{ properties.project_number || '-' }}</span>
       </div>
-      <div class="col-4 item category">
+      <div class="col-6 item category">
         <p>Categorie</p>
-        <span>{{properties.category || '-'}}</span>
+        <span>{{ properties.category || '-' }}</span>
       </div>
-      <div class="col-4 item status">
+      <div class="col-6 item stagnation">
+        <p>Stagnatie</p>
+        <span>{{ properties.stagnation ? 'Ja' : 'Nee' }}</span>
+      </div>
+      <div class="col-6 item status">
         <p>Status</p>
         <span>{{properties.status || '-'}}</span>
       </div>
-      <div class="col-4 item stagnation">
-        <p>Stagnatie</p>
-        <span>{{properties.stagnation ? 'Ja' : 'Nee'}}</span>
+      <div class="col-6 item sla-status">
+        <p>SLA Status</p>
+        <span *ngIf="SLA.onTime">Op tijd</span>
+        <span *ngIf="!SLA.onTime && end_time[0] != null">
+          Overschrijding van {{ SLA.days }} {{ SLA.days == 1 ? 'dag' : 'dagen' }}
+        </span>
       </div>
     </div>
 
     <div class="row">
       <div class="col-6 item description">
         <p>Beschrijving</p>
-        <span>{{properties.description || '-'}}</span>
+        <span>{{ properties.description || '-' }}</span>
       </div>
       <div class="col-6 item description">
         <p>Uiterste hersteltijd</p>
@@ -42,6 +49,7 @@
         <span>{{ resolve_before_time[1] || '-'}} </span>
       </div>
     </div>
+
     <div class="row">
       <div class="col-6 item date">
         <p>Startdatum</p>
@@ -55,44 +63,52 @@
       </div>
     </div>
 
-    <hr>
-    <div class="row" *ngIf="properties.city || properties.zip || properties.street">
-      <div class="col-auto item street">
-        <p>Straat</p>
-        <span> {{properties.street}} {{properties.house || ''}} {{properties.extra || ''}} </span>
-      </div>
-      <div class="col-auto item zip">
-        <p>Postcode</p>
-        <span> {{properties.zip}}</span>
-      </div>
-      <div class="col-auto item city">
-        <p>Plaats</p>
-        <span> {{properties.city || 'N/B'}}</span>
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-      <div class="col-6 item employee_name">
-        <p>Naam werknemer</p>
-        <span> {{properties.employee_name || '-'}}</span>
-      </div>
-      <div class="col-6 item employee_number">
-        <p>Medewerkernr.</p>
-        <span> {{properties.employee_number || '-'}}</span>
-      </div>
-    </div>
-    <div *ngIf="properties.employee_number">
+    <div *ngIf="properties.city || properties.zip || properties.street">
       <hr>
+
+      <div class="row">
+        <div class="col-6 item street">
+          <p>Straat</p>
+          <span> {{ properties.street }} {{ properties.house || '' }} {{ properties.extra || '' }} </span>
+        </div>
+        <div class="col-6 item zip">
+          <p>Postcode</p>
+          <span> {{ properties.zip }}</span>
+        </div>
+        <div class="col-6 item city">
+          <p>Plaats</p>
+          <span> {{ properties.city || 'N/B' }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="properties.employee_name || properties.employee_number">
+      <hr>
+
+      <div class="row">
+        <div class="col-6 item employee_name">
+          <p>Naam werknemer</p>
+          <span> {{ properties.employee_name || '-' }}</span>
+        </div>
+        <div class="col-6 item employee_number">
+          <p>Medewerkernr.</p>
+          <span> {{ properties.employee_number || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div>
+      <hr>
+
       <h6 class="text-center">Gelinkte auto</h6>
       <div *ngIf="linkedCar" class="row align-items-center">
-        <div class="col-auto"><img src="/assets/images/car-location.png"/></div>
-        <div class="col-auto"><span class="license-plate license-nl">{{linkedCar.license_plate}}</span></div>
-        <div class="col">{{linkedCar.driver_name}} ({{linkedCar.driver_skill || '-'}})</div>
+        <div class="col-auto"><img src="/assets/images/car-location.png" /></div>
+        <div class="col-auto"><span class="license-plate license-nl">{{ linkedCar.license_plate }}</span></div>
+        <div class="col">{{ linkedCar.driver_name }} ({{ linkedCar.driver_skill || '-' }})</div>
         <div class="col-auto text-right">
-          <a *ngIf="linkedCarLocation" datatype=""
-             href="/kaart/{{linkedCar.token | token_url_encode }}">
+          <a *ngIf="linkedCarLocation" datatype="" [routerLink]="['/kaart/', linkedCar.token | token_url_encode]">
             Bekijk
           </a>
         </div>
@@ -103,46 +119,44 @@
         </div>
       </div>
     </div>
+
     <div *ngIf="shouldShowNearbyCars">
       <hr>
       <h6 class="text-center">Dichtbijzijnde auto's</h6>
-      <div class="row justify-content-center" *ngIf="shouldShowNearbyCars && !nearbyCars && !nearbyCarsError && !loadingNearbyCars">
+      <div class="row justify-content-center"
+        *ngIf="shouldShowNearbyCars && !nearbyCars && !nearbyCarsError && !loadingNearbyCars">
         <div class="col-auto my-3">
-          <a class="nearby-cars-link" href="javascript:void(0);" (click)="downloadNearbyCars()">Toon auto's in de buurt</a>
+          <a class="nearby-cars-link" href="javascript:void(0);" (click)="downloadNearbyCars()">Toon auto's in de
+            buurt</a>
         </div>
       </div>
+
       <div class="row" *ngIf="loadingNearbyCars">
         <div class="col-12 text-center my-3">
           <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
         </div>
       </div>
+
       <div class="row" *ngIf="nearbyCarsError">
         <div class="col">
           Er is een fout opgetreden.
         </div>
       </div>
+
       <div class="row align-items-center pt-2 nearby-car" *ngFor="let nearbyCar of nearbyCars">
         <div class="col">
-          <strong>{{(nearbyCar.travel_time / 60) | number:'1.0-0' }} min <br/> {{nearbyCar.distance}} km</strong>
+          <strong>{{ (nearbyCar.travel_time / 60) | number:'1.0-0' }} min <br /> {{ nearbyCar.distance }} km</strong>
         </div>
-        <div class="col-auto"><span class="license-plate license-nl">{{nearbyCar.carInfo.license_plate}}</span></div>
-        <div class="col">{{nearbyCar.carInfo.driver_name}} <br/> ({{nearbyCar.carInfo.driver_skill || '-'}})
-          <br/>
+        <div class="col-auto"><span class="license-plate license-nl">{{ nearbyCar.carInfo.license_plate }}</span></div>
+        <div class="col">{{ nearbyCar.carInfo.driver_name }} <br /> ({{ nearbyCar.carInfo.driver_skill || '-' }})
+          <br />
         </div>
         <div class="col-auto text-right">
-          <a href="/kaart/{{nearbyCar.carInfo.token | token_url_encode }}">
-            Bekijk
-          </a>
+          <a [routerLink]="['/kaart/', nearbyCar.carInfo.token | token_url_encode]">Bekijk</a>
         </div>
-        <hr/>
-      </div>
-
-      <div>
-
-
+        <hr />
       </div>
 
     </div>
-
   </div>
 </div>

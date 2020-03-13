@@ -1,22 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 
 @Component({
   selector: 'app-pop-up',
-  template: `
-    <p>
-      pop-up works!
-    </p>
-  `,
+  template: ``,
   styleUrls: ['./pop-up.component.scss']
 })
-export class PopUpComponent implements OnInit {
+export class PopUpComponent {
 
   public properties;
 
   constructor() { }
-
-  ngOnInit() {
-  }
-
 }

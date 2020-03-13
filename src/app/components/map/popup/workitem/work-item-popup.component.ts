@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import * as moment from 'moment';
 import {PopUpComponent} from '../popup';
 import {MapService} from '../../../../services/map.service';
 import {CarProviderService} from '../../../../services/car-provider.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-work-item-popup',
@@ -10,15 +10,21 @@ import {CarProviderService} from '../../../../services/car-provider.service';
   styleUrls: ['./work-item-popup.component.scss']
 })
 export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
-  constructor(private mapService: MapService,
-              private carProviderService: CarProviderService,
-              private changeDectectorRef: ChangeDetectorRef) {
+  constructor(
+    private mapService: MapService,
+    private carProviderService: CarProviderService,
+    private changeDectectorRef: ChangeDetectorRef
+  ) {
     super();
   }
 
   public start_time: [string, string];
   public end_time: [string, string];
   public resolve_before_time: [string, string];
+  public SLA = {
+    days: null,
+    onTime: false
+  };
 
   public linkedCar;
   public linkedCarLocation;
@@ -63,8 +69,25 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     }
 
     if ('end_timestamp' in this.properties) {
-      const momentDate = moment(this.properties.resolve_before_timestamp);
-      this.resolve_before_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : ['-', '-'];
+      const resolveBeforeDate = moment(this.properties.resolve_before_timestamp);
+
+      if (resolveBeforeDate.isValid() && this.properties.end_timestamp != null) {
+        const endDate = moment(this.properties.end_timestamp);
+        const daysUntilSLA = Math.abs(Math.round(endDate.diff(resolveBeforeDate, 'days', true)));
+
+        if (endDate.isAfter(resolveBeforeDate)) {
+          this.SLA = {
+            onTime: false,
+            days: daysUntilSLA
+          };
+        } else {
+          this.SLA.onTime = true;
+        }
+
+        this.resolve_before_time = [resolveBeforeDate.format('DD-MM-YYYY'), resolveBeforeDate.format('HH:mm')];
+      } else {
+        this.resolve_before_time = ['-', '-'];
+      }
     }
 
     if (this.properties.employee_number) {
