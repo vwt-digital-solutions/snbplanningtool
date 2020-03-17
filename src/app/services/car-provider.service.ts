@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject, throwError} from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
-import {CarClass} from '../classes/car-class';
+import {Car} from '../classes/car';
 
 import {map} from 'rxjs/internal/operators';
+import CarLocation from '../classes/car-location';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class CarProviderService {
     setTimeout(() => {
       this.getCars();
       this.getTokens();
-      this.getCarTokens();
+      this.getCarLocations();
     }, 200);
 
 
@@ -35,10 +36,14 @@ export class CarProviderService {
     this.carsTokenSubject.subscribe((value) => this.updateCarLocations());
 
     setInterval(() => {
-      this.getCarTokens();
+      this.getCarLocations();
     }, (5 * 60 * 1000));
 
   }
+
+  ////
+  // API methods
+  ////
 
   public getCars() {
     if (localStorage.getItem('carInfo')) {
@@ -53,21 +58,23 @@ export class CarProviderService {
 
     this.apiService.apiGet('/cars').subscribe(
       result => {
-        const rowData = [];
-        const newCarInfo = new Object();
+        const carInfoItems = [];
 
-        for (const row in result) {
-          if (result.hasOwnProperty(row)) {
-            const data = result[row];
-            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name,
-              data.driver_skill, data.driver_employee_number, data.token));
+        for (const property in result) {
+          if (result.hasOwnProperty(property)) {
+            const carInfo = result[property];
+            carInfoItems.push(new Car(carInfo.id, carInfo.license_plate, carInfo.driver_name,
+              carInfo.driver_skill, carInfo.driver_employee_number, carInfo.token));
           }
         }
 
-        (newCarInfo as any).items = rowData;
-        (newCarInfo as any).lastUpdated = new Date().getTime();
+        const newCarInfo = {
+          items: carInfoItems,
+          lastUpdated: new Date().getTime()
+        };
+
         localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
-        this.carsInfoSubject.next(rowData);
+        this.carsInfoSubject.next(carInfoItems);
         this.loadingSubject.next(false);
 
         return newCarInfo;
@@ -105,7 +112,7 @@ export class CarProviderService {
 
   }
 
-  public getCarTokens() {
+  public getCarLocations() {
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/cars/locations').subscribe(
@@ -123,24 +130,17 @@ export class CarProviderService {
     );
   }
 
-  public updateCarLocations() {
-    const featuresList = this.carsTokenSubject.value || [];
-    const carInfo = this.carsInfoSubject.value || [];
+  public getCarDistances(workItem: string) {
 
-    for (const feature of featuresList) {
-      feature.layer = 'cars';
+    return this.apiService.apiGet('/cars/distances?work_item=' + workItem).pipe(
+      map((result: any) => {
+          for (const item of result.items) {
+            item.carLocation = this.getCarLocationForToken(item.token);
+          }
 
-      for (const item of carInfo) {
-        if (item.token === feature.properties.token) {
-          feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
-          feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
-          feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
-          feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
+          return result.items;
         }
-      }
-    }
-
-    this.carsLocationsSubject.next(featuresList);
+      ));
   }
 
   public postCarInfo(items: any[]) {
@@ -196,6 +196,33 @@ export class CarProviderService {
     });
   }
 
+  ////
+  // Subject methods
+  ////
+
+  public updateCarLocations() {
+    const featuresList = this.carsTokenSubject.value || [];
+    const carInfo = this.carsInfoSubject.value || [];
+
+    const carLocations = [];
+
+    for (const feature of featuresList) {
+      const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
+      for (const item of carInfo) {
+        if (item.token === feature.properties.token) {
+          carLocation.car = item;
+        }
+      }
+      carLocations.push(carLocation);
+    }
+
+    this.carsLocationsSubject.next(carLocations);
+  }
+
+  ////
+  // Search methods
+  ////
+
   public getCarWithEmployeeNumber(employeeNumber: string) {
     return this.carsInfoSubject.value.filter(carInfo => carInfo.driver_employee_number === employeeNumber)[0];
   }
@@ -205,33 +232,7 @@ export class CarProviderService {
       return null;
     }
 
-    return this.carsLocationsSubject.value.filter(feature => feature.properties.token === token)[0];
+    return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
 
-  public getCarInfoForToken(token: string) {
-    if (!token) {
-      return null;
-    }
-
-    return this.carsInfoSubject.value.filter(carInfo => carInfo.token === token)[0];
-  }
-
-  public getCarDistances(workItem: string) {
-
-    return this.apiService.apiGet('/cars/distances?work_item=' + workItem).pipe(
-      map((result: any) => {
-        for (const item of result.items) {
-          item.carInfo = this.getCarInfoForToken(item.token);
-        }
-
-        return result.items;
-      }
-    ));
-  }
 }
-
-
-
-
-
-

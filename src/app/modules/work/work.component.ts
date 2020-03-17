@@ -4,7 +4,7 @@ import { throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { WorkService } from 'src/app/services/work.service';
 
-import { WorkClass } from 'src/app/classes/work-class';
+import { WorkItem } from 'src/app/classes/work-item';
 import {WorkItemProviderService} from '../../services/work-item-provider.service';
 
 @Component({
@@ -59,7 +59,7 @@ export class WorkComponent {
     for (const row in this.workItems) {
       if (this.workItems.hasOwnProperty(row)) {
         const data = this.workItems[row];
-        rowData.push(new WorkClass(
+        rowData.push(new WorkItem(
           data.administration, data.category, data.resolve_before_timestamp,
           data.stagnation, data.project,
           data.city, data.description,

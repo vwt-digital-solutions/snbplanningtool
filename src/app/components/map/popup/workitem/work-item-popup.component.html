@@ -144,19 +144,20 @@
       </div>
 
       <div class="row align-items-center pt-2 nearby-car" *ngFor="let nearbyCar of nearbyCars">
-        <div class="col">
-          <strong>{{ (nearbyCar.travel_time / 60) | number:'1.0-0' }} min <br /> {{ nearbyCar.distance }} km</strong>
+        <div class="col-auto"><span class="license-plate license-nl">{{nearbyCar.carLocation.car.license_plate}}</span></div>
+        <div class="col">{{nearbyCar.carLocation.car.driver_name}} <br/> ({{nearbyCar.carLocation.car.driver_skill || '-'}})
+          <br/>
         </div>
-        <div class="col-auto"><span class="license-plate license-nl">{{ nearbyCar.carInfo.license_plate }}</span></div>
-        <div class="col">{{ nearbyCar.carInfo.driver_name }} <br /> ({{ nearbyCar.carInfo.driver_skill || '-' }})
-          <br />
+        <div class="col text-right">
+          <strong>{{(nearbyCar.travel_time / 60) | number:'1.0-0' }} min <br/> {{nearbyCar.distance}} km</strong>
         </div>
-        <div class="col-auto text-right">
-          <a [routerLink]="['/kaart/', nearbyCar.carInfo.token | token_url_encode]">Bekijk</a>
-        </div>
-        <hr />
+        <hr/>
       </div>
-
+      <div class="row my-1" *ngIf="nearbyCars">
+        <div class="col text-center">
+          <a href="javascript:void(0);" (click)="showAsCustomLayer();">Toon op kaart.</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

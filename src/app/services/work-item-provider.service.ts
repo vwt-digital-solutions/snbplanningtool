@@ -13,6 +13,7 @@ import {
 import {FilterMap} from '../modules/filters/filter-map';
 import { QueryParameterService } from './query-parameter.service';
 import { take } from 'rxjs/operators';
+import {WorkItem} from '../classes/work-item';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,9 @@ export class WorkItemProviderService {
 
   rawWorkItems: any[]  = [];
   filteredWorkItems: any[] = [];
-  workItemsFeatureCollection: any[] = [];
   loading = true;
 
   workItemsSubject = new BehaviorSubject<any[]>([]);
-  mapWorkItemsSubject = new BehaviorSubject<any[]>([]);
   loadingSubject = new BehaviorSubject<boolean>(true);
   errorSubject  = new Subject<any>();
 
@@ -51,7 +50,6 @@ export class WorkItemProviderService {
     this.filterService.filterChanged.subscribe(value => {
       this.queryParameterService.setRouteParams(value);
       this.filterWorkItems();
-      this.workItemsToFeatureCollection();
     });
 
     this.getWorkItems();
@@ -73,10 +71,29 @@ export class WorkItemProviderService {
 
     this.apiService.apiGet('/workitems').subscribe(
       (result: any[]) => {
-        this.rawWorkItems = result;
+        this.rawWorkItems = result.map(resultItem =>
+          new WorkItem(
+            resultItem.administration,
+            resultItem.category,
+            resultItem.resolve_before_timestamp,
+            resultItem.stagnation,
+            resultItem.project,
+            resultItem.city,
+            resultItem.description,
+            resultItem.employee_name,
+            resultItem.employee_number,
+            resultItem.end_timestamp,
+            resultItem.geometry,
+            resultItem.project_number,
+            resultItem.start_timestamp,
+            resultItem.status,
+            resultItem.street,
+            resultItem.task_type,
+            resultItem.zip,
+            resultItem.l2_guid,
+          ));
 
         this.filterWorkItems();
-        this.workItemsToFeatureCollection();
         this.loading = false;
         this.loadingSubject.next(false);
       },
@@ -91,31 +108,6 @@ export class WorkItemProviderService {
   private filterWorkItems() {
     this.filteredWorkItems = this.filterService.filterList(this.rawWorkItems);
     this.workItemsSubject.next(this.filteredWorkItems);
-  }
-
-  private workItemsToFeatureCollection() {
-    const newWorkItemsFeatureCollection = [];
-
-    for (const item in this.filteredWorkItems) {
-      if (this.filteredWorkItems[item].geometry) {
-        const newWorkItem = { type: 'Feature', geometry: { type: 'Point', coordinates: [] }, properties: {} };
-
-        for (const property in this.filteredWorkItems[item]) {
-          if (property !== 'geometry') {
-            newWorkItem.properties[property] = this.filteredWorkItems[item][property];
-          } else {
-            newWorkItem.geometry.coordinates = this.filteredWorkItems[item][property].coordinates;
-          }
-        }
-        (newWorkItem as any).layer = 'work';
-        (newWorkItem as any).active = true;
-
-        newWorkItemsFeatureCollection.push(newWorkItem);
-      }
-    }
-    this.workItemsFeatureCollection = newWorkItemsFeatureCollection;
-    this.mapWorkItemsSubject.next(this.workItemsFeatureCollection);
-
   }
 }
 

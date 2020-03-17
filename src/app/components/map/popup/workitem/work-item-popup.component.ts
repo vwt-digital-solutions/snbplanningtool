@@ -1,8 +1,12 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {PopUpComponent} from '../popup';
+import {CustomLayer} from '../../../../models/layer';
+
 import {MapService} from '../../../../services/map.service';
 import {CarProviderService} from '../../../../services/car-provider.service';
+
 import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-work-item-popup',
@@ -97,5 +101,13 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
         this.linkedCarLocation = this.carProviderService.getCarLocationForToken(this.linkedCar.token);
       }
     }
+  }
+
+  public showAsCustomLayer() {
+    const title = 'Auto\'s dichtbij werkitem ' + this.properties.l2_guid;
+    const items = this.nearbyCars.map(carDistance => carDistance.carLocation);
+    items.push(this.properties);
+    const customLayer = new CustomLayer(title, items);
+    this.mapService.addCustomLayer(customLayer);
   }
 }

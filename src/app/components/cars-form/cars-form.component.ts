@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { CarClass } from 'src/app/classes/car-class';
+import { Car } from 'src/app/classes/car';
 
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
@@ -20,7 +20,7 @@ export class CarsFormComponent implements OnInit {
 
   carsTokens: object;
 
-  model = new CarClass(null, '', '', '', '', null);
+  model = new Car(null, '', '', '', '', null);
 
   constructor(
     private apiService: ApiService,
