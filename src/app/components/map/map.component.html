@@ -1,14 +1,16 @@
   <div class="row map-container">
-    <div class="overlay">
-      <span>Laatste update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/B'}}</b></span>
-      <span [ngClass]="refreshStatusClasses()" [innerHTML]="this.mapService.refreshStatus"></span>
+    <div id="map">
+      <app-layer-control [layers]="this.controlledLayers"></app-layer-control>
+      <div class="overlay">
+        <span>Laatste update: <b>{{(this.mapService.refreshUpdate | date:'HH:mm') || 'N/B'}}</b></span>
+        <span [ngClass]="refreshStatusClasses()" [innerHTML]="this.mapService.refreshStatus"></span>
+      </div>
+
+      <div
+        *ngIf="!this.mapService.geoJsonReady.map"
+        class="alert alert-warning" >
+        <strong>Laden</strong> De applicatie is de locaties aan het ophalen, een moment geduld alstublieft.
+      </div>
     </div>
 
-    <div
-      *ngIf="!this.mapService.geoJsonReady.map"
-      class="alert alert-warning" >
-      <strong>Laden</strong> De applicatie is de locaties aan het ophalen, een moment geduld alstublieft.
-    </div>
-
-    <div id="map"></div>
   </div>

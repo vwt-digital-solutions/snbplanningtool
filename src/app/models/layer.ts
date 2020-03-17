@@ -8,3 +8,17 @@ export class CustomLayer {
     public items: MapGeometryObject[]
   ) {}
 }
+
+export class ControlledLayer {
+
+  public title: string;
+  public identifier: string;
+  public subGroup;
+  public parentElement;
+
+  public visible = true;
+  public removable = false;
+
+  public onRemoveLayer: () => void;
+  public onToggleLayer: (boolean) => void;
+}

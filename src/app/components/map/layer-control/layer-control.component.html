@@ -1,0 +1,20 @@
+<div class="leaflet-control-container">
+  <div class="leaflet-top leaflet-left">
+    <div class="leaflet-control-layers leaflet-control-layers-expanded leaflet-control" aria-haspopup="true"><a
+      class="leaflet-control-layers-toggle" href="#" title="Layers"></a>
+      <section class="leaflet-control-layers-list">
+        <div class="leaflet-control-layers-overlays">
+          <label *ngFor="let item of layers | keyvalue">
+            <div>
+              <input type="checkbox"
+                     class="leaflet-control-layers-selector"
+                     [checked]="item.value.visible" (change)="item.value.onToggleLayer(!item.value.visible)">
+              <span> {{item.value.title}}</span>
+              <a *ngIf="item.value.removable" href="javascript:void(0);" (click)="item.value.onRemoveLayer()"><i class="fa fa-times"></i></a>
+            </div>
+          </label>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

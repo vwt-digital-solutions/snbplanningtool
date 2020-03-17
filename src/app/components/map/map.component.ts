@@ -13,6 +13,7 @@ import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
 
 import { Helpers } from './leaflet.helpers';
+import {ControlledLayer} from '../../models/layer';
 
 @Component({
   selector: 'app-map',
@@ -24,7 +25,6 @@ export class MapComponent implements AfterViewInit {
   @HostBinding('class.map-component') true;
 
   private map: L.map;
-  private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
   private parentCluster: L.markerClusterGroup = L.markerClusterGroup({
     animate: false,
     chunkedLoading: true,
@@ -33,7 +33,7 @@ export class MapComponent implements AfterViewInit {
     iconCreateFunction: (cluster) => this.helpers.createClusterIcon(cluster),
   });
 
-  private clusters: any = {};
+  private controlledLayers;
   private helpers: Helpers;
 
   constructor(
@@ -49,7 +49,6 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.layerButtons.addTo(this.map);
     this.addClusters();
   }
 
@@ -61,24 +60,30 @@ export class MapComponent implements AfterViewInit {
   }
 
   private addClusters(): void {
+    this.controlledLayers = {};
     this.map.addLayer(this.parentCluster);
 
     this.workProvider.workItemsSubject.subscribe(items => {
-      this.addMapLayer('work', 'WERK', items);
+      this.addMapLayer('0-work', 'WERK', items);
     });
 
     this.carProvider.carsLocationsSubject.subscribe(items => {
-      this.addMapLayer('cars', 'AUTO\'S', items);
+      this.addMapLayer('1-cars', 'AUTO\'S', items);
     });
 
     this.mapService.customLayersSubject.subscribe(layer => {
-      this.addMapLayer('customLayer', layer.title, layer.items);
-      this.parentCluster.removeLayer(this.clusters.work);
-      this.parentCluster.removeLayer(this.clusters.cars);
+      this.addMapLayer('2-customLayer', layer.title, layer.items, true);
+      this.toggleMapLayer('0-work', false);
+      this.toggleMapLayer('1-cars', false);
+
+      const subGroup = this.controlledLayers['2-customLayer'].subGroup;
+
+      const bounds = subGroup.getBounds();
+      this.map.flyToBounds(bounds);
     });
   }
 
-  private addMapLayer(layerIdentifier, layerName, items) {
+  private addMapLayer(identifier, name, items, removable=false) {
     const markers = [];
 
     for (const item of items) {
@@ -90,23 +95,52 @@ export class MapComponent implements AfterViewInit {
 
     const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
 
-    if (this.clusters[layerIdentifier]) {
-      this.parentCluster.removeLayer(this.clusters[layerIdentifier]);
-      this.removeLayerButton(this.clusters[layerIdentifier]);
+    let layer: ControlledLayer;
+
+    if (this.controlledLayers[identifier]) {
+      layer = this.controlledLayers[identifier];
+      layer.parentElement.removeLayer(layer.subGroup);
+    } else {
+      layer = new ControlledLayer();
+      layer.identifier = identifier;
+      layer.title = name;
+      layer.parentElement = this.parentCluster;
+      layer.onRemoveLayer = () => { this.removeMapLayer(layer.identifier); };
+      layer.onToggleLayer = (visible) => { this.toggleMapLayer(layer.identifier, visible); };
+      layer.removable = removable;
+      this.controlledLayers[identifier] = layer;
     }
 
-    this.clusters[layerIdentifier] = subGroup;
-    this.addLayerButton(subGroup, layerName);
-    this.map.addLayer(subGroup);
+    layer.subGroup = subGroup;
+    if (layer.visible) {
+      layer.parentElement.addLayer(layer.subGroup);
+    }
   }
 
-  private addLayerButton(layer, name) {
-    this.layerButtons.addOverlay(layer, name);
+  private removeMapLayer(identifier) {
+
+    const layer = this.controlledLayers[identifier];
+
+    layer.parentElement.removeLayer(layer.subGroup);
+    delete this.controlledLayers[identifier];
+
+    this.toggleMapLayer('0-work', true);
+    this.toggleMapLayer('1-cars', true);
   }
 
-  private removeLayerButton(layer) {
-    if (layer) {
-      this.layerButtons.removeLayer(layer);
+  private toggleMapLayer(identifier, visible) {
+    const layer = this.controlledLayers[identifier];
+
+    if (layer.visible === visible) {
+      return;
+    }
+
+    layer.visible = visible;
+
+    if (visible) {
+      layer.parentElement.addLayer(layer.subGroup);
+    } else {
+      layer.parentElement.removeLayer(layer.subGroup);
     }
   }
 
