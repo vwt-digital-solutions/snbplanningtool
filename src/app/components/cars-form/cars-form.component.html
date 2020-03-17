@@ -17,6 +17,19 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="administration">Administratie (klantteam) <span>&#42;</span></label>
+        <select
+          class="form-control"
+          id="administration"
+          [(ngModel)]="model.administration"
+          name="administration"
+          #administration="ngModel"
+          required >
+          <option [ngValue]="null" selected disabled hidden>-- Selecteer een klantteam --</option>
+          <option *ngFor="let administration of administrations" [ngValue]="administration">{{administration}}</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label for="license_plate">Kentekenplaat</label>
         <input
           type="text"
