@@ -76,7 +76,7 @@ export class WorkItem extends MapGeometryObject {
   getPopupOptions() {
     return {
       maxWidth: 600,
-      minWidth: 400,
+      minWidth: 500,
     };
   }
 

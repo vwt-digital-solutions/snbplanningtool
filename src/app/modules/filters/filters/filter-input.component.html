@@ -1,47 +1,60 @@
-<div class="form-group mb-3" [ngSwitch]="filter.inputType">
-  <label [for]="filter.field">{{filter.name}}</label>
-  <div [id]="filter.field + 'filter-div'"></div>
+<div class="form-group mb-3" class="filter-container" [id]="'filter-container-'+filter.field" [ngSwitch]="filter.inputType">
+  <a data-toggle="collapse"
+     (click)="collapsed = !collapsed"
+     href="javascript:void(0);"
+     [attr.aria-expanded]="collapsed"
+     [attr.aria-controls]="filter.field + '-filter-div'">
+    <h6 class="w-100">
+      <label [for]="filter.field">
+          {{filter.name}}
+      </label>
+      <i *ngIf="collapsed" class="fa fa-chevron-down float-right"></i>
+      <i *ngIf="!collapsed" class="fa fa-chevron-up float-right"></i>
+    </h6>
+  </a>
+  <div [ngbCollapse]="collapsed" [id]="filter.field + '-filter-div'">
 
-  <input *ngSwitchCase="'input'" type="text" class="form-control" (ngModelChange)="filter.dataChange($event)" [ngModel]="filter.value" [id]="filter.field">
+    <input *ngSwitchCase="'input'" type="text" class="form-control" (ngModelChange)="filter.dataChange($event)" [ngModel]="filter.value" [id]="filter.field">
 
-  <select *ngSwitchCase="'single-choice'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
-    <option value="">--</option>
-    <option *ngFor="let opt of filter.options" [value]="opt">{{opt}}</option>
-  </select>
+    <select *ngSwitchCase="'single-choice'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
+      <option value="">--</option>
+      <option *ngFor="let opt of filter.options" [value]="opt">{{opt}}</option>
+    </select>
 
-  <div *ngSwitchCase="'multiple-choice'">
-    <div class="form-check" *ngFor="let opt of filter.options">
-      <label class="form-check-label" [for]="filter.field + '-' + opt"> <input [id]="filter.field + '-' + opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
+    <div *ngSwitchCase="'multiple-choice'">
+      <div class="form-check" *ngFor="let opt of filter.options">
+        <label class="form-check-label" [for]="filter.field + '-' + opt"> <input [id]="filter.field + '-' + opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
+      </div>
     </div>
+
+    <div *ngSwitchCase="'date-range'">
+      <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text">van</span>
+        </div>
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerFrom="ngbDatepicker" [(ngModel)]="filter.fromDate" [id]="filter.field + '-from'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('fromDate', $event)"/>
+        <div class="input-group-append">
+          <button (click)="filter.dateChanged('fromDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
+          <button (click)="datepickerFrom.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
+        </div>
+      </div>
+      <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text">tot</span>
+        </div>
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerTo="ngbDatepicker" [(ngModel)]="filter.toDate" [id]="filter.field + '-to'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('toDate', $event)"/>
+        <div class="input-group-append">
+          <button (click)="filter.dateChanged('toDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
+          <button (click)="datepickerTo.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" [ngModel]="filter.value" (ngModelChange)="filter.dataChange($event)">
+      <option [ngValue]="''">--</option>
+      <option [ngValue]="true">Ja</option>
+      <option [ngValue]="false">Nee</option>
+    </select>
   </div>
-
-  <div *ngSwitchCase="'date-range'">
-    <div class="input-group mb-1">
-      <div class="input-group-prepend">
-        <span class="input-group-text">van</span>
-      </div>
-      <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerFrom="ngbDatepicker" [(ngModel)]="filter.fromDate" [id]="filter.field + '-from'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('fromDate', $event)"/>
-      <div class="input-group-append">
-        <button (click)="filter.dateChanged('fromDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
-        <button (click)="datepickerFrom.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
-      </div>
-    </div>
-    <div class="input-group mb-1">
-      <div class="input-group-prepend">
-        <span class="input-group-text">tot</span>
-      </div>
-      <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerTo="ngbDatepicker" [(ngModel)]="filter.toDate" [id]="filter.field + '-to'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('toDate', $event)"/>
-      <div class="input-group-append">
-        <button (click)="filter.dateChanged('toDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
-        <button (click)="datepickerTo.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" [ngModel]="filter.value" (ngModelChange)="filter.dataChange($event)">
-    <option [ngValue]="''">--</option>
-    <option [ngValue]="true">Ja</option>
-    <option [ngValue]="false">Nee</option>
-  </select>
-
+  <hr>
 </div>

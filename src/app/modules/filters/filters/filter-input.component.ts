@@ -11,6 +11,8 @@ export class FilterInputComponent implements OnInit {
 
   @Input() filter: Filter;
 
+  private collapsed = true;
+
   constructor() { }
 
   ngOnInit() {

@@ -9,27 +9,44 @@
         <p>Taaktype</p>
         <span>{{ properties.task_type || '-' }}</span>
       </div>
-      <div class="col-6 item project">
+      <div class="col-6 item description">
+        <p>Uiterste hersteltijd</p>
+        <span>{{ resolve_before_time[0] || '-'}} </span>
+        <span>{{ resolve_before_time[1] || '-'}} </span>
+      </div>
+      <div class="col-6 item date">
+        <p>Klantafspraak</p>
+        <span>{{ start_time[0] || '-'}} </span>
+        <span>{{ start_time[1] || '-'}} </span>
+        <span>{{ end_time[1] || '-'}} </span>
+      </div>
+      <div class="col-4 item project">
         <p>Project</p>
         <span>{{ properties.project || '-' }}</span>
       </div>
-      <div class="col-6 item project_number">
+      <div class="col-4 item project_number">
         <p>Projectnummer</p>
         <span>{{ properties.project_number || '-' }}</span>
       </div>
-      <div class="col-6 item category">
+      <div class="col-4 item category">
         <p>Categorie</p>
         <span>{{ properties.category || '-' }}</span>
       </div>
-      <div class="col-6 item stagnation">
+      <div class="col-4 item stagnation">
         <p>Stagnatie</p>
         <span>{{ properties.stagnation ? 'Ja' : 'Nee' }}</span>
       </div>
-      <div class="col-6 item status">
+      <div class="col-4 item status">
         <p>Status</p>
         <span>{{properties.status || '-'}}</span>
       </div>
-      <div class="col-6 item sla-status">
+      <div class="col-4 item description">
+        <p>Beschrijving</p>
+        <span>{{ properties.description || '-' }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 item sla-status">
         <p>SLA Status</p>
         <span *ngIf="SLA.onTime">Op tijd</span>
         <span *ngIf="!SLA.onTime && end_time[0] != null">
@@ -37,45 +54,19 @@
         </span>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-6 item description">
-        <p>Beschrijving</p>
-        <span>{{ properties.description || '-' }}</span>
-      </div>
-      <div class="col-6 item description">
-        <p>Uiterste hersteltijd</p>
-        <span>{{ resolve_before_time[0] || '-'}} </span>
-        <span>{{ resolve_before_time[1] || '-'}} </span>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-6 item date">
-        <p>Startdatum</p>
-        <span>{{ start_time[0] || '-'}} </span>
-        <span>{{ start_time[1] || '-'}} </span>
-      </div>
-      <div class="col-6 item date">
-        <p>Einddatum</p>
-        <span>{{ end_time[0] || '-'}} </span>
-        <span>{{ end_time[1] || '-'}} </span>
-      </div>
-    </div>
-
     <div *ngIf="properties.city || properties.zip || properties.street">
       <hr>
 
       <div class="row">
-        <div class="col-6 item street">
+        <div class="col-4 item street">
           <p>Straat</p>
           <span> {{ properties.street }} {{ properties.house || '' }} {{ properties.extra || '' }} </span>
         </div>
-        <div class="col-6 item zip">
+        <div class="col-4 item zip">
           <p>Postcode</p>
           <span> {{ properties.zip }}</span>
         </div>
-        <div class="col-6 item city">
+        <div class="col-4 item city">
           <p>Plaats</p>
           <span> {{ properties.city || 'N/B' }}</span>
         </div>

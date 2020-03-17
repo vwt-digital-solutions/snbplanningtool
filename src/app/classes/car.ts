@@ -5,6 +5,7 @@ export class Car {
     public driver_name: string,
     public driver_skill: string,
     public driver_employee_number: string,
+    public administration: string,
     public token: string
   ) {}
 }
