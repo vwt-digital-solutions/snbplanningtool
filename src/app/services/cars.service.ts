@@ -5,6 +5,7 @@ import { throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { AuthRoleService } from './auth-role.service';
 import {CarProviderService} from './car-provider.service';
+import { MapGeometryObject } from '../classes/map-geometry-object';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,11 @@ export class CarsService {
     this.gridOptions = {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
+        { headerName: 'Administratie (klantteam)', field: 'administration', cellEditorSelector: this.cellEditorAdministration },
         { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
         { headerName: 'Naam bestuurder', field: 'driver_name', },
         { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
-        { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector:this.cellEditorDriverSkill },
+        { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector: this.cellEditorDriverSkill },
         {
           headerName: 'Locatie',
           field: 'token',
@@ -72,6 +74,13 @@ export class CarsService {
     return {
       component: 'agRichSelectCellEditor',
       params: { values: carTokens.concat([params.value]) }
+    };
+  }
+
+  cellEditorAdministration(params) {
+    return {
+      component: 'agRichSelectCellEditor',
+      params: { values: MapGeometryObject.administrations }
     };
   }
 

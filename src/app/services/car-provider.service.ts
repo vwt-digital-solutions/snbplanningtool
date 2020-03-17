@@ -63,8 +63,15 @@ export class CarProviderService {
         for (const property in result) {
           if (result.hasOwnProperty(property)) {
             const carInfo = result[property];
-            carInfoItems.push(new Car(carInfo.id, carInfo.license_plate, carInfo.driver_name,
-              carInfo.driver_skill, carInfo.driver_employee_number, carInfo.token));
+            carInfoItems.push(new Car(
+              carInfo.id,
+              carInfo.license_plate,
+              carInfo.driver_name,
+              carInfo.driver_skill,
+              carInfo.driver_employee_number,
+              carInfo.administration,
+              carInfo.token
+            ));
           }
         }
 
