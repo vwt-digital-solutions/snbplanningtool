@@ -81,7 +81,11 @@
   }
 }
 
-/* Custom map styles */
+.leaflet-routing-container {
+  display: none;
+}
+
+  /* Custom map styles */
 // Cluster styling
 .cluster {
   text-align: center;

@@ -11,6 +11,8 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
+import 'leaflet-routing-machine';
+require('lrm-google');
 
 import { Helpers } from './leaflet.helpers';
 import {ControlledLayer} from '../../models/layer';
@@ -72,7 +74,7 @@ export class MapComponent implements AfterViewInit {
     });
 
     this.mapService.customLayersSubject.subscribe(layer => {
-      this.addMapLayer('2-customLayer', layer.title, layer.items, true);
+      this.addMapLayer('2-customLayer', layer.title, layer.items, true, true);
       this.toggleMapLayer('0-work', false);
       this.toggleMapLayer('1-cars', false);
 
@@ -83,7 +85,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private addMapLayer(identifier, name, items, removable=false) {
+  private addMapLayer(identifier, name, items, removable = false, addRoute = false) {
     const markers = [];
 
     for (const item of items) {
@@ -100,6 +102,9 @@ export class MapComponent implements AfterViewInit {
     if (this.controlledLayers[identifier]) {
       layer = this.controlledLayers[identifier];
       layer.parentElement.removeLayer(layer.subGroup);
+      if (layer.routeParent) {
+        layer.route.removeFrom(layer.routeParent);
+      }
     } else {
       layer = new ControlledLayer();
       layer.identifier = identifier;
@@ -115,6 +120,31 @@ export class MapComponent implements AfterViewInit {
     if (layer.visible) {
       layer.parentElement.addLayer(layer.subGroup);
     }
+
+    if (addRoute) {
+      const lon1 = items[0].geometry.coordinates[0];
+      const lat1 = items[0].geometry.coordinates[1];
+
+      const lon2 = items[1].geometry.coordinates[0];
+      const lat2 = items[1].geometry.coordinates[1];
+
+      const route = L.Routing.control({
+        addWaypoints: false,
+        draggableWaypoints: false,
+        router:  new L.Routing.Google(),
+        lineOptions: {
+          styles: [{color: '#008BB8', opacity: 1, weight: 4}]
+        },
+        waypoints: [
+          L.latLng(lat1, lon1),
+          L.latLng(lat2, lon2)
+        ]
+      });
+
+      route.addTo(this.map);
+      layer.route = route;
+      layer.routeParent = this.map;
+    }
   }
 
   private removeMapLayer(identifier) {
@@ -122,6 +152,10 @@ export class MapComponent implements AfterViewInit {
     const layer = this.controlledLayers[identifier];
 
     layer.parentElement.removeLayer(layer.subGroup);
+    if (layer.route) {
+      layer.routeParent.removeControl(layer.route);
+    }
+
     delete this.controlledLayers[identifier];
 
     this.toggleMapLayer('0-work', true);
@@ -139,8 +173,14 @@ export class MapComponent implements AfterViewInit {
 
     if (visible) {
       layer.parentElement.addLayer(layer.subGroup);
+      if (layer.route) {
+        layer.route.addTo(layer.routeParent);
+      }
     } else {
       layer.parentElement.removeLayer(layer.subGroup);
+      if (layer.route) {
+        layer.routeParent.removeControl(layer.route);
+      }
     }
   }
 

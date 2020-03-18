@@ -16,6 +16,9 @@ export class ControlledLayer {
   public subGroup;
   public parentElement;
 
+  public route;
+  public routeParent;
+
   public visible = true;
   public removable = false;
 
