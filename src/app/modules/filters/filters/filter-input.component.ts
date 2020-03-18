@@ -11,7 +11,7 @@ export class FilterInputComponent implements OnInit {
 
   @Input() filter: Filter;
 
-  private collapsed = true;
+  public collapsed = true;
 
   constructor() { }
 

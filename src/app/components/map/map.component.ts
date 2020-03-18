@@ -33,7 +33,7 @@ export class MapComponent implements AfterViewInit {
     iconCreateFunction: (cluster) => this.helpers.createClusterIcon(cluster),
   });
 
-  private controlledLayers;
+  public controlledLayers;
   private helpers: Helpers;
 
   constructor(
