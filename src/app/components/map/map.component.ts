@@ -74,7 +74,7 @@ export class MapComponent implements AfterViewInit {
     });
 
     this.mapService.customLayersSubject.subscribe(layer => {
-      this.addMapLayer('2-customLayer', layer.title, layer.items, true, true);
+      this.addMapLayer('2-customLayer', layer.title, layer.items, true, layer.showRoute);
       this.toggleMapLayer('0-work', false);
       this.toggleMapLayer('1-cars', false);
 
@@ -85,7 +85,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private addMapLayer(identifier, name, items, removable = false, addRoute = false) {
+  private addMapLayer(identifier, name, items, removable = false, showRoute = false) {
     const markers = [];
 
     for (const item of items) {
@@ -121,7 +121,7 @@ export class MapComponent implements AfterViewInit {
       layer.parentElement.addLayer(layer.subGroup);
     }
 
-    if (addRoute) {
+    if (showRoute) {
       const lon1 = items[0].geometry.coordinates[0];
       const lat1 = items[0].geometry.coordinates[1];
 

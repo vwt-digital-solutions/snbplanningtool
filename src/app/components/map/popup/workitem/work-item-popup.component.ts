@@ -137,7 +137,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     const title = 'Afstand monteur ' + this.linkedCar.driver_name + ' en werkitem ' + this.properties.l2_guid;
     const items = [this.linkedCarLocation, this.properties];
 
-    const customLayer = new CustomLayer(title, items);
+    const customLayer = new CustomLayer(title, items, true);
     this.mapService.addCustomLayer(customLayer);
   }
 }
