@@ -32,7 +32,11 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
 
   public linkedCar;
   public linkedCarLocation;
-  public linkedCarToken;
+  public linkedCarDistance;
+
+
+  public loadingLinkedCarDistance = false;
+  public linkedCarDistanceError = false;
 
 
   public nearbyCars = null;
@@ -40,6 +44,23 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   public shouldShowNearbyCars = true;
   public loadingNearbyCars = false;
   public nearbyCarsError = false;
+
+  public downloadLinkedCarDistance() {
+    this.loadingLinkedCarDistance = true;
+    this.changeDectectorRef.detectChanges();
+
+    this.carProviderService.getCarDistances(this.properties.l2_guid, [this.linkedCar.token])
+      .subscribe(result => {
+        this.linkedCarDistance = result[0];
+        this.loadingLinkedCarDistance = false;
+        this.changeDectectorRef.detectChanges();
+      }, error => {
+        this.linkedCarDistanceError = true;
+        this.loadingLinkedCarDistance = false;
+        this.changeDectectorRef.detectChanges();
+      });
+
+  }
 
   public downloadNearbyCars() {
     this.loadingNearbyCars = true;
@@ -55,6 +76,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
       this.loadingNearbyCars = false;
       this.changeDectectorRef.detectChanges();
     });
+
 
   }
 
@@ -103,7 +125,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     }
   }
 
-  public showAsCustomLayer() {
+  public showNearbyCarAsCustomLayer() {
     const title = 'Auto\'s dichtbij werkitem ' + this.properties.l2_guid;
     const items = this.nearbyCars.map(carDistance => carDistance.carLocation);
     items.push(this.properties);

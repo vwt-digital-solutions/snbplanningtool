@@ -88,8 +88,6 @@
         </div>
       </div>
     </div>
-
-
     <div>
       <hr>
 
@@ -98,6 +96,20 @@
         <div class="col-auto"><img src="/assets/images/car-location.png" /></div>
         <div class="col-auto"><span class="license-plate license-nl">{{ linkedCar.license_plate }}</span></div>
         <div class="col">{{ linkedCar.driver_name }} ({{ linkedCar.driver_skill || '-' }})</div>
+        <div class="col text-center">
+          <a *ngIf="linkedCarLocation && !linkedCarDistance && !loadingLinkedCarDistance"
+             href="javascript:void(0)"
+             (click)="downloadLinkedCarDistance()">
+            Laad reistijd
+          </a>
+          <div *ngIf="loadingLinkedCarDistance">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+          </div>
+          <div *ngIf="linkedCarDistanceError">Fout.</div>
+          <div *ngIf="linkedCarDistance">
+            <strong>{{(linkedCarDistance.travel_time / 60) | number:'1.0-0' }} min <br/> {{linkedCarDistance.distance}} km</strong>
+          </div>
+        </div>
         <div class="col-auto text-right">
           <a *ngIf="linkedCarLocation" datatype="" [routerLink]="['/kaart/', linkedCar.token | token_url_encode]">
             Bekijk
@@ -146,7 +158,7 @@
       </div>
       <div class="row my-1" *ngIf="nearbyCars">
         <div class="col text-center">
-          <a href="javascript:void(0);" (click)="showAsCustomLayer();">Toon op kaart.</a>
+          <a href="javascript:void(0);" (click)="showNearbyCarAsCustomLayer();">Toon op kaart</a>
         </div>
       </div>
     </div>

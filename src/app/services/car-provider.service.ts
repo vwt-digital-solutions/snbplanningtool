@@ -137,9 +137,14 @@ export class CarProviderService {
     );
   }
 
-  public getCarDistances(workItem: string) {
+  public getCarDistances(workItem: string, cars: string[] = null) {
 
-    return this.apiService.apiGet('/cars/distances?work_item=' + workItem).pipe(
+    let url = '/cars/distances?work_item=' + workItem;
+    if (cars) {
+      url = url + '&cars=' + cars.join(',');
+    }
+
+    return this.apiService.apiGet(url).pipe(
       map((result: any) => {
           for (const item of result.items) {
             item.carLocation = this.getCarLocationForToken(item.token);
