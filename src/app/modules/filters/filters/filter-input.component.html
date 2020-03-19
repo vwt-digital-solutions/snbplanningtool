@@ -1,8 +1,20 @@
-<div class="form-group mb-3" [ngSwitch]="filter.inputType">
-    <label [for]="filter.field">{{filter.name}}</label>
-  <div [id]="filter.field + 'filter-div'"></div>
+<div class="form-group mb-3" class="filter-container" [id]="'filter-container-'+filter.field" [ngSwitch]="filter.inputType">
+  <a data-toggle="collapse"
+     (click)="collapsed = !collapsed"
+     href="javascript:void(0);"
+     [attr.aria-expanded]="collapsed"
+     [attr.aria-controls]="filter.field + '-filter-div'">
+    <h6 class="w-100">
+      <label [for]="filter.field">
+          {{filter.name}}
+      </label>
+      <i *ngIf="collapsed" class="fa fa-chevron-down float-right"></i>
+      <i *ngIf="!collapsed" class="fa fa-chevron-up float-right"></i>
+    </h6>
+  </a>
+  <div [ngbCollapse]="collapsed" [id]="filter.field + '-filter-div'">
 
-    <input *ngSwitchCase="'input'" type="text" class="form-control" (change)="filter.dataChanged.next(true)" [id]="filter.field" [value]="filter.value" (input)="filter.value = $event.target.value">
+    <input *ngSwitchCase="'input'" type="text" class="form-control" (ngModelChange)="filter.dataChange($event)" [ngModel]="filter.value" [id]="filter.field">
 
     <select *ngSwitchCase="'single-choice'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
       <option value="">--</option>
@@ -38,10 +50,11 @@
       </div>
     </div>
 
-  <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" (change)="filter.dataChanged.next(true)" (input)="filter.value = $event.target.value">
-    <option value="">--</option>
-    <option value="true">Ja</option>
-    <option value="false">Nee</option>
-  </select>
-
+    <select *ngSwitchCase="'optional-boolean'" [id]="filter.value" type="text" class="form-control" [ngModel]="filter.value" (ngModelChange)="filter.dataChange($event)">
+      <option [ngValue]="''">--</option>
+      <option [ngValue]="true">Ja</option>
+      <option [ngValue]="false">Nee</option>
+    </select>
+  </div>
+  <hr>
 </div>

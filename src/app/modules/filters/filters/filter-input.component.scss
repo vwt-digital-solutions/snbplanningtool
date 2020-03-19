@@ -1,0 +1,13 @@
+.filter-container {
+  a {
+    color: black;
+  }
+
+  .collapse + hr {
+      margin-top : 0;
+  }
+
+  .collapse.show + hr {
+      margin-top : 1rem;
+  }
+}

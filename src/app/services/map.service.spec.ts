@@ -23,10 +23,7 @@ describe('MapService', () => {
     expect(service.geoJsonObjectActive).toBeDefined();
     expect(service.refreshUpdate).toBeUndefined();
     expect(service.refreshStatus).toBeDefined();
-    expect(service.refreshStatusClass).toBeDefined();
-    expect(service.iconUrlCar).toBeDefined();
-    expect(service.iconUrlWork).toBeDefined();
-    expect(service.markerLayer).toBeDefined();
+    expect(service.refreshStatusClass).toBeDefined();;
     expect(service.config.defaults.lat).toBeDefined();
     expect(service.config.defaults.lng).toBeDefined();
     expect(service.config.defaults.zoomLevel).toBeDefined();

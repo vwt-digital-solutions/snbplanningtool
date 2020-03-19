@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Subject } from 'rxjs';
-import {AuthRoleService} from './auth-role.service';
-import {ApiService} from './api.service';
+import { AuthRoleService } from './auth-role.service';
+import { ApiService } from './api.service';
 import {
-  BooleanFilter, ChoiceFilter, ChoiceFilterType, DateFilter,
+  BooleanFilter,
+  ChoiceFilter,
+  ChoiceFilterType,
+  DateFilter,
   ValueFilter
 } from '../modules/filters/filters/filters';
 import {FilterMap} from '../modules/filters/filter-map';
+import { QueryParameterService } from './query-parameter.service';
+import { take } from 'rxjs/operators';
+import {WorkItem} from '../classes/work-item';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +22,9 @@ export class WorkItemProviderService {
 
   rawWorkItems: any[]  = [];
   filteredWorkItems: any[] = [];
-  workItemsFeatureCollection: any[] = [];
   loading = true;
 
   workItemsSubject = new BehaviorSubject<any[]>([]);
-  mapWorkItemsSubject = new BehaviorSubject<any[]>([]);
   loadingSubject = new BehaviorSubject<boolean>(true);
   errorSubject  = new Subject<any>();
 
@@ -33,20 +37,27 @@ export class WorkItemProviderService {
       new DateFilter('Startdatum', 'start_timestamp'),
       new DateFilter('Einddatum', 'end_timestamp'),
       new ChoiceFilter('Categorie', 'category', ChoiceFilterType.multiple),
-      new BooleanFilter('Stagnatie', 'stagnation'),
+      new BooleanFilter('Stagnatie', 'stagnation', ''),
       new DateFilter('Uiterstehersteltijd', 'resolve_before_timestamp'),
     ]
   );
 
-  constructor(public authRoleService: AuthRoleService,
-              private apiService: ApiService,
-              ) {
+  constructor(
+    public authRoleService: AuthRoleService,
+    private apiService: ApiService,
+    private queryParameterService: QueryParameterService
+  ) {
     this.filterService.filterChanged.subscribe(value => {
+      this.queryParameterService.setRouteParams(value);
       this.filterWorkItems();
-      this.workItemsToFeatureCollection();
     });
 
     this.getWorkItems();
+
+    // Only take 2 subscriptions the initial empty route and the routeparams that are initialised later.
+    this.queryParameterService.route.queryParams.pipe(take(2)).subscribe(params => {
+      this.filterService.setFilterValues(params);
+    });
 
     setInterval(() => {
       this.getWorkItems();
@@ -59,11 +70,30 @@ export class WorkItemProviderService {
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/workitems').subscribe(
-      (result: any[]) => {
-        this.rawWorkItems = result;
+      (result: any) => {
+        this.rawWorkItems = result.items.map(resultItem =>
+          new WorkItem(
+            resultItem.administration,
+            resultItem.category,
+            resultItem.resolve_before_timestamp,
+            resultItem.stagnation,
+            resultItem.project,
+            resultItem.city,
+            resultItem.description,
+            resultItem.employee_name,
+            resultItem.employee_number,
+            resultItem.end_timestamp,
+            resultItem.geometry,
+            resultItem.project_number,
+            resultItem.start_timestamp,
+            resultItem.status,
+            resultItem.street,
+            resultItem.task_type,
+            resultItem.zip,
+            resultItem.l2_guid,
+          ));
 
         this.filterWorkItems();
-        this.workItemsToFeatureCollection();
         this.loading = false;
         this.loadingSubject.next(false);
       },
@@ -78,31 +108,6 @@ export class WorkItemProviderService {
   private filterWorkItems() {
     this.filteredWorkItems = this.filterService.filterList(this.rawWorkItems);
     this.workItemsSubject.next(this.filteredWorkItems);
-  }
-
-  private workItemsToFeatureCollection() {
-    const newWorkItemsFeatureCollection = [];
-
-    for (const item in this.filteredWorkItems) {
-      if (this.filteredWorkItems[item].geometry) {
-        const newWorkItem = { type: 'Feature', geometry: { type: 'Point', coordinates: [] }, properties: {} };
-
-        for (const property in this.filteredWorkItems[item]) {
-          if (property !== 'geometry') {
-            newWorkItem.properties[property] = this.filteredWorkItems[item][property];
-          } else {
-            newWorkItem.geometry.coordinates = this.filteredWorkItems[item][property].coordinates;
-          }
-        }
-        (newWorkItem as any).layer = 'work';
-        (newWorkItem as any).active = true;
-
-        newWorkItemsFeatureCollection.push(newWorkItem);
-      }
-    }
-    this.workItemsFeatureCollection = newWorkItemsFeatureCollection;
-    this.mapWorkItemsSubject.next(this.workItemsFeatureCollection);
-
   }
 }
 

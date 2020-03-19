@@ -1,8 +1,8 @@
 import {Component, AfterViewInit, HostBinding, ComponentFactoryResolver, Injector} from '@angular/core';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
+import {CarProviderService} from '../../services/car-provider.service';
 import { MapService } from 'src/app/services/map.service';
-
 import { WorkItemProviderService } from '../../services/work-item-provider.service';
 
 import { map, take, withLatestFrom } from 'rxjs/operators';
@@ -11,12 +11,11 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
+import 'leaflet-routing-machine';
+import 'lrm-google';
 
 import { Helpers } from './leaflet.helpers';
-
-import {WorkItemPopupComponent} from './popup/workitem/work-item-popup.component';
-import {CarInfoPopupComponent} from './popup/carinfo/car-info-popup.component';
-import {CarProviderService} from '../../services/car-provider.service';
+import {ControlledLayer} from '../../models/layer';
 
 @Component({
   selector: 'app-map',
@@ -28,7 +27,6 @@ export class MapComponent implements AfterViewInit {
   @HostBinding('class.map-component') true;
 
   private map: L.map;
-  private layerButtons = L.control.layers(null, null, { collapsed: false, position: 'topleft' });
   private parentCluster: L.markerClusterGroup = L.markerClusterGroup({
     animate: false,
     chunkedLoading: true,
@@ -37,7 +35,7 @@ export class MapComponent implements AfterViewInit {
     iconCreateFunction: (cluster) => this.helpers.createClusterIcon(cluster),
   });
 
-  private clusters: any = {};
+  public controlledLayers;
   private helpers: Helpers;
 
   constructor(
@@ -53,7 +51,6 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.layerButtons.addTo(this.map);
     this.addClusters();
   }
 
@@ -65,98 +62,125 @@ export class MapComponent implements AfterViewInit {
   }
 
   private addClusters(): void {
+    this.controlledLayers = {};
     this.map.addLayer(this.parentCluster);
 
-    this.addWorkSubGroup();
-    this.addCarSubGroup();
-  }
+    this.workProvider.workItemsSubject.subscribe(items => {
+      this.addMapLayer('0-work', 'WERK', items);
+    });
 
-  private addWorkSubGroup(): void {
-    this.workProvider.mapWorkItemsSubject.subscribe(features => {
-      let markers = features.map(feature => this.createMarker(feature));
-      const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
-      markers = [];
+    this.carProvider.carsLocationsSubject.subscribe(items => {
+      this.addMapLayer('1-cars', 'AUTO\'S', items);
+    });
 
-      if (this.clusters.work) {
-        this.parentCluster.removeLayer(this.clusters.work);
-        this.removeLayerButton(this.clusters.work);
-      }
+    this.mapService.customLayersSubject.subscribe(layer => {
+      this.addMapLayer('2-customLayer', layer.title, layer.items, true, layer.showRoute);
+      this.toggleMapLayer('0-work', false);
+      this.toggleMapLayer('1-cars', false);
 
-      this.clusters.work = subGroup;
-      this.addLayerButton(subGroup, 'WERK');
-      this.map.addLayer(subGroup);
+      const subGroup = this.controlledLayers['2-customLayer'].subGroup;
+
+      const bounds = subGroup.getBounds();
+      this.map.flyToBounds(bounds);
     });
   }
 
-  private addCarSubGroup(): void {
-    this.carProvider.carsLocationsSubject.subscribe(features => {
-      let markers = features.map(feature => this.createMarker(feature));
-      const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
-      markers = [];
+  private addMapLayer(identifier, name, items, removable = false, showRoute = false) {
+    const markers = [];
 
-      if (this.clusters.cars) {
-        this.parentCluster.removeLayer(this.clusters.cars);
-        this.removeLayerButton(this.clusters.cars);
+    for (const item of items) {
+      const marker = this.helpers.createMarker(item);
+      if (marker) {
+        markers.push(marker);
       }
-
-      this.clusters.cars = subGroup;
-      this.addLayerButton(subGroup, `AUTO'S`);
-      this.map.addLayer(subGroup);
-    });
-  }
-
-  private createMarker(feature: any): L.marker {
-    const coordinates = feature.geometry.coordinates;
-    const options = {
-      marker: {
-        keyboard: false,
-      },
-      icon: {
-        iconSize: [32, 33],
-        iconAnchor: null,
-        popupAnchor: [0, 0]
-      }
-    };
-
-    let marker;
-    let componentClass;
-    let popupOptions;
-
-    if (feature.layer === 'cars') {
-
-      marker =  this.helpers.createCarMarker(feature, options, coordinates);
-
-      popupOptions = {
-        maxWidth: 300,
-        minWidth: 200,
-      };
-
-      componentClass = CarInfoPopupComponent;
-
-    } else if (feature.layer === 'work') {
-
-      marker = this.helpers.createWorkMarker(feature, options, coordinates);
-
-      popupOptions = {
-        maxWidth: 600,
-        minWidth: 400,
-      };
-
-      componentClass = WorkItemPopupComponent;
     }
 
-    marker = this.helpers.bindPopupToMarker(componentClass, feature,  marker, popupOptions);
+    const subGroup = L.featureGroup.subGroup(this.parentCluster, markers);
 
-    return marker;
+    let layer: ControlledLayer;
+
+    if (this.controlledLayers[identifier]) {
+      layer = this.controlledLayers[identifier];
+      layer.parentElement.removeLayer(layer.subGroup);
+      if (layer.routeParent) {
+        layer.route.removeFrom(layer.routeParent);
+      }
+    } else {
+      layer = new ControlledLayer();
+      layer.identifier = identifier;
+      layer.title = name;
+      layer.parentElement = this.parentCluster;
+      layer.onRemoveLayer = () => { this.removeMapLayer(layer.identifier); };
+      layer.onToggleLayer = (visible) => { this.toggleMapLayer(layer.identifier, visible); };
+      layer.removable = removable;
+      this.controlledLayers[identifier] = layer;
+    }
+
+    layer.subGroup = subGroup;
+    if (layer.visible) {
+      layer.parentElement.addLayer(layer.subGroup);
+    }
+
+    if (showRoute) {
+      const lon1 = items[0].geometry.coordinates[0];
+      const lat1 = items[0].geometry.coordinates[1];
+
+      const lon2 = items[1].geometry.coordinates[0];
+      const lat2 = items[1].geometry.coordinates[1];
+
+      const route = L.Routing.control({
+        addWaypoints: false,
+        draggableWaypoints: false,
+        router:  new L.Routing.Google(),
+        lineOptions: {
+          styles: [{color: '#008BB8', opacity: 1, weight: 4}]
+        },
+        waypoints: [
+          L.latLng(lat1, lon1),
+          L.latLng(lat2, lon2)
+        ]
+      });
+
+      route.addTo(this.map);
+      layer.route = route;
+      layer.routeParent = this.map;
+    }
   }
 
-  private addLayerButton(layer, name) {
-    this.layerButtons.addOverlay(layer, name);
+  private removeMapLayer(identifier) {
+
+    const layer = this.controlledLayers[identifier];
+
+    layer.parentElement.removeLayer(layer.subGroup);
+    if (layer.route) {
+      layer.routeParent.removeControl(layer.route);
+    }
+
+    delete this.controlledLayers[identifier];
+
+    this.toggleMapLayer('0-work', true);
+    this.toggleMapLayer('1-cars', true);
   }
 
-  private removeLayerButton(layer) {
-    if (layer) {
-      this.layerButtons.removeLayer(layer);
+  private toggleMapLayer(identifier, visible) {
+    const layer = this.controlledLayers[identifier];
+
+    if (layer.visible === visible) {
+      return;
+    }
+
+    layer.visible = visible;
+
+    if (visible) {
+      layer.parentElement.addLayer(layer.subGroup);
+      if (layer.route) {
+        layer.route.addTo(layer.routeParent);
+      }
+    } else {
+      layer.parentElement.removeLayer(layer.subGroup);
+      if (layer.route) {
+        layer.routeParent.removeControl(layer.route);
+      }
     }
   }
 
@@ -203,6 +227,12 @@ export class MapComponent implements AfterViewInit {
     // Resize map on filter close
     this.mapService.mapResized.subscribe(() => setTimeout(() => this.map.invalidateSize(true), 50));
 
+    this.mapService.customLayersSubject.subscribe(value => {
+
+
+    });
+
+
     this.mapReady();
   }
 
@@ -212,11 +242,11 @@ export class MapComponent implements AfterViewInit {
         // Get latest features
         withLatestFrom(
           this.carProvider.carsLocationsSubject,
-          this.workProvider.mapWorkItemsSubject
+          this.workProvider.workItemsSubject
         ),
         // Find features with this tokenId
         map(([activeTokenId, cars, work]) => [...cars, ...work].filter(feature =>
-          (feature.properties.token === activeTokenId || feature.properties.l2_guid === activeTokenId))
+          (feature.token === activeTokenId || feature.l2_guid === activeTokenId))
         ),
       )
       .subscribe(features => {
@@ -226,7 +256,8 @@ export class MapComponent implements AfterViewInit {
           const coordinates = feature.geometry.coordinates;
 
           // Zoom marker into center of view
-          this.map.setZoomAround(L.latLng(coordinates[1], coordinates[0]), 16);
+          this.map.setZoom(15);
+          this.map.panTo(L.latLng(coordinates[1], coordinates[0]));
         }
       });
 

@@ -19,7 +19,7 @@ export abstract class Filter {
 
   inputType = 'input';
 
-  dataChanged = new Subject<any>();
+  dataChanged = new Subject<{ [name: string]: any}>();
 
   constructor(name: string, field: string, defaultValue = null) {
     this.name = name;
@@ -57,6 +57,15 @@ export class ValueFilter extends Filter {
   constructor(name: string, field: string, defaultValue = null, type = ValueFilterType.contains) {
     super(name, field, defaultValue);
     this.type = type;
+  }
+
+  setValue(newValue) {
+    this.value = newValue;
+  }
+
+  dataChange(value) {
+    this.value = value;
+    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
   }
 
   filterElement(element, index, array): boolean {
@@ -106,6 +115,16 @@ export class ChoiceFilter extends Filter  {
     this.inputType = type.toString();
   }
 
+  setValue(newValue) {
+    if (this.type === ChoiceFilterType.multiple) {
+      this.value = Array.isArray(newValue) ? newValue : [newValue];
+    }
+
+    if ([ChoiceFilterType.single, ChoiceFilterType.singleRadio].includes(this.type)) {
+      this.value = newValue;
+    }
+  }
+
   toggleValue(newValue) {
     const index = this.value.indexOf(newValue);
 
@@ -115,7 +134,7 @@ export class ChoiceFilter extends Filter  {
       this.value.push(newValue);
     }
 
-    this.dataChanged.next(true);
+    this.dataChanged.next({ [this.name]: this.value });
   }
 
 
@@ -208,18 +227,28 @@ export class DateFilter extends Filter  {
   fromDate = null;
   toDate = null;
 
+  setValue(newValue) {
+    this.value = JSON.parse(newValue);
+    this.fromDate = this.value.fromDate;
+    this.toDate = this.value.toDate;
+  }
+
   dateChanged(dateField, date: NgbDate) {
     this[dateField] = date;
-    this.value = [null,null];
-    this.dataChanged.next(true);
+    this.value = {
+      fromDate: this.fromDate,
+      toDate: this.toDate
+    };
+
+    this.dataChanged.next({ [this.name]: JSON.stringify(this.value) });
   }
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
-    if (this.value === [null, null]) {
+    if (!this.fromDate && !this.toDate) {
       return listToFilter;
     }
 
-    return super.filterList(listToFilter, originalList)
+    return super.filterList(listToFilter, originalList);
   }
 
   filterElement(element, index, array): boolean {
@@ -252,16 +281,25 @@ export class DateFilter extends Filter  {
 }
 
 export class BooleanFilter extends Filter {
-
   inputType = 'optional-boolean';
+
+  setValue(newValue) {
+    if (newValue != null) {
+      this.value = newValue;
+    }
+  }
+
+  dataChange(value) {
+    this.value = value;
+
+    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+  }
 
   filterElement(element, index, array): boolean {
     if (this.value === '') {
       return true;
     }
 
-    const value = this.value === 'true';
-
-    return element[this.field] === value;
+    return element[this.field] === this.value;
   }
 }

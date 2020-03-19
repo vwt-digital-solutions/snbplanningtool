@@ -25,7 +25,7 @@
     right: -24px !important;
     padding: 12px !important;
     color: black !important;
-    background: rgba(0,0,0,.4) !important;
+    background: rgba(0, 0, 0, .4) !important;
     border-radius: 0 3px 3px 0 !important;
     display: flex;
     align-items: center;
@@ -40,6 +40,10 @@
   box-shadow: none;
   margin: 0;
 
+  a {
+    color: gray;
+  }
+
   label {
     display: inline-block !important;
     padding: 8px 15px;
@@ -49,9 +53,9 @@
       visibility: hidden;
 
       &:before {
-        content:"";
+        content: "";
         visibility: visible;
-        display:inline-block;
+        display: inline-block;
         width: 3px;
         height: 36px;
         border-radius: 3px 0 0 3px;
@@ -60,6 +64,7 @@
         background: red;
         position: absolute;
       }
+
       &:checked {
         &:before {
           visibility: visible;
@@ -76,7 +81,11 @@
   }
 }
 
-/* Custom map styles */
+.leaflet-routing-container {
+  display: none;
+}
+
+  /* Custom map styles */
 // Cluster styling
 .cluster {
   text-align: center;
@@ -110,11 +119,12 @@
 }
 
 // Map UI Styling
-.map-ui-element, .leaflet-control-layers label {
+.map-ui-element,
+.leaflet-control-layers label {
   border-radius: 3px;
   cursor: pointer;
   color: rgba(0, 0, 0, 0.847);
-  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;
   background-color: #fff;
   display: block;
   text-align: center;
@@ -127,7 +137,8 @@
   }
 
   // Default sizes for buttons on the map
-  .map-btn, &.map-btn {
+  .map-btn,
+  &.map-btn {
     height: 40px;
     width: 40px;
     line-height: 40px;
@@ -137,14 +148,16 @@
 
 
 // Popup styling
-.popup-car, .popup-work {
+.popup-car,
+.popup-work {
   span:not(.license-plate) {
     background-color: #008bb8;
     border-radius: 5px;
     display: inline-block;
     color: white;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 5px 8px;
+    margin-right: 5px;
     margin-bottom: 5px;
 
     &.license-nl {
@@ -216,16 +229,19 @@
       background-color: var(--red);
     }
   }
+
   &.semi-urgent {
     &::after {
       background-color: var(--orange);
     }
   }
+
   &.notice {
     &::before {
       background-color: var(--yellow);
     }
   }
+
   &.on-schedule {
     &::before {
       background-color: var(--green);

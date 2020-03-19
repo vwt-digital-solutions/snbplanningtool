@@ -1,8 +1,8 @@
-import { WorkClass } from './work-class';
+import { WorkItem } from './work-item';
 
-describe('WorkClass', () => {
+describe('WorkItem', () => {
   it('should create an instance', () => {
-    expect(new WorkClass(
+    expect(new WorkItem(
       'Amersfoort',
       'A description',
       'Pietje Puk',
@@ -15,7 +15,8 @@ describe('WorkClass', () => {
       'Modemweg',
       'basic',
       '1234 AB',
-      'abcd'
+      'abcd',
+      {}
     )).toBeTruthy();
   });
 });

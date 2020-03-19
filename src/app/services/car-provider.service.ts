@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject, throwError} from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
-import {CarClass} from '../classes/car-class';
+import {Car} from '../classes/car';
+
+import {map} from 'rxjs/internal/operators';
+import CarLocation from '../classes/car-location';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +19,31 @@ export class CarProviderService {
 
   carsLocationsSubject = new BehaviorSubject<any[]>([]);
   carsInfoSubject = new BehaviorSubject<any[]>([]);
+  carsTokenSubject = new BehaviorSubject<any[]>([]);
   tokensSubject = new BehaviorSubject<any []>([]);
 
   constructor(public authRoleService: AuthRoleService,
               private apiService: ApiService) {
-    this.getCars();
-    this.getTokens();
-    this.getCarLocations();
+
+    setTimeout(() => {
+      this.getCars();
+      this.getTokens();
+      this.getCarLocations();
+    }, 200);
+
+
+    this.carsInfoSubject.subscribe((value) => this.updateCarLocations());
+    this.carsTokenSubject.subscribe((value) => this.updateCarLocations());
 
     setInterval(() => {
       this.getCarLocations();
     }, (5 * 60 * 1000));
 
   }
+
+  ////
+  // API methods
+  ////
 
   public getCars() {
     if (localStorage.getItem('carInfo')) {
@@ -42,22 +57,24 @@ export class CarProviderService {
     }
 
     this.apiService.apiGet('/cars').subscribe(
-      result => {
-        const rowData = [];
-        const newCarInfo = new Object();
+      (result: any) => {
+        const carInfoItems = result.items.map(carInfo => {
+          return new Car(carInfo.id,
+            carInfo.license_plate,
+            carInfo.driver_name,
+            carInfo.driver_skill,
+            carInfo.driver_employee_number,
+            carInfo.administration,
+            carInfo.token);
+        });
 
-        for (const row in result) {
-          if (result.hasOwnProperty(row)) {
-            const data = result[row];
-            rowData.push(new CarClass(data.id, data.license_plate, data.driver_name,
-              data.driver_skill, data.driver_employee_number, data.token));
-          }
-        }
+        const newCarInfo = {
+          items: carInfoItems,
+          lastUpdated: new Date().getTime()
+        };
 
-        (newCarInfo as any).items = rowData;
-        (newCarInfo as any).lastUpdated = new Date().getTime();
         localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
-        this.carsInfoSubject.next(rowData);
+        this.carsInfoSubject.next(carInfoItems);
         this.loadingSubject.next(false);
 
         return newCarInfo;
@@ -79,9 +96,9 @@ export class CarProviderService {
     }
 
     this.apiService.apiGet('/tokens').subscribe(
-      result => {
+      (result: any)  => {
         const newCarTokens = new Object();
-        (newCarTokens as any).items = result;
+        (newCarTokens as any).items = result.items;
         (newCarTokens as any).lastUpdated = new Date().getTime();
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
 
@@ -103,28 +120,32 @@ export class CarProviderService {
 
         const featuresList: [any] = result.features;
 
-        const carInfo = this.carsInfoSubject.value;
-
-        for (const feature of featuresList) {
-          feature.layer = 'cars';
-
-          for (const item of carInfo) {
-            if (item.token === feature.properties.token) {
-              feature.properties.driver_name = (item.driver_name ? item.driver_name : '');
-              feature.properties.driver_skill = (item.driver_skill ? item.driver_skill : '');
-              feature.properties.license_plate = (item.license_plate ? item.license_plate : '');
-              feature.properties.driver_employee_number = (item.driver_employee_number ? item.driver_employee_number : '');
-            }
-          }
-        }
         this.loadingSubject.next(false);
-        this.carsLocationsSubject.next(featuresList);
+        this.carsTokenSubject.next(featuresList);
       },
       error => {
         this.errorSubject.next(error);
         this.loadingSubject.next(false);
       }
     );
+  }
+
+  public getCarDistances(workItem: string, cars: string[] = null) {
+
+    let url = '/cars/distances?work_item=' + workItem;
+    if (cars) {
+      url = url + '&cars=' + cars.join(',');
+    }
+
+    return this.apiService.apiGet(url).pipe(
+      map((result: any) => {
+          for (const item of result.items) {
+            item.carLocation = this.getCarLocationForToken(item.token);
+          }
+
+          return result.items;
+        }
+      ));
   }
 
   public postCarInfo(items: any[]) {
@@ -180,17 +201,43 @@ export class CarProviderService {
     });
   }
 
+  ////
+  // Subject methods
+  ////
+
+  public updateCarLocations() {
+    const featuresList = this.carsTokenSubject.value || [];
+    const carInfo = this.carsInfoSubject.value || [];
+
+    const carLocations = [];
+
+    for (const feature of featuresList) {
+      const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
+      for (const item of carInfo) {
+        if (item.token === feature.properties.token) {
+          carLocation.car = item;
+        }
+      }
+      carLocations.push(carLocation);
+    }
+
+    this.carsLocationsSubject.next(carLocations);
+  }
+
+  ////
+  // Search methods
+  ////
+
   public getCarWithEmployeeNumber(employeeNumber: string) {
     return this.carsInfoSubject.value.filter(carInfo => carInfo.driver_employee_number === employeeNumber)[0];
   }
 
   public getCarLocationForToken(token: string) {
-    return this.carsLocationsSubject.value.filter(feature => feature.properties.token === token)[0];
+    if (!token) {
+      return null;
+    }
+
+    return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
+
 }
-
-
-
-
-
-

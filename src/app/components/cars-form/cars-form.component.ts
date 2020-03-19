@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { CarClass } from 'src/app/classes/car-class';
+import { Car } from 'src/app/classes/car';
 
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
+import { MapGeometryObject } from '../../classes/map-geometry-object';
 
 @Component({
   selector: 'app-cars-form',
@@ -19,8 +20,9 @@ export class CarsFormComponent implements OnInit {
   buttonSave = 'Opslaan';
 
   carsTokens: object;
+  administrations = MapGeometryObject.administrations;
 
-  model = new CarClass(null, '', '', '', '', null);
+  model = new Car(null, '', '', '', '', '', null);
 
   constructor(
     private apiService: ApiService,

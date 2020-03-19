@@ -9,6 +9,7 @@ import { LicenseManager } from 'ag-grid-enterprise';
 import { registerLocaleData } from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
 import {MapService} from './services/map.service';
+import { QueryParameterService } from './services/query-parameter.service';
 
 registerLocaleData(localeNl);
 
@@ -20,9 +21,15 @@ export class AppComponent {
   constructor(
     private env: EnvService,
     private oauthService: OAuthService,
+    private queryParamService: QueryParameterService,
     public authRoleService: AuthRoleService,
     public mapService: MapService,
   ) {
+    // Save our URL so we can restore it after AD login
+    if (!window.location.href.includes('access_token') && window.location.href.includes('localhost')) {
+      sessionStorage.setItem('url', window.location.href);
+    }
+
     LicenseManager.setLicenseKey(env.agGridKey);
 
     const config = new AuthConfig();
@@ -37,6 +44,13 @@ export class AppComponent {
     this.oauthService.configure(config);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.tryLogin({});
+
+    // Load our saved URL
+    const savedURL = sessionStorage.getItem('url');
+    if (savedURL && savedURL.includes('?')) {
+      const queryParams = this.queryParamService.getRouteParams(sessionStorage.getItem('url'));
+      this.queryParamService.setRouteParams(queryParams);
+    }
   }
 
   showFilters = true;
@@ -44,7 +58,6 @@ export class AppComponent {
   toggleFilters() {
     this.showFilters = !this.showFilters;
 
-    this.mapService.mapResized.next()
-
+    this.mapService.mapResized.next();
   }
 }

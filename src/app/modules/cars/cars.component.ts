@@ -6,7 +6,7 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 
 import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
-import { CarClass } from 'src/app/classes/car-class';
+import { Car } from 'src/app/classes/car';
 import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
 import { MapComponent } from 'src/app/components/map/map.component';
 import {FiltersModule} from '../filters/filters.module';
+import {LayerControlComponent} from '../../components/map/layer-control/layer-control.component';
 
 @NgModule({
   imports: [
@@ -12,12 +13,14 @@ import {FiltersModule} from '../filters/filters.module';
   ],
   declarations: [
     HomeComponent,
-    MapComponent
+    MapComponent,
+    LayerControlComponent
   ],
   exports : [
     CommonModule,
     HomeComponent,
-    MapComponent
+    MapComponent,
+    LayerControlComponent
   ],
   bootstrap: [HomeComponent]
 })

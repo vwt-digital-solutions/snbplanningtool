@@ -1,20 +1,24 @@
 <div class="row popup-car">
   <div class="col-12 item driver_name">
     <p>Naam bestuurder</p>
-    <span>{{properties.driver_name || '-'}}</span>
+    <span>{{properties.car.driver_name || '-'}}</span>
   </div>
   <div class="col-12 item driver_skill">
     <p>Rol bestuurder</p>
-    <span>{{properties.driver_skill || '-'}}</span>
+    <span>{{properties.car.driver_skill || '-'}}</span>
   </div>
   <div class="col-12 item driver_employee_number">
     <p>Medewerkernr. bestuurder</p>
-    <span>{{properties.driver_employee_number || '-'}}</span>
+    <span>{{properties.car.driver_employee_number || '-'}}</span>
+  </div>
+  <div class="col-12 item administration" *ngIf="properties.car.administration">
+    <p>Administratie</p>
+    <span>{{properties.car.administration || '-'}}</span>
   </div>
   <div class="col-12 item license_plate">
     <p>Kentekenplaat</p>
     <div class="license-plate license-nl">
-      <span>{{properties.license_plate || 'N/B'}}</span>
+      <span>{{properties.car.license_plate || 'N/B'}}</span>
     </div>
   </div>
 </div>

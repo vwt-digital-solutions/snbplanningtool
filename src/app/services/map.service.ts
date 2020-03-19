@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 
 import {BehaviorSubject, Subject} from 'rxjs';
 import { map } from 'rxjs/operators';
+import {CustomLayer, Layer} from '../models/layer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  geoJsonObjectCars = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
-  geoJsonObjectActive = { features: new BehaviorSubject<any[]>([]), type: 'FeatureCollection'};
+
   activeTokenId = new BehaviorSubject<string>(null);
   clickedMarker = false;
 
@@ -21,14 +21,6 @@ export class MapService {
   refreshUpdate: number;
   refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass = false;
-
-  iconUrlCar = 'assets/images/car-location.png';
-  iconUrlWork = 'assets/images/work-location.png';
-
-  markerLayer = {
-    cars: true,
-    work: true
-  };
 
   mapResized = new Subject<any>();
 
@@ -181,16 +173,9 @@ export class MapService {
     markerPopupOnHover: false,
   };
 
-  constructor() {
-    this.setMapMarkers();
-  }
+  customLayersSubject = new Subject<CustomLayer>();
 
-  setMapMarkers() {
-    this.geoJsonObjectActive.features.next([]);
-    this.geoJsonObjectCars.features
-      .pipe(
-        map(features => features.filter(feature => feature.active))
-      )
-      .subscribe(features => this.geoJsonObjectActive.features.next(features));
+  public addCustomLayer(layer: CustomLayer) {
+    this.customLayersSubject.next(layer);
   }
 }
