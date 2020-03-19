@@ -12,7 +12,7 @@ import 'leaflet.markercluster';
 import 'leaflet.gridlayer.googlemutant';
 import 'leaflet.featuregroup.subgroup';
 import 'leaflet-routing-machine';
-require('lrm-google');
+import 'lrm-google';
 
 import { Helpers } from './leaflet.helpers';
 import {ControlledLayer} from '../../models/layer';
