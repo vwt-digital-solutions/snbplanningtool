@@ -58,22 +58,15 @@ export class CarProviderService {
 
     this.apiService.apiGet('/cars').subscribe(
       result => {
-        const carInfoItems = [];
-
-        for (const property in result) {
-          if (result.hasOwnProperty(property)) {
-            const carInfo = result[property];
-            carInfoItems.push(new Car(
-              carInfo.id,
-              carInfo.license_plate,
-              carInfo.driver_name,
-              carInfo.driver_skill,
-              carInfo.driver_employee_number,
-              carInfo.administration,
-              carInfo.token
-            ));
-          }
-        }
+        const carInfoItems = result.items.map(carInfo => {
+          return new Car(carInfo.id,
+            carInfo.license_plate,
+            carInfo.driver_name,
+            carInfo.driver_skill,
+            carInfo.driver_employee_number,
+            carInfo.administration,
+            carInfo.token);
+        });
 
         const newCarInfo = {
           items: carInfoItems,
@@ -105,7 +98,7 @@ export class CarProviderService {
     this.apiService.apiGet('/tokens').subscribe(
       result => {
         const newCarTokens = new Object();
-        (newCarTokens as any).items = result;
+        (newCarTokens as any).items = result.items;
         (newCarTokens as any).lastUpdated = new Date().getTime();
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
 
