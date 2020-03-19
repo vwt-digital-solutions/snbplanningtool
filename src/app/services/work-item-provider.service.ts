@@ -71,7 +71,7 @@ export class WorkItemProviderService {
 
     this.apiService.apiGet('/workitems').subscribe(
       (result: any[]) => {
-        this.rawWorkItems = result.map(resultItem =>
+        this.rawWorkItems = result.items.map(resultItem =>
           new WorkItem(
             resultItem.administration,
             resultItem.category,
