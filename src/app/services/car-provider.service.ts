@@ -57,7 +57,7 @@ export class CarProviderService {
     }
 
     this.apiService.apiGet('/cars').subscribe(
-      result => {
+      (result: any) => {
         const carInfoItems = result.items.map(carInfo => {
           return new Car(carInfo.id,
             carInfo.license_plate,
@@ -96,7 +96,7 @@ export class CarProviderService {
     }
 
     this.apiService.apiGet('/tokens').subscribe(
-      result => {
+      (result: any)  => {
         const newCarTokens = new Object();
         (newCarTokens as any).items = result.items;
         (newCarTokens as any).lastUpdated = new Date().getTime();

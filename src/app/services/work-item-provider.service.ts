@@ -70,7 +70,7 @@ export class WorkItemProviderService {
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/workitems').subscribe(
-      (result: any[]) => {
+      (result: any) => {
         this.rawWorkItems = result.items.map(resultItem =>
           new WorkItem(
             resultItem.administration,
