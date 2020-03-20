@@ -1,6 +1,7 @@
 import {Subject} from 'rxjs/index';
 import {isNullOrUndefined} from 'util';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import { getValue } from './json-helper';
 import * as moment from 'moment';
 
 export abstract class Filter {
@@ -71,14 +72,12 @@ export class ValueFilter extends Filter {
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case ValueFilterType.contains:
-        return (element[this.field].toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
+        return (getValue(element, this.field).toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
       case ValueFilterType.matches:
-        return (element[this.field].toLowerCase() === this.value.toLowerCase());
+        return (getValue(element, this.field).toLowerCase() === this.value.toLowerCase());
       default:
         return true;
     }
-
-    return element[this.field] === this.value;
   }
 }
 
@@ -141,8 +140,14 @@ export class ChoiceFilter extends Filter  {
   filterList(listToFilter: any[], originalList: any[]): any[] {
     if (this.inferOptionsFromList) {
       this.options = originalList
-        .map(value => value !== undefined && value !== '' && value !== null ? value[this.field] : '')
-        .filter((v, i, a) => a.indexOf(v) === i && v !== '' && v !== undefined && v !== null)
+        .map(value => {
+          return ![undefined, null, ''].includes(value) ?
+            getValue(value, this.field) :
+            '';
+        })
+        .filter((v, i, a) => {
+          return a.indexOf(v) === i && ![undefined, null, ''].includes(v);
+        })
         .sort();
     }
 
@@ -157,11 +162,11 @@ export class ChoiceFilter extends Filter  {
 
     switch (this.type) {
       case ChoiceFilterType.single:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       case ChoiceFilterType.singleRadio:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       case ChoiceFilterType.multiple:
-        return this.value.indexOf(element[this.field]) > -1;
+        return this.value.indexOf(getValue(element, this.field)) > -1;
       default:
         return true;
     }
@@ -187,15 +192,15 @@ export class OffsetFilter extends Filter  {
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case OffsetFilterType.greaterThan:
-        return element[this.field] > this.value;
+        return getValue(element, this.field) > this.value;
       case OffsetFilterType.lessThan:
-        return element[this.field] < this.value;
+        return getValue(element, this.field) < this.value;
       case OffsetFilterType.greaterThanOrEqualTo:
-        return element[this.field] >= this.value;
+        return getValue(element, this.field) >= this.value;
       case OffsetFilterType.lessThanOrEqualTo:
-        return element[this.field] <= this.value;
+        return getValue(element, this.field) <= this.value;
       case OffsetFilterType.equalTo:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       default:
         return false;
     }
@@ -211,7 +216,7 @@ export class RangeFilter extends Filter  {
   inputType = 'range';
 
   filterElement(element, index, array): boolean {
-    return element[this.field] >= this.value[0] && element[this.value] <= this.value[1];
+    return getValue(element, this.field) >= this.value[0] && element[this.value] <= this.value[1];
   }
 }
 
@@ -256,7 +261,7 @@ export class DateFilter extends Filter  {
       return true;
     }
 
-    const elementMoment = moment(element[this.field]);
+    const elementMoment = moment(getValue(element, this.field));
     if (isNullOrUndefined(elementMoment)) {
       return false;
     }
@@ -300,6 +305,6 @@ export class BooleanFilter extends Filter {
       return true;
     }
 
-    return element[this.field] === this.value;
+    return getValue(element, this.field) === this.value;
   }
 }

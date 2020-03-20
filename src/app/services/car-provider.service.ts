@@ -3,15 +3,20 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject, throwError} from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
+import { QueryParameterService } from './query-parameter.service';
 import {Car} from '../classes/car';
 
-import {map} from 'rxjs/internal/operators';
+import {map, take} from 'rxjs/internal/operators';
 import CarLocation from '../classes/car-location';
+import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filters';
+import { FilterMap } from '../modules/filters/filter-map';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarProviderService {
+  rawCarItems: any[]  = [];
+  filteredCarItems: any[] = [];
 
   loadingSubject = new Subject<boolean>();
   savingSubject = new Subject<boolean>();
@@ -22,8 +27,22 @@ export class CarProviderService {
   carsTokenSubject = new BehaviorSubject<any[]>([]);
   tokensSubject = new BehaviorSubject<any []>([]);
 
-  constructor(public authRoleService: AuthRoleService,
-              private apiService: ApiService) {
+  public filterService = new FilterMap(
+    [
+      new ChoiceFilter('Administratie (klantteam)', 'car.administration', ChoiceFilterType.multiple)
+    ]
+  );
+
+  constructor(
+    public authRoleService: AuthRoleService,
+    private apiService: ApiService,
+    private queryParameterService: QueryParameterService
+  ) {
+    this.filterService.filterChanged.subscribe(value => {
+      this.queryParameterService.setRouteParams(value);
+      this.filter(this.rawCarItems);
+    });
+
 
     setTimeout(() => {
       this.getCars();
@@ -31,14 +50,17 @@ export class CarProviderService {
       this.getCarLocations();
     }, 200);
 
+    // Only take 2 subscriptions the initial empty route and the routeparams that are initialised later.
+    this.queryParameterService.route.queryParams.pipe(take(2)).subscribe(params => {
+      this.filterService.setFilterValues(params);
+    });
 
-    this.carsInfoSubject.subscribe((value) => this.updateCarLocations());
-    this.carsTokenSubject.subscribe((value) => this.updateCarLocations());
+    this.carsInfoSubject.subscribe(() => this.updateCarLocations());
+    this.carsTokenSubject.subscribe(() => this.updateCarLocations());
 
     setInterval(() => {
       this.getCarLocations();
     }, (5 * 60 * 1000));
-
   }
 
   ////
@@ -117,7 +139,6 @@ export class CarProviderService {
 
     this.apiService.apiGet('/cars/locations').subscribe(
       (result: any) => {
-
         const featuresList: [any] = result.features;
 
         this.loadingSubject.next(false);
@@ -194,8 +215,6 @@ export class CarProviderService {
 
         }, error => {
           return throwError(error);
-          this.errorSubject.next(error);
-          this.savingSubject.next(false);
         }
       );
     });
@@ -211,17 +230,19 @@ export class CarProviderService {
 
     const carLocations = [];
 
-    for (const feature of featuresList) {
+    featuresList.forEach(feature => {
       const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
-      for (const item of carInfo) {
+      carInfo.forEach(item => {
         if (item.token === feature.properties.token) {
           carLocation.car = item;
         }
-      }
-      carLocations.push(carLocation);
-    }
+      });
 
-    this.carsLocationsSubject.next(carLocations);
+      carLocations.push(carLocation);
+    });
+
+    this.rawCarItems = carLocations;
+    this.filter(this.rawCarItems);
   }
 
   ////
@@ -240,4 +261,8 @@ export class CarProviderService {
     return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
 
+  private filter(listToFilter: any[]) {
+    this.filteredCarItems = this.filterService.filterList(listToFilter);
+    this.carsLocationsSubject.next(this.filteredCarItems);
+  }
 }
