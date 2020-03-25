@@ -7,6 +7,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
 import { MapGeometryObject } from '../../classes/map-geometry-object';
+import {Token} from '../../classes/token';
 
 @Component({
   selector: 'app-cars-form',
@@ -19,7 +20,7 @@ export class CarsFormComponent implements OnInit {
   valueFormat = 'Inclusief streepjes (bv. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
   buttonSave = 'Opslaan';
 
-  carsTokens: object;
+  carsTokens: Token[];
   administrations = MapGeometryObject.administrations;
 
   model = new Car(null, '', '', '', '', '', null);
@@ -41,7 +42,6 @@ export class CarsFormComponent implements OnInit {
   onSubmit() {
 
     delete this.model.id;
-    this.model.license_plate = this.model.license_plate.toUpperCase();
 
     this.buttonSave = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 

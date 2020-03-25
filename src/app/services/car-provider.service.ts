@@ -11,6 +11,8 @@ import CarLocation from '../classes/car-location';
 import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filters';
 import { FilterMap } from '../modules/filters/filter-map';
 
+import {Token} from '../classes/token';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,10 +24,13 @@ export class CarProviderService {
   savingSubject = new Subject<boolean>();
   errorSubject = new Subject<any>();
 
-  carsLocationsSubject = new BehaviorSubject<any[]>([]);
-  carsInfoSubject = new BehaviorSubject<any[]>([]);
-  carsTokenSubject = new BehaviorSubject<any[]>([]);
-  tokensSubject = new BehaviorSubject<any []>([]);
+  // Internal subject used to generate
+  private carsTokenSubject = new BehaviorSubject<any[]>([]);
+
+  public carsLocationsSubject = new BehaviorSubject<CarLocation[]>([]);
+  public carsInfoSubject = new BehaviorSubject<Car[]>([]);
+
+  public tokensSubject = new BehaviorSubject<Token[]>([]);
 
   public filterService = new FilterMap(
     [
@@ -117,7 +122,7 @@ export class CarProviderService {
       return;
     }
 
-    this.apiService.apiGet('/tokens').subscribe(
+    this.apiService.apiGet('/tokens?assigned=false').subscribe(
       (result: any)  => {
         const newCarTokens = new Object();
         (newCarTokens as any).items = result.items;
@@ -125,7 +130,7 @@ export class CarProviderService {
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
 
 
-        this.tokensSubject.next(result as [any]);
+        this.tokensSubject.next(result as Token[]);
       },
       error => {
         return throwError(error);
@@ -169,30 +174,37 @@ export class CarProviderService {
       ));
   }
 
-  public postCarInfo(items: any[]) {
+  public postCarInfo(items: Car[]) {
     this.savingSubject.next(true);
 
     items.forEach((item) => {
       const newItem = item.id == null;
 
-      if (item.driver_skill == null) {
+      // Clone the item, because we need to remove some fields before posting to the API,
+      // like removing the license_plate.
+      const postInfo = Object.assign({}, item);
+
+      if (postInfo.driver_skill == null) {
         item.driver_skill = '';
       }
-      if (item.driver_employee_number == null) {
+      if (postInfo.driver_employee_number == null) {
         item.driver_employee_number = '';
       }
 
-      this.apiService.postCarInfo(item).subscribe(
+      delete postInfo.license_plate;
+
+      this.apiService.postCarInfo(postInfo).subscribe(
         result => {
-          let newRow = [];
+          let newRow: Car;
           const carInfo = this.carsInfoSubject.value;
 
           if (newItem) {
-            item.id = (result as any).carinfo_id;
+            item = (result as any);
             carInfo.push(item);
+            this.assignToken(item.token);
           } else {
             for (let i = 0; i < items.length; i++) {
-              if (items[i] && items[i].id === (result as any).carinfo_id) {
+              if (items[i] && items[i].id === (result as any).id) {
                 newRow = items[i];
                 items.splice(i, 1);
               }
@@ -243,6 +255,18 @@ export class CarProviderService {
 
     this.rawCarItems = carLocations;
     this.filter(this.rawCarItems);
+  }
+
+  public assignToken(token: string) {
+    const carTokens = (JSON.parse(localStorage.getItem('carTokens'))
+      ? JSON.parse(localStorage.getItem('carTokens')) : null);
+
+    carTokens.items = carTokens.items.filter((obj: Token) => obj.id !== token);
+
+    localStorage.setItem('carTokens', JSON.stringify(carTokens));
+
+    this.tokensSubject.next(carTokens.items as Token[]);
+
   }
 
   ////

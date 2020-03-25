@@ -94,7 +94,7 @@
       <h6 class="text-center">Gelinkte auto</h6>
       <div *ngIf="linkedCar" class="row align-items-center">
         <div class="col-auto"><img src="/assets/images/car-location.png" /></div>
-        <div class="col-auto"><span class="license-plate license-nl">{{ linkedCar.license_plate }}</span></div>
+        <div class="col-auto"><span class="license-plate license-nl">{{ linkedCar.license_plate | formatLicensePlate }}</span></div>
         <div class="col">{{ linkedCar.driver_name }} ({{ linkedCar.driver_skill || '-' }})</div>
         <div class="col text-center">
           <a *ngIf="linkedCarLocation && !linkedCarDistance && !loadingLinkedCarDistance"
@@ -147,7 +147,7 @@
       </div>
 
       <div class="row align-items-center pt-2 nearby-car" *ngFor="let nearbyCar of nearbyCars">
-        <div class="col-auto"><span class="license-plate license-nl">{{nearbyCar.carLocation.car.license_plate}}</span></div>
+        <div class="col-auto"><span class="license-plate license-nl">{{nearbyCar.carLocation.car.license_plate | formatLicensePlate }}</span></div>
         <div class="col">{{nearbyCar.carLocation.car.driver_name}} <br/> ({{nearbyCar.carLocation.car.driver_skill || '-'}})
           <br/>
         </div>

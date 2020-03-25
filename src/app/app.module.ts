@@ -23,6 +23,7 @@ import { WorkItemPopupComponent } from './components/map/popup/workitem/work-ite
 import { CarInfoPopupComponent } from './components/map/popup/carinfo/car-info-popup.component';
 import { PopUpComponent } from './components/map/popup/popup';
 import { TokenURLPipe } from './pipes/TokenURLPipe';
+import { FormatLicensePlatePipe } from './pipes/LicensePlatePipe';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { TokenURLPipe } from './pipes/TokenURLPipe';
     WorkItemPopupComponent,
     CarInfoPopupComponent,
     PopUpComponent,
+    FormatLicensePlatePipe,
     TokenURLPipe
   ],
   imports: [

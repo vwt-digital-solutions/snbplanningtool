@@ -18,7 +18,8 @@
   <div class="col-12 item license_plate">
     <p>Kentekenplaat</p>
     <div class="license-plate license-nl">
-      <span>{{properties.car.license_plate || 'N/B'}}</span>
+      <span *ngIf="properties.car.license_plate">{{properties.car.license_plate | formatLicensePlate}}</span>
+      <span *ngIf="!properties.car.license_plate">N/B</span>
     </div>
   </div>
 </div>
