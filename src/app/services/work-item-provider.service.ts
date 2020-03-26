@@ -30,15 +30,15 @@ export class WorkItemProviderService {
 
   public filterService = new FilterMap(
     [
-      new ValueFilter('Beschrijving', 'description'),
-      new ChoiceFilter('Administratie (klantteam)', 'administration', ChoiceFilterType.multiple),
-      new ChoiceFilter('Taaktype', 'task_type', ChoiceFilterType.multiple),
-      new ChoiceFilter('Status', 'status', ChoiceFilterType.multiple),
-      new DateFilter('Startdatum', 'start_timestamp'),
-      new DateFilter('Einddatum', 'end_timestamp'),
-      new ChoiceFilter('Categorie', 'category', ChoiceFilterType.multiple),
-      new BooleanFilter('Stagnatie', 'stagnation', ''),
-      new DateFilter('Uiterstehersteltijd', 'resolve_before_timestamp'),
+      new ValueFilter('work', 'Beschrijving', 'description'),
+      new ChoiceFilter('work', 'Administratie (klantteam)', 'administration', ChoiceFilterType.multiple),
+      new ChoiceFilter('work', 'Taaktype', 'task_type', ChoiceFilterType.multiple),
+      new ChoiceFilter('work', 'Status', 'status', ChoiceFilterType.multiple),
+      new DateFilter('work', 'Startdatum', 'start_timestamp'),
+      new DateFilter('work', 'Einddatum', 'end_timestamp'),
+      new ChoiceFilter('work', 'Categorie', 'category', ChoiceFilterType.multiple),
+      new BooleanFilter('work', 'Stagnatie', 'stagnation', ''),
+      new DateFilter('work', 'Uiterstehersteltijd', 'resolve_before_timestamp'),
     ]
   );
 

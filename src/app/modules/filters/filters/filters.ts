@@ -4,6 +4,7 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import { getValue } from './json-helper';
 import * as moment from 'moment';
 
+type featureIdTypes = 'car' | 'work';
 export abstract class Filter {
 
   // The name to display for this filter.
@@ -11,6 +12,8 @@ export abstract class Filter {
 
   // The value on which to filter the given array of objects.
   field: string;
+
+  featureIdentifier: featureIdTypes;
 
   // The current filter's value.
   value;
@@ -22,11 +25,17 @@ export abstract class Filter {
 
   dataChanged = new Subject<{ [name: string]: any}>();
 
-  constructor(name: string, field: string, defaultValue = null) {
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    defaultValue = null,
+  ) {
     this.name = name;
     this.field = field;
     this.defaultValue = defaultValue;
     this.value = defaultValue;
+    this.featureIdentifier = featureIdentifier;
   }
 
   abstract filterElement(element, index, array): boolean;
@@ -55,8 +64,14 @@ export class ValueFilter extends Filter {
 
   type: ValueFilterType;
 
-  constructor(name: string, field: string, defaultValue = null, type = ValueFilterType.contains) {
-    super(name, field, defaultValue);
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    defaultValue = null,
+    type = ValueFilterType.contains
+  ) {
+    super(featureIdentifier, name, field, defaultValue);
     this.type = type;
   }
 
@@ -66,7 +81,9 @@ export class ValueFilter extends Filter {
 
   dataChange(value) {
     this.value = value;
-    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: value !== '' ? value : null
+    });
   }
 
   filterElement(element, index, array): boolean {
@@ -92,13 +109,19 @@ export enum ChoiceFilterType {
 }
 
 export class ChoiceFilter extends Filter  {
-
   type = ChoiceFilterType.single;
   options: any[];
   inferOptionsFromList = false;
 
-  constructor(name: string, field: string, type = ChoiceFilterType.single, options: any[] = null, defaultValue = null, ) {
-    super(name, field, defaultValue);
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    type = ChoiceFilterType.single,
+    options: any[] = null,
+    defaultValue = null,
+  ) {
+    super(featureIdentifier, name, field, defaultValue);
     if (options == null) {
       this.inferOptionsFromList = true;
     } else {
@@ -133,7 +156,9 @@ export class ChoiceFilter extends Filter  {
       this.value.push(newValue);
     }
 
-    this.dataChanged.next({ [this.name]: this.value });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: this.value
+    });
   }
 
 
@@ -245,7 +270,9 @@ export class DateFilter extends Filter  {
       toDate: this.toDate
     };
 
-    this.dataChanged.next({ [this.name]: JSON.stringify(this.value) });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: JSON.stringify(this.value)
+    });
   }
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
@@ -297,7 +324,9 @@ export class BooleanFilter extends Filter {
   dataChange(value) {
     this.value = value;
 
-    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: value !== '' ? value : null
+    });
   }
 
   filterElement(element, index, array): boolean {

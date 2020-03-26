@@ -34,7 +34,12 @@ export class CarProviderService {
 
   public filterService = new FilterMap(
     [
-      new ChoiceFilter('Administratie (klantteam)', 'car.administration', ChoiceFilterType.multiple)
+      new ChoiceFilter(
+        'car',
+        'Administratie (klantteam)',
+        'car.administration',
+        ChoiceFilterType.multiple
+      )
     ]
   );
 
