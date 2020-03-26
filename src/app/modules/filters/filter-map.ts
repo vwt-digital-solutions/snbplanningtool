@@ -15,16 +15,6 @@ export class FilterMap {
 
   }
 
-  private static splitIdentifierFromKey(obj: object): object[] {
-    return Object.keys(obj).map(key => {
-      const splits = key.split('|');
-      return {
-        [splits[0]] : splits[1]
-      };
-    });
-  }
-
-
   public setFilterValues(queryParams) {
     const keys = Object.keys(queryParams);
 
