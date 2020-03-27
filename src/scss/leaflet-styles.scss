@@ -87,33 +87,37 @@
 
   /* Custom map styles */
 // Cluster styling
+.leaflet-custom-popup {
+  bottom: 12px !important;
+}
+
 .cluster {
   text-align: center;
   color: white;
   background-position: -1px 0;
 
   &.size-1 {
-    background-image: url('assets/images/clusters/m1.png');
+    background-image: url('/assets/images/clusters/m1.png');
     line-height: 53px;
   }
 
   &.size-2 {
-    background-image: url('assets/images/clusters/m2.png');
+    background-image: url('/assets/images/clusters/m2.png');
     line-height: 56px;
   }
 
   &.size-3 {
-    background-image: url('assets/images/clusters/m3.png');
+    background-image: url('/assets/images/clusters/m3.png');
     line-height: 66px;
   }
 
   &.size-4 {
-    background-image: url('assets/images/clusters/m4.png');
+    background-image: url('/assets/images/clusters/m4.png');
     line-height: 78px;
   }
 
   &.size-5 {
-    background-image: url('assets/images/clusters/m5.png');
+    background-image: url('/assets/images/clusters/m5.png');
     line-height: 90px;
   }
 }

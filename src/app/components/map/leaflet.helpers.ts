@@ -95,7 +95,10 @@ export class Helpers {
         component.instance.properties = item;
         component.changeDetectorRef.detectChanges();
 
-        marker.bindPopup(component.location.nativeElement, item.getPopupOptions());
+        marker.bindPopup(component.location.nativeElement, {
+          ...item.getPopupOptions(),
+          className: 'leaflet-custom-popup'
+        });
 
         if (this.mapService.config.markerPopupOnHover && !this.mapService.clickedMarker) {
           marker.openPopup();

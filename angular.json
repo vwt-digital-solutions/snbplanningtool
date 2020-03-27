@@ -29,7 +29,8 @@
               "src/silent-refresh.html"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/scss/leaflet-styles.scss"
             ],
             "scripts": [],
             "es5BrowserSupport": true
