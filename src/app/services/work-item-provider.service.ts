@@ -36,7 +36,15 @@ export class WorkItemProviderService {
       new ChoiceFilter('work', 'Status', 'status', ChoiceFilterType.multiple),
       new DateFilter('work', 'Startdatum', 'start_timestamp'),
       new DateFilter('work', 'Einddatum', 'end_timestamp'),
-      new ChoiceFilter('work', 'Categorie', 'category', ChoiceFilterType.multiple),
+      new ChoiceFilter(
+        'work',
+        'Categorie',
+        'category',
+        ChoiceFilterType.multiple,
+        null,
+        null,
+        WorkItem.categories
+      ),
       new BooleanFilter('work', 'Stagnatie', 'stagnation', ''),
       new DateFilter('work', 'Uiterstehersteltijd', 'resolve_before_timestamp'),
     ]

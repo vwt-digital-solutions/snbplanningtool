@@ -111,6 +111,7 @@ export enum ChoiceFilterType {
 export class ChoiceFilter extends Filter  {
   type = ChoiceFilterType.single;
   options: any[];
+  icons: { option: string, icon: string };
   inferOptionsFromList = false;
 
   constructor(
@@ -120,6 +121,7 @@ export class ChoiceFilter extends Filter  {
     type = ChoiceFilterType.single,
     options: any[] = null,
     defaultValue = null,
+    icons = null
   ) {
     super(featureIdentifier, name, field, defaultValue);
     if (options == null) {
@@ -128,6 +130,7 @@ export class ChoiceFilter extends Filter  {
       this.options = options;
     }
 
+    this.icons = icons;
     this.type = type;
 
     if (type === ChoiceFilterType.multiple) {

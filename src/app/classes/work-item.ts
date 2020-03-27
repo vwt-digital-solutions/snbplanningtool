@@ -4,6 +4,13 @@ import * as moment from 'moment';
 import * as L from 'leaflet';
 
 export class WorkItem extends MapGeometryObject {
+  public static readonly categories = {
+    bulkuitvoering: 'fa-pallet',
+    netwerkkwaliteit: 'fa-signal',
+    schade: 'fa-exclamation',
+    storing: 'fa-unlink',
+  };
+
   constructor(
     public administration: string,
     public category: string,
@@ -44,18 +51,11 @@ export class WorkItem extends MapGeometryObject {
     const urgencyClass = this.featureUrgencyCSS();
     const category = this.category;
 
-    const categories = {
-      bulkuitvoering: 'fa-pallet',
-      netwerkkwaliteit: 'fa-signal',
-      schade: 'fa-exclamation',
-      storing: 'fa-unlink',
-    };
-
-    if (category && categories.hasOwnProperty(category.toLowerCase())) {
+    if (category && WorkItem.categories.hasOwnProperty(category.toLowerCase())) {
       return new L.divIcon({
         html: `
           <div style="background-image: url(${this.getIconPath(true)})">
-            <i class="glyph-icon fas ${categories[category.toLowerCase()]}"></i>
+            <i class="glyph-icon fas ${WorkItem.categories[category.toLowerCase()]}"></i>
           </div>`,
         className: `div-icon work-marker ${urgencyClass}`,
         ...this.options.icon

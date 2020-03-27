@@ -23,7 +23,12 @@
 
     <div *ngSwitchCase="'multiple-choice'">
       <div class="form-check" *ngFor="let opt of filter.options">
-        <label class="form-check-label" [for]="filter.field + '-' + opt"> <input [id]="filter.field + '-' + opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}</label>
+        <i *ngIf="filter.icons && filter.icons.hasOwnProperty(opt.toLowerCase())"
+          [ngClass]="['filter-icon fas', filter.icons[opt.toLowerCase()]]">
+        </i>
+        <label class="form-check-label" [for]="filter.field + '-' + opt">
+          <input [id]="filter.field + '-' + opt" [value]="opt" type="checkbox" (change)="filter.toggleValue(opt)" [checked]="filter.value.indexOf(opt) > -1"> {{opt}}
+        </label>
       </div>
     </div>
 
