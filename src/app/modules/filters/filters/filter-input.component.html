@@ -37,17 +37,41 @@
         <div class="input-group-prepend">
           <span class="input-group-text">van</span>
         </div>
-        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerFrom="ngbDatepicker" [(ngModel)]="filter.fromDate" [id]="filter.field + '-from'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('fromDate', $event)"/>
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control"
+          readonly
+          ngbDatepicker
+          #datepickerFrom="ngbDatepicker"
+          [id]="filter.field + '-from'"
+          [ngModel]="filter.value.fromDate"
+          (ngModelChange)="filter.dateChanged('fromDate', $event)"/>
         <div class="input-group-append">
           <button (click)="filter.dateChanged('fromDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
           <button (click)="datepickerFrom.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
         </div>
       </div>
+
       <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text">{{ filter.selectedInputTypes['toDate'] == filter.typesOfInput[0] ? 'type' : 'tot' }}</span>
+        </div>
+        <input type="text" class="form-control"
+          [ngModel]="filter.selectedInputTypes['toDate']"
+          (ngModelChange)="filter.setInputType($event, 'toDate')"
+          [ngbTypeahead]="filter.search"
+          />
+      </div>
+
+      <div class="input-group mb-1" *ngIf="filter.selectedInputTypes['toDate'] == filter.typesOfInput[0]">
         <div class="input-group-prepend">
           <span class="input-group-text">tot</span>
         </div>
-        <input placeholder="JJJJ-MM-DD" type="text" class="form-control" [readonly]="true" ngbDatepicker #datepickerTo="ngbDatepicker" [(ngModel)]="filter.toDate" [id]="filter.field + '-to'" (change)="filter.dataChanged.next(true)" (dateSelect)="filter.dateChanged('toDate', $event)"/>
+        <input placeholder="JJJJ-MM-DD" type="text" class="form-control"
+          readonly
+          ngbDatepicker
+          #datepickerTo="ngbDatepicker"
+          [id]="filter.field + '-to'"
+          [ngModel]="filter.value.toDate"
+          (ngModelChange)="filter.dateChanged('toDate', $event)"/>
         <div class="input-group-append">
           <button (click)="filter.dateChanged('toDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
           <button (click)="datepickerTo.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>

@@ -1,8 +1,9 @@
-import {Subject} from 'rxjs/index';
+import {Subject, Observable} from 'rxjs/index';
 import {isNullOrUndefined} from 'util';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import { getValue } from './json-helper';
 import * as moment from 'moment';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 type featureIdTypes = 'car' | 'work';
 export abstract class Filter {
@@ -257,61 +258,107 @@ export class DateFilter extends Filter  {
 
   inputType = 'date-range';
 
-  fromDate = null;
-  toDate = null;
+  value = {
+    fromDate: null,
+    toDate: null,
+  };
+
+  typesOfInput = [
+    'datum selectie',
+    'morgen',
+    'volgende week',
+    'volgende maand'
+  ];
+
+  selectedInputTypes = {
+    fromDate: this.typesOfInput[0],
+    toDate: this.typesOfInput[0]
+  };
 
   setValue(newValue) {
-    this.value = JSON.parse(newValue);
-    this.fromDate = this.value.fromDate;
-    this.toDate = this.value.toDate;
+    const data = JSON.parse(newValue);
+    this.value.fromDate = data.fromDate ? moment(data.fromDate, 'YYYY-MM-DD') : null;
+    this.value.toDate = data.toDate ? moment(data.toDate, 'YYYY-MM-DD') : null;
   }
 
-  dateChanged(dateField, date: NgbDate) {
-    this[dateField] = date;
-    this.value = {
-      fromDate: this.fromDate,
-      toDate: this.toDate
-    };
+  search = (text: Observable<string>) => {
+    const debouncedText = text.pipe(debounceTime(200), distinctUntilChanged());
+    return debouncedText.pipe(
+      map((term: string) => (term === '' ? this.typesOfInput :
+        this.typesOfInput.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
+    );
+  }
+
+  setInputType(value, field) {
+    if (value && this.typesOfInput.includes(value)) {
+      this.selectedInputTypes[field] = value;
+
+      if (value !== 'datum selectie') {
+        const today = moment();
+        const dateMap = {
+          morgen: moment(today).add(1, 'days'),
+          'volgende week': moment(today).add(1, 'weeks'),
+          'volgende maand': moment(today).add(1, 'months'),
+        };
+
+        const date = dateMap[value];
+
+        this.dateChanged(field, date);
+      }
+    }
+  }
+
+   /**
+    * Dates are converted to ISO due to the following issue.
+    * @see https://github.com/moment/moment/issues/4751
+    */
+  momentToIso(value: moment.Moment): string {
+    if (!isNullOrUndefined(value)) {
+      return value.toISOString();
+    }
+  }
+
+  dateChanged(dateField, value: any) {
+    this.value[dateField] = value;
+    let data;
+
+    if (Object.values(this.value).some(val => val !== null)) {
+      data = {
+        fromDate: this.momentToIso(this.value.fromDate),
+        toDate: this.momentToIso(this.value.toDate),
+      };
+    }
 
     this.dataChanged.next({
-      [`${this.featureIdentifier}|${this.name}`]: JSON.stringify(this.value)
+      [`${this.featureIdentifier}|${this.name}`]: JSON.stringify(data)
     });
   }
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
-    if (!this.fromDate && !this.toDate) {
+    if (!this.value.fromDate && !this.value.toDate) {
       return listToFilter;
     }
 
     return super.filterList(listToFilter, originalList);
   }
 
-  filterElement(element, index, array): boolean {
-    if (isNullOrUndefined(this.fromDate) && isNullOrUndefined(this.toDate)) {
+  filterElement(element): boolean {
+    // Return value if both from and to date are undefind or null
+    if (isNullOrUndefined(this.value.fromDate) && isNullOrUndefined(this.value.toDate)) {
       return true;
     }
 
+    // Don't return value if element has no date
     const elementMoment = moment(getValue(element, this.field));
     if (isNullOrUndefined(elementMoment)) {
       return false;
     }
 
-    let fromMoment;
-    let toMoment;
+    // Check if our data exists and if it does if it falls outside of our dataset.
+    const matchesStartCriteria = isNullOrUndefined(this.value.fromDate) || this.value.fromDate.isBefore(elementMoment);
+    const matchesEndCriteria = isNullOrUndefined(this.value.toDate) || this.value.toDate.add(1, 'days').isAfter(elementMoment);
 
-    if (!isNullOrUndefined(this.fromDate)) {
-      fromMoment = moment([this.fromDate.year, this.fromDate.month - 1, this.fromDate.day]);
-    }
-    if (!isNullOrUndefined(this.toDate)) {
-      toMoment = moment([this.toDate.year, this.toDate.month - 1, this.toDate.day]).add(1, 'days');
-    }
-
-    let elementMatches = isNullOrUndefined(this.fromDate) || fromMoment.isBefore(elementMoment);
-
-    elementMatches = elementMatches && (isNullOrUndefined(this.toDate) || toMoment.isAfter(elementMoment));
-
-    return elementMatches;
-
+    return matchesStartCriteria && matchesEndCriteria;
   }
 }
 
@@ -332,7 +379,7 @@ export class BooleanFilter extends Filter {
     });
   }
 
-  filterElement(element, index, array): boolean {
+  filterElement(element): boolean {
     if (this.value === '') {
       return true;
     }
