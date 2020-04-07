@@ -1,8 +1,11 @@
-import {Subject} from 'rxjs/index';
+import {Subject, Observable} from 'rxjs/index';
 import {isNullOrUndefined} from 'util';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { getValue } from './json-helper';
 import * as moment from 'moment';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+type featureIdTypes = 'car' | 'work';
 export abstract class Filter {
 
   // The name to display for this filter.
@@ -10,6 +13,8 @@ export abstract class Filter {
 
   // The value on which to filter the given array of objects.
   field: string;
+
+  featureIdentifier: featureIdTypes;
 
   // The current filter's value.
   value;
@@ -21,11 +26,17 @@ export abstract class Filter {
 
   dataChanged = new Subject<{ [name: string]: any}>();
 
-  constructor(name: string, field: string, defaultValue = null) {
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    defaultValue = null,
+  ) {
     this.name = name;
     this.field = field;
     this.defaultValue = defaultValue;
     this.value = defaultValue;
+    this.featureIdentifier = featureIdentifier;
   }
 
   abstract filterElement(element, index, array): boolean;
@@ -54,8 +65,14 @@ export class ValueFilter extends Filter {
 
   type: ValueFilterType;
 
-  constructor(name: string, field: string, defaultValue = null, type = ValueFilterType.contains) {
-    super(name, field, defaultValue);
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    defaultValue = null,
+    type = ValueFilterType.contains
+  ) {
+    super(featureIdentifier, name, field, defaultValue);
     this.type = type;
   }
 
@@ -65,20 +82,20 @@ export class ValueFilter extends Filter {
 
   dataChange(value) {
     this.value = value;
-    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: value !== '' ? value : null
+    });
   }
 
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case ValueFilterType.contains:
-        return (element[this.field].toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
+        return (getValue(element, this.field).toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
       case ValueFilterType.matches:
-        return (element[this.field].toLowerCase() === this.value.toLowerCase());
+        return (getValue(element, this.field).toLowerCase() === this.value.toLowerCase());
       default:
         return true;
     }
-
-    return element[this.field] === this.value;
   }
 }
 
@@ -93,19 +110,28 @@ export enum ChoiceFilterType {
 }
 
 export class ChoiceFilter extends Filter  {
-
   type = ChoiceFilterType.single;
   options: any[];
+  icons: { option: string, icon: string };
   inferOptionsFromList = false;
 
-  constructor(name: string, field: string, type = ChoiceFilterType.single, options: any[] = null, defaultValue = null, ) {
-    super(name, field, defaultValue);
+  constructor(
+    featureIdentifier: featureIdTypes,
+    name: string,
+    field: string,
+    type = ChoiceFilterType.single,
+    options: any[] = null,
+    defaultValue = null,
+    icons = null
+  ) {
+    super(featureIdentifier, name, field, defaultValue);
     if (options == null) {
       this.inferOptionsFromList = true;
     } else {
       this.options = options;
     }
 
+    this.icons = icons;
     this.type = type;
 
     if (type === ChoiceFilterType.multiple) {
@@ -134,15 +160,23 @@ export class ChoiceFilter extends Filter  {
       this.value.push(newValue);
     }
 
-    this.dataChanged.next({ [this.name]: this.value });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: this.value
+    });
   }
 
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
     if (this.inferOptionsFromList) {
       this.options = originalList
-        .map(value => value !== undefined && value !== '' && value !== null ? value[this.field] : '')
-        .filter((v, i, a) => a.indexOf(v) === i && v !== '' && v !== undefined && v !== null)
+        .map(value => {
+          return ![undefined, null, ''].includes(value) ?
+            getValue(value, this.field) :
+            '';
+        })
+        .filter((v, i, a) => {
+          return a.indexOf(v) === i && ![undefined, null, ''].includes(v);
+        })
         .sort();
     }
 
@@ -157,11 +191,11 @@ export class ChoiceFilter extends Filter  {
 
     switch (this.type) {
       case ChoiceFilterType.single:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       case ChoiceFilterType.singleRadio:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       case ChoiceFilterType.multiple:
-        return this.value.indexOf(element[this.field]) > -1;
+        return this.value.indexOf(getValue(element, this.field)) > -1;
       default:
         return true;
     }
@@ -187,15 +221,15 @@ export class OffsetFilter extends Filter  {
   filterElement(element, index, array): boolean {
     switch (this.type) {
       case OffsetFilterType.greaterThan:
-        return element[this.field] > this.value;
+        return getValue(element, this.field) > this.value;
       case OffsetFilterType.lessThan:
-        return element[this.field] < this.value;
+        return getValue(element, this.field) < this.value;
       case OffsetFilterType.greaterThanOrEqualTo:
-        return element[this.field] >= this.value;
+        return getValue(element, this.field) >= this.value;
       case OffsetFilterType.lessThanOrEqualTo:
-        return element[this.field] <= this.value;
+        return getValue(element, this.field) <= this.value;
       case OffsetFilterType.equalTo:
-        return element[this.field] === this.value;
+        return getValue(element, this.field) === this.value;
       default:
         return false;
     }
@@ -211,7 +245,7 @@ export class RangeFilter extends Filter  {
   inputType = 'range';
 
   filterElement(element, index, array): boolean {
-    return element[this.field] >= this.value[0] && element[this.value] <= this.value[1];
+    return getValue(element, this.field) >= this.value[0] && element[this.value] <= this.value[1];
   }
 }
 
@@ -223,60 +257,186 @@ export class RangeFilter extends Filter  {
 export class DateFilter extends Filter  {
 
   inputType = 'date-range';
+  hoveredDate: NgbDate | null = null;
 
-  fromDate = null;
-  toDate = null;
+  value = {
+    fromDate: null,
+    toDate: null,
+  };
+
+  customValues = [
+    {
+      name : 'Vandaag',
+      value : {
+        fromDate: moment().utc().startOf('day')
+      }
+    },
+    {
+      name : 'Morgen',
+      value : {
+        fromDate: moment().utc().startOf('day').add('days', 1)
+      }
+    },
+    {
+      name : 'Komende week',
+      value : {
+        fromDate: moment().utc().startOf('day'),
+        toDate: moment().utc().startOf('day').add('days', 7)
+      }
+    },
+    {
+      name : 'Komende maand',
+      value : {
+        fromDate: moment().utc().startOf('day'),
+        toDate: moment().utc().startOf('day').add('months', 1)
+      }
+    }
+  ];
+
+  selectedCustomValue = null;
+
+  ////
+  // Filter functions.
+  ////
 
   setValue(newValue) {
-    this.value = JSON.parse(newValue);
-    this.fromDate = this.value.fromDate;
-    this.toDate = this.value.toDate;
+    const data = JSON.parse(newValue);
+    this.value.fromDate = data.fromDate ? moment(data.fromDate, 'YYYY-MM-DD') : null;
+    this.value.toDate = data.toDate ? moment(data.toDate, 'YYYY-MM-DD') : null;
   }
 
-  dateChanged(dateField, date: NgbDate) {
-    this[dateField] = date;
-    this.value = {
-      fromDate: this.fromDate,
-      toDate: this.toDate
-    };
+  dateChanged(value: any) {
 
-    this.dataChanged.next({ [this.name]: JSON.stringify(this.value) });
+    if (!value) {
+      this.value.fromDate = null;
+      this.value.toDate = null;
+    } else if (value.value) {
+      // Clone the value to prevent mutating this.customValues.
+      this.value = {
+        fromDate: value.value.fromDate ? moment(value.value.fromDate) : null,
+        toDate: value.value.toDate ? moment(value.value.toDate) : null
+      };
+    } else {
+
+      if (!this.value.fromDate && !this.value.toDate) {
+        this.value.fromDate = value;
+      } else if (this.value.fromDate && !this.value.toDate && value.isAfter(this.value.fromDate)) {
+        this.value.toDate = value;
+      } else {
+        this.value.toDate = null;
+        this.value.fromDate = value;
+      }
+    }
+
+    let data;
+
+    if (Object.values(this.value).some(val => val !== null)) {
+      data = {
+        fromDate: this.momentToIso(this.value.fromDate),
+        toDate: this.momentToIso(this.value.toDate),
+      };
+    }
+
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: JSON.stringify(data)
+    });
   }
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
-    if (!this.fromDate && !this.toDate) {
+    if (!this.value.fromDate && !this.value.toDate) {
       return listToFilter;
     }
 
     return super.filterList(listToFilter, originalList);
   }
 
-  filterElement(element, index, array): boolean {
-    if (isNullOrUndefined(this.fromDate) && isNullOrUndefined(this.toDate)) {
+  filterElement(element): boolean {
+    // Return value if both from and to date are undefind or null
+    if (isNullOrUndefined(this.value.fromDate) && isNullOrUndefined(this.value.toDate)) {
       return true;
     }
 
-    const elementMoment = moment(element[this.field]);
+    // Don't return value if element has no date
+    const elementMoment = moment(getValue(element, this.field));
     if (isNullOrUndefined(elementMoment)) {
       return false;
     }
 
-    let fromMoment;
-    let toMoment;
-
-    if (!isNullOrUndefined(this.fromDate)) {
-      fromMoment = moment([this.fromDate.year, this.fromDate.month - 1, this.fromDate.day]);
+    let toDate = this.value.toDate ? moment(this.value.toDate) : null;
+    if (isNullOrUndefined(toDate) && !isNullOrUndefined(this.value.fromDate)) {
+      toDate = moment(this.value.fromDate);
     }
-    if (!isNullOrUndefined(this.toDate)) {
-      toMoment = moment([this.toDate.year, this.toDate.month - 1, this.toDate.day]).add(1, 'days');
+    if (toDate) {
+      toDate.add(1, 'days');
     }
 
-    let elementMatches = isNullOrUndefined(this.fromDate) || fromMoment.isBefore(elementMoment);
+    // Check if our data exists and if it does if it falls outside of our dataset.
+    const matchesStartCriteria = isNullOrUndefined(this.value.fromDate) || this.value.fromDate.isBefore(elementMoment);
+    const matchesEndCriteria = isNullOrUndefined(this.value.fromDate) || toDate.isAfter(elementMoment);
 
-    elementMatches = elementMatches && (isNullOrUndefined(this.toDate) || toMoment.isAfter(elementMoment));
+    return matchesStartCriteria && matchesEndCriteria;
+  }
 
-    return elementMatches;
+  ////
+  // Helper functions.
+  ////
 
+  /**
+   * Dates are converted to ISO due to the following issue.
+   * @see https://github.com/moment/moment/issues/4751
+   */
+  momentToIso(value: moment.Moment): string {
+    if (!isNullOrUndefined(value)) {
+      return value.toISOString();
+    }
+  }
+
+  momentToNgbDate(value: moment.Moment): NgbDateStruct {
+
+    if (!value) {
+      return null;
+    }
+
+    const year = value.year();
+    const month = value.month();
+    const day = value.day();
+
+    const newValue = {
+      year: value.year(),
+      month: value.month() + 1,
+      day: value.date(),
+    };
+
+    return newValue;
+  }
+
+  ////
+  // Calendar display functions.
+  ////
+
+  isHovered(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    return fromDate && !toDate && this.hoveredDate &&
+      date.after(fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    return toDate && date.after(fromDate) && date.before(toDate);
+  }
+
+  isRange(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    const  returnValue = date.equals(fromDate) || (toDate && date.equals(toDate))
+      || this.isInside(date) || this.isHovered(date);
+
+    return returnValue;
   }
 }
 
@@ -292,14 +452,16 @@ export class BooleanFilter extends Filter {
   dataChange(value) {
     this.value = value;
 
-    this.dataChanged.next({ [this.name]: value !== '' ? value : null });
+    this.dataChanged.next({
+      [`${this.featureIdentifier}|${this.name}`]: value !== '' ? value : null
+    });
   }
 
-  filterElement(element, index, array): boolean {
+  filterElement(element): boolean {
     if (this.value === '') {
       return true;
     }
 
-    return element[this.field] === this.value;
+    return getValue(element, this.field) === this.value;
   }
 }

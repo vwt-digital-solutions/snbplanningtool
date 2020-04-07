@@ -17,10 +17,20 @@ export class FilterMap {
 
   public setFilterValues(queryParams) {
     const keys = Object.keys(queryParams);
+
     this.filters.forEach((filter: any) => {
-      keys.forEach(key => {
-        if (filter.name === key && queryParams[key]) {
-          filter.setValue(queryParams[key]);
+      keys.forEach(keyAndIdentifier => {
+        const [identifier, key] = keyAndIdentifier.split('|');
+        if (filter.featureIdentifier !== identifier) {
+          return;
+        }
+
+        if (filter.name !== key) {
+          return;
+        }
+
+        if (queryParams[keyAndIdentifier]) {
+          filter.setValue(queryParams[keyAndIdentifier]);
         }
       });
     });

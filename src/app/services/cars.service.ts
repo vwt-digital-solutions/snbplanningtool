@@ -23,7 +23,7 @@ export class CarsService {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'Administratie (klantteam)', field: 'administration', cellEditorSelector: this.cellEditorAdministration },
-        { headerName: 'Kentekenplaat', field: 'license_plate', valueSetter: this.cellEditorLicense },
+        { headerName: 'Kentekenplaat', field: 'license_plate', editable: false },
         { headerName: 'Naam bestuurder', field: 'driver_name', },
         { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
         { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector: this.cellEditorDriverSkill },
@@ -54,18 +54,6 @@ export class CarsService {
         ]
       }
     };
-  }
-
-  cellEditorLicense(params) {
-    if (params.newValue.match(/.{1,3}-.{2,3}-.{1,2}/g)) {
-      params.data[params.colDef.field] = params.newValue;
-      params.colDef.cellStyle = { color: 'black', backgroundColor: 'transparent' };
-      return true;
-    } else {
-      params.colDef.cellStyle = { color: 'white', backgroundColor: '#c0392b' };
-    }
-
-    return false;
   }
 
   cellEditorToken(params) {

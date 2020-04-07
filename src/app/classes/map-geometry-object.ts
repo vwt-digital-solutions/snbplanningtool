@@ -32,7 +32,7 @@ export abstract class MapGeometryObject {
     },
     icon: {
       iconSize: [32, 33],
-      iconAnchor: null,
+      iconAnchor: [16, 33],
       popupAnchor: [0, 0]
     }
   };

@@ -3,27 +3,56 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Subject, throwError} from 'rxjs';
 import {AuthRoleService} from './auth-role.service';
 import {ApiService} from './api.service';
+import { QueryParameterService } from './query-parameter.service';
 import {Car} from '../classes/car';
 
-import {map} from 'rxjs/internal/operators';
+import {map, take} from 'rxjs/internal/operators';
 import CarLocation from '../classes/car-location';
+import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filters';
+import { FilterMap } from '../modules/filters/filter-map';
+
+import {Token} from '../classes/token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarProviderService {
+  rawCarItems: any[]  = [];
+  filteredCarItems: any[] = [];
 
   loadingSubject = new Subject<boolean>();
   savingSubject = new Subject<boolean>();
   errorSubject = new Subject<any>();
 
-  carsLocationsSubject = new BehaviorSubject<any[]>([]);
-  carsInfoSubject = new BehaviorSubject<any[]>([]);
-  carsTokenSubject = new BehaviorSubject<any[]>([]);
-  tokensSubject = new BehaviorSubject<any []>([]);
+  // Internal subject used to generate
+  private carsTokenSubject = new BehaviorSubject<any[]>([]);
 
-  constructor(public authRoleService: AuthRoleService,
-              private apiService: ApiService) {
+  public carsLocationsSubject = new BehaviorSubject<CarLocation[]>([]);
+  public carsInfoSubject = new BehaviorSubject<Car[]>([]);
+
+  public tokensSubject = new BehaviorSubject<Token[]>([]);
+
+  public filterService = new FilterMap(
+    [
+      new ChoiceFilter(
+        'car',
+        'Administratie (klantteam)',
+        'car.administration',
+        ChoiceFilterType.multiple
+      )
+    ]
+  );
+
+  constructor(
+    public authRoleService: AuthRoleService,
+    private apiService: ApiService,
+    private queryParameterService: QueryParameterService
+  ) {
+    this.filterService.filterChanged.subscribe(value => {
+      this.queryParameterService.setRouteParams(value);
+      this.filter(this.rawCarItems);
+    });
+
 
     setTimeout(() => {
       this.getCars();
@@ -31,14 +60,17 @@ export class CarProviderService {
       this.getCarLocations();
     }, 200);
 
+    // Only take 2 subscriptions the initial empty route and the routeparams that are initialised later.
+    this.queryParameterService.route.queryParams.pipe(take(2)).subscribe(params => {
+      this.filterService.setFilterValues(params);
+    });
 
-    this.carsInfoSubject.subscribe((value) => this.updateCarLocations());
-    this.carsTokenSubject.subscribe((value) => this.updateCarLocations());
+    this.carsInfoSubject.subscribe(() => this.updateCarLocations());
+    this.carsTokenSubject.subscribe(() => this.updateCarLocations());
 
     setInterval(() => {
       this.getCarLocations();
     }, (5 * 60 * 1000));
-
   }
 
   ////
@@ -95,7 +127,7 @@ export class CarProviderService {
       return;
     }
 
-    this.apiService.apiGet('/tokens').subscribe(
+    this.apiService.apiGet('/tokens?assigned=false').subscribe(
       (result: any)  => {
         const newCarTokens = new Object();
         (newCarTokens as any).items = result.items;
@@ -103,7 +135,7 @@ export class CarProviderService {
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
 
 
-        this.tokensSubject.next(result as [any]);
+        this.tokensSubject.next(result as Token[]);
       },
       error => {
         return throwError(error);
@@ -117,7 +149,6 @@ export class CarProviderService {
 
     this.apiService.apiGet('/cars/locations').subscribe(
       (result: any) => {
-
         const featuresList: [any] = result.features;
 
         this.loadingSubject.next(false);
@@ -148,30 +179,37 @@ export class CarProviderService {
       ));
   }
 
-  public postCarInfo(items: any[]) {
+  public postCarInfo(items: Car[]) {
     this.savingSubject.next(true);
 
     items.forEach((item) => {
       const newItem = item.id == null;
 
-      if (item.driver_skill == null) {
+      // Clone the item, because we need to remove some fields before posting to the API,
+      // like removing the license_plate.
+      const postInfo = Object.assign({}, item);
+
+      if (postInfo.driver_skill == null) {
         item.driver_skill = '';
       }
-      if (item.driver_employee_number == null) {
+      if (postInfo.driver_employee_number == null) {
         item.driver_employee_number = '';
       }
 
-      this.apiService.postCarInfo(item).subscribe(
+      delete postInfo.license_plate;
+
+      this.apiService.postCarInfo(postInfo).subscribe(
         result => {
-          let newRow = [];
+          let newRow: Car;
           const carInfo = this.carsInfoSubject.value;
 
           if (newItem) {
-            item.id = (result as any).carinfo_id;
+            item = (result as any);
             carInfo.push(item);
+            this.assignToken(item.token);
           } else {
             for (let i = 0; i < items.length; i++) {
-              if (items[i] && items[i].id === (result as any).carinfo_id) {
+              if (items[i] && items[i].id === (result as any).id) {
                 newRow = items[i];
                 items.splice(i, 1);
               }
@@ -194,8 +232,6 @@ export class CarProviderService {
 
         }, error => {
           return throwError(error);
-          this.errorSubject.next(error);
-          this.savingSubject.next(false);
         }
       );
     });
@@ -211,17 +247,31 @@ export class CarProviderService {
 
     const carLocations = [];
 
-    for (const feature of featuresList) {
+    featuresList.forEach(feature => {
       const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
-      for (const item of carInfo) {
+      carInfo.forEach(item => {
         if (item.token === feature.properties.token) {
           carLocation.car = item;
         }
-      }
-      carLocations.push(carLocation);
-    }
+      });
 
-    this.carsLocationsSubject.next(carLocations);
+      carLocations.push(carLocation);
+    });
+
+    this.rawCarItems = carLocations;
+    this.filter(this.rawCarItems);
+  }
+
+  public assignToken(token: string) {
+    const carTokens = (JSON.parse(localStorage.getItem('carTokens'))
+      ? JSON.parse(localStorage.getItem('carTokens')) : null);
+
+    carTokens.items = carTokens.items.filter((obj: Token) => obj.id !== token);
+
+    localStorage.setItem('carTokens', JSON.stringify(carTokens));
+
+    this.tokensSubject.next(carTokens.items as Token[]);
+
   }
 
   ////
@@ -240,4 +290,8 @@ export class CarProviderService {
     return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
 
+  private filter(listToFilter: any[]) {
+    this.filteredCarItems = this.filterService.filterList(listToFilter);
+    this.carsLocationsSubject.next(this.filteredCarItems);
+  }
 }
