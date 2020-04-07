@@ -1,6 +1,6 @@
 import {Subject, Observable} from 'rxjs/index';
 import {isNullOrUndefined} from 'util';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import { getValue } from './json-helper';
 import * as moment from 'moment';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -257,23 +257,47 @@ export class RangeFilter extends Filter  {
 export class DateFilter extends Filter  {
 
   inputType = 'date-range';
+  hoveredDate: NgbDate | null = null;
 
   value = {
     fromDate: null,
     toDate: null,
   };
 
-  typesOfInput = [
-    'datum selectie',
-    'morgen',
-    'volgende week',
-    'volgende maand'
+  customValues = [
+    {
+      name : 'Vandaag',
+      value : {
+        fromDate: moment().utc().startOf('day')
+      }
+    },
+    {
+      name : 'Morgen',
+      value : {
+        fromDate: moment().utc().startOf('day').add('days', 1)
+      }
+    },
+    {
+      name : 'Komende week',
+      value : {
+        fromDate: moment().utc().startOf('day'),
+        toDate: moment().utc().startOf('day').add('days', 7)
+      }
+    },
+    {
+      name : 'Komende maand',
+      value : {
+        fromDate: moment().utc().startOf('day'),
+        toDate: moment().utc().startOf('day').add('months', 1)
+      }
+    }
   ];
 
-  selectedInputTypes = {
-    fromDate: this.typesOfInput[0],
-    toDate: this.typesOfInput[0]
-  };
+  selectedCustomValue = null;
+
+  ////
+  // Filter functions.
+  ////
 
   setValue(newValue) {
     const data = JSON.parse(newValue);
@@ -281,45 +305,29 @@ export class DateFilter extends Filter  {
     this.value.toDate = data.toDate ? moment(data.toDate, 'YYYY-MM-DD') : null;
   }
 
-  search = (text: Observable<string>) => {
-    const debouncedText = text.pipe(debounceTime(200), distinctUntilChanged());
-    return debouncedText.pipe(
-      map((term: string) => (term === '' ? this.typesOfInput :
-        this.typesOfInput.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
-    );
-  }
+  dateChanged(value: any) {
 
-  setInputType(value, field) {
-    if (value && this.typesOfInput.includes(value)) {
-      this.selectedInputTypes[field] = value;
+    if (!value) {
+      this.value.fromDate = null;
+      this.value.toDate = null;
+    } else if (value.value) {
+      // Clone the value to prevent mutating this.customValues.
+      this.value = {
+        fromDate: value.value.fromDate ? moment(value.value.fromDate) : null,
+        toDate: value.value.toDate ? moment(value.value.toDate) : null
+      };
+    } else {
 
-      if (value !== 'datum selectie') {
-        const today = moment();
-        const dateMap = {
-          morgen: moment(today).add(1, 'days'),
-          'volgende week': moment(today).add(1, 'weeks'),
-          'volgende maand': moment(today).add(1, 'months'),
-        };
-
-        const date = dateMap[value];
-
-        this.dateChanged(field, date);
+      if (!this.value.fromDate && !this.value.toDate) {
+        this.value.fromDate = value;
+      } else if (this.value.fromDate && !this.value.toDate && value.isAfter(this.value.fromDate)) {
+        this.value.toDate = value;
+      } else {
+        this.value.toDate = null;
+        this.value.fromDate = value;
       }
     }
-  }
 
-   /**
-    * Dates are converted to ISO due to the following issue.
-    * @see https://github.com/moment/moment/issues/4751
-    */
-  momentToIso(value: moment.Moment): string {
-    if (!isNullOrUndefined(value)) {
-      return value.toISOString();
-    }
-  }
-
-  dateChanged(dateField, value: any) {
-    this.value[dateField] = value;
     let data;
 
     if (Object.values(this.value).some(val => val !== null)) {
@@ -354,11 +362,81 @@ export class DateFilter extends Filter  {
       return false;
     }
 
+    let toDate = this.value.toDate ? moment(this.value.toDate) : null;
+    if (isNullOrUndefined(toDate) && !isNullOrUndefined(this.value.fromDate)) {
+      toDate = moment(this.value.fromDate);
+    }
+    if (toDate) {
+      toDate.add(1, 'days');
+    }
+
     // Check if our data exists and if it does if it falls outside of our dataset.
     const matchesStartCriteria = isNullOrUndefined(this.value.fromDate) || this.value.fromDate.isBefore(elementMoment);
-    const matchesEndCriteria = isNullOrUndefined(this.value.toDate) || this.value.toDate.add(1, 'days').isAfter(elementMoment);
+    const matchesEndCriteria = isNullOrUndefined(this.value.fromDate) || toDate.isAfter(elementMoment);
 
     return matchesStartCriteria && matchesEndCriteria;
+  }
+
+  ////
+  // Helper functions.
+  ////
+
+  /**
+   * Dates are converted to ISO due to the following issue.
+   * @see https://github.com/moment/moment/issues/4751
+   */
+  momentToIso(value: moment.Moment): string {
+    if (!isNullOrUndefined(value)) {
+      return value.toISOString();
+    }
+  }
+
+  momentToNgbDate(value: moment.Moment): NgbDateStruct {
+
+    if (!value) {
+      return null;
+    }
+
+    const year = value.year();
+    const month = value.month();
+    const day = value.day();
+
+    const newValue = {
+      year: value.year(),
+      month: value.month() + 1,
+      day: value.date(),
+    };
+
+    return newValue;
+  }
+
+  ////
+  // Calendar display functions.
+  ////
+
+  isHovered(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    return fromDate && !toDate && this.hoveredDate &&
+      date.after(fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    return toDate && date.after(fromDate) && date.before(toDate);
+  }
+
+  isRange(date: NgbDate) {
+    const fromDate = this.momentToNgbDate(this.value.fromDate);
+    const toDate = this.momentToNgbDate(this.value.toDate);
+
+    const  returnValue = date.equals(fromDate) || (toDate && date.equals(toDate))
+      || this.isInside(date) || this.isHovered(date);
+
+    return returnValue;
   }
 }
 

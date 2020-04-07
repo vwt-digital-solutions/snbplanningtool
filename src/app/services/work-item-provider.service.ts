@@ -34,8 +34,7 @@ export class WorkItemProviderService {
       new ChoiceFilter('work', 'Administratie (klantteam)', 'administration', ChoiceFilterType.multiple),
       new ChoiceFilter('work', 'Taaktype', 'task_type', ChoiceFilterType.multiple),
       new ChoiceFilter('work', 'Status', 'status', ChoiceFilterType.multiple),
-      new DateFilter('work', 'Startdatum', 'start_timestamp'),
-      new DateFilter('work', 'Einddatum', 'end_timestamp'),
+      new DateFilter('work', 'Datum', 'start_timestamp'),
       new ChoiceFilter(
         'work',
         'Categorie',

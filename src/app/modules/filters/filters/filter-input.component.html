@@ -3,7 +3,9 @@
      (click)="collapsed = !collapsed"
      href="javascript:void(0);"
      [attr.aria-expanded]="collapsed"
-     [attr.aria-controls]="filter.field + '-filter-div'">
+     [attr.aria-controls]="filter.field + '-filter-div'"
+     class="collapse-link"
+  >
     <h6 class="w-100">
       <label [for]="filter.field">
           {{filter.name}}
@@ -32,50 +34,45 @@
       </div>
     </div>
 
-    <div *ngSwitchCase="'date-range'">
-      <div class="input-group mb-1">
-        <div class="input-group-prepend">
-          <span class="input-group-text">van</span>
-        </div>
-        <input placeholder="JJJJ-MM-DD" type="text" class="form-control"
-          readonly
-          ngbDatepicker
-          #datepickerFrom="ngbDatepicker"
-          [id]="filter.field + '-from'"
-          [ngModel]="filter.value.fromDate"
-          (ngModelChange)="filter.dateChanged('fromDate', $event)"/>
-        <div class="input-group-append">
-          <button (click)="filter.dateChanged('fromDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
-          <button (click)="datepickerFrom.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
-        </div>
+    <div *ngSwitchCase="'date-range'" class="row">
+      <div class="col"></div>
+      <div class="col-auto" *ngIf="filter.value.fromDate || filter.value.toDate">
+        <a href="javascript:void(0);" (click)="filter.dateChanged(null)" class="m-3">
+          Wissen
+        </a>
       </div>
-
-      <div class="input-group mb-1">
-        <div class="input-group-prepend">
-          <span class="input-group-text">{{ filter.selectedInputTypes['toDate'] == filter.typesOfInput[0] ? 'type' : 'tot' }}</span>
-        </div>
-        <input type="text" class="form-control"
-          [ngModel]="filter.selectedInputTypes['toDate']"
-          (ngModelChange)="filter.setInputType($event, 'toDate')"
-          [ngbTypeahead]="filter.search"
-          />
+      <div class="input-group mb-1 col-auto">
+        <ngb-datepicker #d
+                        ngbDatepicker
+                        #datepickerFrom="ngbDatepicker"
+                        [id]="filter.field + '-from'"
+                        [ngModel]="filter.value"
+                        [dayTemplate]="t"
+                        [dayTemplateData]="getContext"
+                        (ngModelChange)="filter.dateChanged($event)">
+        </ngb-datepicker>
+        <ng-template #t let-date let-today="today" let-month="currentMonth" let-data="data" let-focused="focused">
+            <span class="custom-day"
+                  [class.focused]="focused"
+                  [class.range]="filter.isRange(date)"
+                  [class.faded]="filter.isHovered(date) || filter.isInside(date)"
+                  [class.text-muted]="!filter.isRange(date) && !filter.isHovered(date) && month !== date.month"
+                  [class.today]="today"
+                  (mouseenter)="hoveredDate = date"
+                  (mouseleave)="hoveredDate = null">
+              {{ date.day }}
+            </span>
+        </ng-template>
       </div>
-
-      <div class="input-group mb-1" *ngIf="filter.selectedInputTypes['toDate'] == filter.typesOfInput[0]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">tot</span>
-        </div>
-        <input placeholder="JJJJ-MM-DD" type="text" class="form-control"
-          readonly
-          ngbDatepicker
-          #datepickerTo="ngbDatepicker"
-          [id]="filter.field + '-to'"
-          [ngModel]="filter.value.toDate"
-          (ngModelChange)="filter.dateChanged('toDate', $event)"/>
-        <div class="input-group-append">
-          <button (click)="filter.dateChanged('toDate', null)" class="btn btn-primary"><i class="fa fa-times"></i></button>
-          <button (click)="datepickerTo.toggle()" class="btn btn-primary"><i class="fa fa-calendar"></i></button>
-        </div>
+      <div class="col-auto">
+        <ul>
+          <li *ngFor="let customValue of filter.customValues">
+            <a href="javascript:void(0);"
+               (click)="filter.dateChanged(customValue)">
+              {{customValue.name}}
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
