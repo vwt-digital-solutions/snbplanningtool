@@ -1,6 +1,7 @@
 import * as L from 'leaflet';
 
 export abstract class MapGeometryObject {
+  public static businessUnits = ['service', 'ftth', 'nls'];
   public static administrations = [
     'Administratie niet kunnen bepalen',
     'Operations Noord Klantteam 01 (NHL)',
