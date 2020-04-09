@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {ApiService} from '../../services/api.service';
+import { Component } from '@angular/core';
 import {WorkItemProviderService} from '../../services/work-item-provider.service';
 import { CarProviderService } from '../../services/car-provider.service';
 
@@ -8,7 +7,7 @@ import { CarProviderService } from '../../services/car-provider.service';
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent {
 
   public workItemProviderService: WorkItemProviderService;
   public carProviderService: CarProviderService;
@@ -19,9 +18,6 @@ export class FilterComponent implements OnInit {
   ) {
     this.workItemProviderService = workItemProviderService;
     this.carProviderService = carProviderService;
-  }
-
-  ngOnInit() {
   }
 
 }

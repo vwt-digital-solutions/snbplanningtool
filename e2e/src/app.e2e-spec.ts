@@ -1,5 +1,5 @@
 import { browser, protractor, by, element } from 'protractor';
-const request = require('request');
+const request = require('request'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('SnB Planning Tool', () => {
   it('should authenticate', () => {
@@ -10,12 +10,14 @@ describe('SnB Planning Tool', () => {
       headers: {
         'content-type': 'application/x-www-form-urlencoded'
       },
+      /* eslint-disable */
       form: {
         grant_type: 'client_credentials',
         client_id: browser.params.login.clientId,
         client_secret: browser.params.login.clientSecret,
         scope: browser.params.login.scope
       }
+      /* eslint-enable */
     };
 
     const get = (options: any): any => {

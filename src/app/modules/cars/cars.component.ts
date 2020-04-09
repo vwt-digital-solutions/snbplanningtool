@@ -46,7 +46,8 @@ export class CarsComponent {
   }
 
   onBtSave() {
-    const that = this;
+    // TODO - Remove that = this
+    const that = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.buttonSaveInner = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
     this.carProviderService.savingSubject.subscribe(saving => {

@@ -112,7 +112,7 @@ export enum ChoiceFilterType {
 export class ChoiceFilter extends Filter  {
   type = ChoiceFilterType.single;
   options: any[];
-  icons: { option: string, icon: string };
+  icons: { option: string; icon: string };
   inferOptionsFromList = false;
 
   constructor(

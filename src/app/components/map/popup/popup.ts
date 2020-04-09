@@ -9,6 +9,4 @@ import * as L from 'leaflet';
 export class PopUpComponent {
 
   public properties;
-
-  constructor() { }
 }

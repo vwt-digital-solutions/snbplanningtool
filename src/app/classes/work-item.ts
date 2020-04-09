@@ -51,7 +51,7 @@ export class WorkItem extends MapGeometryObject {
     const urgencyClass = this.featureUrgencyCSS();
     const category = this.category;
 
-    if (category && WorkItem.categories.hasOwnProperty(category.toLowerCase())) {
+    if (category && WorkItem.categories.hasOwnProperty(category.toLowerCase())) { // eslint-disable-line no-prototype-builtins
       return new L.divIcon({
         html: `
           <div style="background-image: url(${this.getIconPath(true)})">

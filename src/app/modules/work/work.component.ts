@@ -57,7 +57,7 @@ export class WorkComponent {
     const rowData = [];
 
     for (const row in this.workItems) {
-      if (this.workItems.hasOwnProperty(row)) {
+      if (this.workItems.hasOwnProperty(row)) { // eslint-disable-line no-prototype-builtins
         const data = this.workItems[row];
         rowData.push(new WorkItem(
           data.administration, data.category, data.resolve_before_timestamp,

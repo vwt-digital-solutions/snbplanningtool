@@ -16,7 +16,7 @@ export class QueryParameterService {
     const paramObj = {};
 
     params.forEach((value, key) => {
-      if (paramObj.hasOwnProperty(key)) {
+      if (paramObj.hasOwnProperty(key)) { // eslint-disable-line no-prototype-builtins
         if (Array.isArray(paramObj[key])) {
           paramObj[key] = [...paramObj[key], value];
         } else {

@@ -190,10 +190,10 @@ export class CarProviderService {
       const postInfo = Object.assign({}, item);
 
       if (postInfo.driver_skill == null) {
-        item.driver_skill = '';
+        item.driver_skill = ''; // eslint-disable-line @typescript-eslint/camelcase
       }
       if (postInfo.driver_employee_number == null) {
-        item.driver_employee_number = '';
+        item.driver_employee_number = ''; // eslint-disable-line @typescript-eslint/camelcase
       }
 
       delete postInfo.license_plate;
