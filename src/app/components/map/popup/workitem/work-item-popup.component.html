@@ -49,7 +49,7 @@
       <div class="col-12 item sla-status">
         <p>SLA Status</p>
         <span *ngIf="SLA.onTime">Op tijd</span>
-        <span *ngIf="!SLA.onTime && endTime[0] != null">
+        <span *ngIf="!SLA.onTime && end_time[0] != null">
           Overschrijding van {{ SLA.days }} {{ SLA.days == 1 ? 'dag' : 'dagen' }}
         </span>
       </div>
