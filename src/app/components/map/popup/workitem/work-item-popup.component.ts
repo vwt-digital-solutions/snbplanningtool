@@ -22,9 +22,9 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     super();
   }
 
-  public startTime: [string, string];
-  public endTime: [string, string];
-  public resolveBeforeTime: [string, string];
+  public start_time: [string, string]; // eslint-disable-line @typescript-eslint/camelcase
+  public end_time: [string, string]; // eslint-disable-line @typescript-eslint/camelcase
+  public resolve_before_time: [string, string]; // eslint-disable-line @typescript-eslint/camelcase
   public SLA = {
     days: null,
     onTime: false
@@ -83,12 +83,14 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   ngOnInit() {
     if ('start_timestamp' in this.properties) {
       const momentDate = moment(this.properties.start_timestamp);
-      this.startTime = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : ['-', '-'];
+      this.start_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), // eslint-disable-line @typescript-eslint/camelcase
+        momentDate.format('HH:mm')] : ['-', '-'];
     }
 
     if ('end_timestamp' in this.properties) {
       const momentDate = moment(this.properties.end_timestamp);
-      this.endTime = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), momentDate.format('HH:mm')] : ['-', '-'];
+      this.end_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), // eslint-disable-line @typescript-eslint/camelcase
+        momentDate.format('HH:mm')] : ['-', '-'];
     }
 
     if ('end_timestamp' in this.properties) {
@@ -107,9 +109,10 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
           this.SLA.onTime = true;
         }
 
-        this.resolveBeforeTime = [resolveBeforeDate.format('DD-MM-YYYY'), resolveBeforeDate.format('HH:mm')];
+        this.resolve_before_time = [resolveBeforeDate.format('DD-MM-YYYY'), // eslint-disable-line @typescript-eslint/camelcase
+          resolveBeforeDate.format('HH:mm')];
       } else {
-        this.resolveBeforeTime = ['-', '-'];
+        this.resolve_before_time = ['-', '-']; // eslint-disable-line @typescript-eslint/camelcase
       }
     }
 
