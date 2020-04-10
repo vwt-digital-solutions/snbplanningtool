@@ -96,8 +96,10 @@ export class CarProviderService {
             carInfo.driver_name,
             carInfo.driver_skill,
             carInfo.driver_employee_number,
+            carInfo.business_unit,
             carInfo.administration,
-            carInfo.token);
+            carInfo.token
+          );
         });
 
         const newCarInfo = {

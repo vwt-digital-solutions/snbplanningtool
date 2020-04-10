@@ -3,7 +3,6 @@ import { throwError } from 'rxjs';
 
 import { Car } from 'src/app/classes/car';
 
-import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
 import { MapGeometryObject } from '../../classes/map-geometry-object';
@@ -22,11 +21,11 @@ export class CarsFormComponent implements OnInit {
 
   carsTokens: Token[];
   administrations = MapGeometryObject.administrations;
+  businessUnits = MapGeometryObject.businessUnits;
 
-  model = new Car(null, '', '', '', '', '', null);
+  model = new Car(null, '', '', '', '', '', '', null);
 
   constructor(
-    private apiService: ApiService,
     private carsService: CarsService,
     private carProviderService: CarProviderService
   ) { }
