@@ -1,7 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 export function stringToLicensePlate(value: string): string {
-  const results = value.toUpperCase().match(/\d+|[A-Z]+/g);
+  let results = [];
+
+  if (value) {
+    results = value.toUpperCase().match(/\d+|[A-Z]+/g) || [];
+  }
 
   if (results) {
     return results.join('-');
