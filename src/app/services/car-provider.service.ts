@@ -12,6 +12,7 @@ import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filte
 import { FilterMap } from '../modules/filters/filter-map';
 
 import {Token} from '../classes/token';
+import { MapGeometryObject } from '../classes/map-geometry-object';
 
 @Injectable({
   providedIn: 'root'

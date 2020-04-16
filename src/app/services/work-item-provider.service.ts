@@ -72,7 +72,7 @@ export class WorkItemProviderService {
   }
 
   //
-  private getWorkItems() {
+  public getWorkItems() {
     this.loading = true;
     this.loadingSubject.next(true);
 

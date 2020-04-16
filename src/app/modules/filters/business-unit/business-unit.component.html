@@ -1,0 +1,12 @@
+<div class="form-group mb-3">
+  <div class="form-check" *ngFor="let businessUnit of businessUnits">
+    <input
+      [id]="businessUnit"
+      [value]="businessUnit"
+      [ngModel]="selectedBusinessUnit"
+      (ngModelChange)="setSelectedBusinessUnit($event)"
+      type="radio"
+      name="business-unit">
+    <label class="form-check-label" [for]="businessUnit">{{businessUnit}}</label>
+  </div>
+</div>
