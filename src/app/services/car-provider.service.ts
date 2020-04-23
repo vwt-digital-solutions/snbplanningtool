@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
+import { map, take } from 'rxjs/internal/operators';
 
-import {BehaviorSubject, Subject, throwError} from 'rxjs';
-import {AuthRoleService} from './auth-role.service';
-import {ApiService} from './api.service';
+import { BehaviorSubject, Subject, throwError } from 'rxjs';
+import { AuthRoleService } from './auth-role.service';
+import { ApiService } from './api.service';
 import { QueryParameterService } from './query-parameter.service';
-import {Car} from '../classes/car';
+import { Car } from '../classes/car';
 
-import {map, take} from 'rxjs/internal/operators';
-import CarLocation from '../classes/car-location';
 import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filters';
 import { FilterMap } from '../modules/filters/filter-map';
 
-import {Token} from '../classes/token';
-import { MapGeometryObject } from '../classes/map-geometry-object';
+import CarLocation from '../classes/car-location';
+import Token from '../classes/token';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +52,6 @@ export class CarProviderService {
       this.queryParameterService.setRouteParams(value);
       this.filter(this.rawCarItems);
     });
-
 
     setTimeout(() => {
       this.getCars();

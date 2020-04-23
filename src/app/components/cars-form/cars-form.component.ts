@@ -4,9 +4,9 @@ import { throwError } from 'rxjs';
 import { Car } from 'src/app/classes/car';
 
 import { CarsService } from 'src/app/services/cars.service';
-import {CarProviderService} from '../../services/car-provider.service';
+import { CarProviderService } from '../../services/car-provider.service';
 import { MapGeometryObject } from '../../classes/map-geometry-object';
-import {Token} from '../../classes/token';
+import Token from '../../classes/token';
 
 @Component({
   selector: 'app-cars-form',

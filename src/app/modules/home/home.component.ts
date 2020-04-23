@@ -1,12 +1,10 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 
-import { AuthRoleService } from 'src/app/services/auth-role.service';
-import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
-import {WorkItemProviderService} from 'src/app/services/work-item-provider.service';
-import {CarProviderService} from '../../services/car-provider.service';
+import { WorkItemProviderService } from 'src/app/services/work-item-provider.service';
+import { CarProviderService } from '../../services/car-provider.service';
 
 @Component({
   selector: 'app-home',
@@ -18,38 +16,31 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private authRoleService: AuthRoleService,
-    private apiService: ApiService,
     private mapService: MapService,
     private workItemProviderService: WorkItemProviderService,
     private carProviderService: CarProviderService
   ) {
 
-    workItemProviderService.loadingSubject.subscribe(
-      value => {
-        this.mapService.geoJsonReady.work = !value;
+    this.workItemProviderService.loadingSubject.subscribe(value => {
+      this.mapService.geoJsonReady.work = !value;
 
-        if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
-          this.mapService.geoJsonReady.map = true;
-        }
+      if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
+        this.mapService.geoJsonReady.map = true;
       }
-    );
+    });
 
-    this.carProviderService.loadingSubject.subscribe(
-      value => {
-        this.mapService.geoJsonReady.cars = !value;
+    this.carProviderService.loadingSubject.subscribe(value => {
+      this.mapService.geoJsonReady.cars = !value;
 
-        if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
-          this.mapService.geoJsonReady.map = true;
-        }
+      if (this.mapService.geoJsonReady.cars && this.mapService.geoJsonReady.work) {
+        this.mapService.geoJsonReady.map = true;
       }
-    );
+    });
 
-    workItemProviderService.errorSubject.subscribe(error => {
+    this.workItemProviderService.errorSubject.subscribe(error => {
       this.handleError(error);
     });
   }
-
 
 
   // API CALLS
