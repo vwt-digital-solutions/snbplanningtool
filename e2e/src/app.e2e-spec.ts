@@ -101,23 +101,23 @@ describe('SnB Planning Tool', () => {
     expect(carsRows).toBeGreaterThan(0);
   });
 
-  it('should edit first carInfo row to "Pietje Puk"', () => {
+  it('should edit first carInfo row to "Lasser"', () => {
     browser.get('/autos');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       browser.params.carInfoRow.token = text[0];
     });
     firstRowDriverColumn.getText().then((text) => {
-      browser.params.carInfoRow.driverName = text[0];
+      browser.params.carInfoRow.driverSkill = text[0];
     });
 
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, 'Pietje Puk', protractor.Key.RETURN).perform();
+    browser.actions().sendKeys(protractor.Key.RETURN, 'Lasser', protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
     browser.sleep(3000);
@@ -134,20 +134,20 @@ describe('SnB Planning Tool', () => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);
     });
     firstRowDriverColumn.getText().then((text) => {
-      expect(text[0]).toContain('Pietje Puk');
+      expect(text[0]).toContain('Lasser');
     });
   });
 
-  it('should revert first carInfo row back to original name', () => {
+  it('should revert first carInfo row back to original driver_skill', () => {
     browser.get('/autos');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, browser.params.carInfoRow.driverName, protractor.Key.RETURN).perform();
+    browser.actions().sendKeys(protractor.Key.RETURN, browser.params.carInfoRow.driverSkill, protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
     browser.sleep(3000);
@@ -159,7 +159,7 @@ describe('SnB Planning Tool', () => {
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);
