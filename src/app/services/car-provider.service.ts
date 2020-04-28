@@ -96,6 +96,7 @@ export class CarProviderService {
             carInfo.driver_skill,
             carInfo.driver_employee_number,
             carInfo.business_unit,
+            carInfo.division,
             carInfo.administration,
             carInfo.token
           );
@@ -198,6 +199,9 @@ export class CarProviderService {
       }
 
       delete postInfo.license_plate;
+      delete postInfo.driver_name;
+      delete postInfo.business_unit;
+      delete postInfo.division;
 
       this.apiService.postCarInfo(postInfo).subscribe(
         result => {

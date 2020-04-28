@@ -23,7 +23,7 @@ export class CarsFormComponent implements OnInit {
   administrations = MapGeometryObject.administrations;
   businessUnits = MapGeometryObject.businessUnits;
 
-  model = new Car(null, '', '', '', '', '', '', null);
+  model = new Car(null, '', '', '', '', '', '', '', null);
 
   constructor(
     private carsService: CarsService,
