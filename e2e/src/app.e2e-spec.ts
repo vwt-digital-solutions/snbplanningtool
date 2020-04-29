@@ -116,13 +116,14 @@ describe('SnB Planning Tool', () => {
       browser.params.carInfoRow.driverSkill = text[0];
     });
 
+    browser.actions().mouseMove(firstRowDriverColumn);
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, 'Lasser', protractor.Key.RETURN).perform();
+    browser.sleep(200);
+    browser.actions().sendKeys(protractor.Key.RETURN, protractor.Key.ARROW_DOWN, protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
-    browser.sleep(3000);
+    browser.sleep(5000);
 
-    browser.executeScript('window.localStorage.clear();');
     browser.refresh();
     browser.sleep(2000);
 
@@ -146,8 +147,10 @@ describe('SnB Planning Tool', () => {
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
     let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
+    browser.actions().mouseMove(firstRowDriverColumn);
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, browser.params.carInfoRow.driverSkill, protractor.Key.RETURN).perform();
+    browser.sleep(200);
+    browser.actions().sendKeys(protractor.Key.RETURN, protractor.Key.UP, protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
     browser.sleep(3000);
