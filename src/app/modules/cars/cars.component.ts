@@ -4,9 +4,7 @@ import { throwError } from 'rxjs';
 
 import { AuthRoleService } from 'src/app/services/auth-role.service';
 
-import { ApiService } from 'src/app/services/api.service';
 import { CarsService } from 'src/app/services/cars.service';
-import { Car } from 'src/app/classes/car';
 import {CarProviderService} from '../../services/car-provider.service';
 
 @Component({
@@ -33,7 +31,6 @@ export class CarsComponent {
 
   constructor(
     public authRoleService: AuthRoleService,
-    private apiService: ApiService,
     public carsService: CarsService,
     public carProviderService: CarProviderService
   ) { }
@@ -46,7 +43,8 @@ export class CarsComponent {
   }
 
   onBtSave() {
-    const that = this;
+    // TODO - Remove that = this
+    const that = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.buttonSaveInner = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
 
     this.carProviderService.savingSubject.subscribe(saving => {

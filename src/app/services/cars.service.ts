@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 import { AuthRoleService } from './auth-role.service';
 import {CarProviderService} from './car-provider.service';
 import { MapGeometryObject } from '../classes/map-geometry-object';
+import { isNullOrUndefined } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class CarsService {
         { headerName: 'Naam bestuurder', field: 'driver_name', },
         { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
         { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector: this.cellEditorDriverSkill },
+        { headerName: 'Afdeling', field: 'business_unit', cellEditorSelector: this.cellEditorBusinessUnit },
         {
           headerName: 'Locatie',
           field: 'token',
@@ -72,6 +74,13 @@ export class CarsService {
     };
   }
 
+  cellEditorBusinessUnit(params) {
+    return {
+      component: 'agRichSelectCellEditor',
+      params: { values: MapGeometryObject.businessUnits }
+    };
+  }
+
   cellEditorDriverSkill(params) {
     const values = ['Metende', 'Lasser', 'Leerling', 'Kraanmachinist', 'Overig', 'NLS', 'Cluster'];
 
@@ -82,7 +91,7 @@ export class CarsService {
   }
 
   cellTokenLocator(params) {
-    if (params.value !== '' ) {
+    if (params.value !== '' && !isNullOrUndefined(params.value)) {
       return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
       return '-';

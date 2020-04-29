@@ -1,5 +1,5 @@
 import { browser, protractor, by, element } from 'protractor';
-const request = require('request');
+const request = require('request'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('SnB Planning Tool', () => {
   it('should authenticate', () => {
@@ -10,12 +10,14 @@ describe('SnB Planning Tool', () => {
       headers: {
         'content-type': 'application/x-www-form-urlencoded'
       },
+      /* eslint-disable */
       form: {
         grant_type: 'client_credentials',
         client_id: browser.params.login.clientId,
         client_secret: browser.params.login.clientSecret,
         scope: browser.params.login.scope
       }
+      /* eslint-enable */
     };
 
     const get = (options: any): any => {
@@ -99,53 +101,56 @@ describe('SnB Planning Tool', () => {
     expect(carsRows).toBeGreaterThan(0);
   });
 
-  it('should edit first carInfo row to "Pietje Puk"', () => {
+  it('should edit first carInfo row to "Lasser"', () => {
     browser.get('/autos');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       browser.params.carInfoRow.token = text[0];
     });
     firstRowDriverColumn.getText().then((text) => {
-      browser.params.carInfoRow.driverName = text[0];
+      browser.params.carInfoRow.driverSkill = text[0];
     });
 
+    browser.actions().mouseMove(firstRowDriverColumn);
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, 'Pietje Puk', protractor.Key.RETURN).perform();
+    browser.sleep(200);
+    browser.actions().sendKeys(protractor.Key.RETURN, protractor.Key.ARROW_DOWN, protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
-    browser.sleep(3000);
+    browser.sleep(5000);
 
-    browser.executeScript('window.localStorage.clear();');
     browser.refresh();
     browser.sleep(2000);
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);
     });
     firstRowDriverColumn.getText().then((text) => {
-      expect(text[0]).toContain('Pietje Puk');
+      expect(text[0]).toContain('Lasser');
     });
   });
 
-  it('should revert first carInfo row back to original name', () => {
+  it('should revert first carInfo row back to original driver_skill', () => {
     browser.get('/autos');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
+    browser.actions().mouseMove(firstRowDriverColumn);
     firstRowDriverColumn.click();
-    browser.actions().sendKeys(protractor.Key.RETURN, browser.params.carInfoRow.driverName, protractor.Key.RETURN).perform();
+    browser.sleep(200);
+    browser.actions().sendKeys(protractor.Key.RETURN, protractor.Key.UP, protractor.Key.RETURN).perform();
 
     element(by.css('button.save')).click();
     browser.sleep(3000);
@@ -157,7 +162,7 @@ describe('SnB Planning Tool', () => {
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);

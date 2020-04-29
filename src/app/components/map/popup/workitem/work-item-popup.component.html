@@ -90,11 +90,15 @@
     </div>
     <div>
       <hr>
-
       <h6 class="text-center">Gelinkte auto</h6>
       <div *ngIf="linkedCar" class="row align-items-center">
         <div class="col-auto"><img src="/assets/images/car-location.png" /></div>
-        <div class="col-auto"><span class="license-plate license-nl">{{ linkedCar.license_plate | formatLicensePlate }}</span></div>
+        <div class="col-auto">
+          <span class="license-plate license-nl" *ngIf="linkedCar.license_plate">
+            {{linkedCar.license_plate | formatLicensePlate}}
+          </span>
+          <span class="license-plate license-nl" *ngIf="!linkedCar.license_plate">N/B</span>
+        </div>
         <div class="col">{{ linkedCar.driver_name }} ({{ linkedCar.driver_skill || '-' }})</div>
         <div class="col text-center">
           <a *ngIf="linkedCarLocation && !linkedCarDistance && !loadingLinkedCarDistance"

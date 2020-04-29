@@ -227,12 +227,6 @@ export class MapComponent implements AfterViewInit {
     // Resize map on filter close
     this.mapService.mapResized.subscribe(() => setTimeout(() => this.map.invalidateSize(true), 50));
 
-    this.mapService.customLayersSubject.subscribe(value => {
-
-
-    });
-
-
     this.mapReady();
   }
 

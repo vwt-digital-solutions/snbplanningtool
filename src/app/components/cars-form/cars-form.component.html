@@ -28,8 +28,22 @@
           name="administration"
           #administration="ngModel"
           required >
-          <option [ngValue]="null" selected disabled hidden>-- Selecteer een klantteam --</option>
+          <option [ngValue]="null" selected disabled hidden>Selecteer een klantteam</option>
           <option *ngFor="let administration of administrations" [ngValue]="administration">{{administration}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="business_unit">Afdeling<span>&#42;</span></label>
+        <select
+          class="form-control"
+          id="business_unit"
+          [(ngModel)]="model.business_unit"
+          name="business_unit"
+          #administration="ngModel"
+          required >
+          <option [ngValue]="null" selected disabled hidden>Selecteer een afdeling</option>
+          <option *ngFor="let businessUnit of businessUnits" [ngValue]="businessUnit">{{businessUnit}}</option>
         </select>
       </div>
 

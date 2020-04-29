@@ -1,15 +1,16 @@
+---
 trigger:
-- develop
-- master
+  - develop
+  - master
 
 pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: |
-    zip -r ./deploy.zip .
-  displayName: 'Create deployment artifact'
+  - script: |
+      zip -r ./deploy.zip .
+    displayName: 'Create deployment artifact'
 
-- task: PublishPipelineArtifact@0
-  inputs:
-    targetPath: deploy.zip
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: deploy.zip

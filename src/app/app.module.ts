@@ -24,6 +24,7 @@ import { CarInfoPopupComponent } from './components/map/popup/carinfo/car-info-p
 import { PopUpComponent } from './components/map/popup/popup';
 import { TokenURLPipe } from './pipes/TokenURLPipe';
 import { FormatLicensePlatePipe } from './pipes/LicensePlatePipe';
+import { BusinessUnitInterceptor } from './interceptors/business-unit.interceptor';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,11 @@ import { FormatLicensePlatePipe } from './pipes/LicensePlatePipe';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BusinessUnitInterceptor,
       multi: true
     }
   ],

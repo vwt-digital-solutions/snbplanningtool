@@ -11,7 +11,6 @@ export class WorkService {
   gridOptions: GridOptions;
 
   constructor() {
-    const that = this;
     this.gridOptions = {
       columnDefs: [
         { headerName: 'Administratie (klantteam)', field: 'administration', pinned: 'left', width: 200 },
@@ -88,12 +87,12 @@ export class WorkService {
   dateComparator(filterDate, cellValue) {
     if (cellValue == null) { return 0; }
 
-    const old_date = new Date(cellValue).setHours(0, 0, 0, 0);
-    const new_date = new Date(filterDate).setHours(0, 0, 0, 0);
+    const oldDate = new Date(cellValue).setHours(0, 0, 0, 0);
+    const newDate = new Date(filterDate).setHours(0, 0, 0, 0);
 
-    if (old_date < new_date) {
+    if (oldDate < newDate) {
       return -1;
-    } else if (old_date > new_date) {
+    } else if (oldDate > newDate) {
       return 1;
     } else {
       return 0;

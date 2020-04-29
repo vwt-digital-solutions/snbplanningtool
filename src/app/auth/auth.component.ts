@@ -9,6 +9,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   template: ''
 })
 export class AuthComponent {
+  /* eslint-disable */
   private sessionStorageItems = {
     access_token: '',
     granted_scopes: ['https://vwt-d-gew1-snb-planning-api/snbplanningapi.read'],
@@ -19,6 +20,7 @@ export class AuthComponent {
     id_token_expires_at: new Date().getTime(),
     id_token_stored_at: new Date().getTime()
   };
+  /* eslint-enable */
 
   constructor(
     private route: ActivatedRoute,
@@ -38,21 +40,25 @@ export class AuthComponent {
 
           // SAVE ACCESS TOKEN
           const decodedToken = helper.decodeToken(accessToken);
+          /* eslint-disable */
           this.sessionStorageItems.id_token_claims_obj = decodedToken;
           this.sessionStorageItems.id_token_claims_obj['roles'] = ['snbplanningapi.editor'];
           this.sessionStorageItems.id_token_claims_obj['email'] = 'opensource@vwt.digital';
           this.sessionStorageItems.access_token = accessToken;
           this.sessionStorageItems.id_token = accessToken;
+          /* eslint-enable */
 
 
           // SET EXPIRATION TIME
+          /* eslint-disable */
           const expiresAt = (expiresIn.toString().length <= 6 ? expiresIn * 1000 : expiresIn);
           this.sessionStorageItems.expires_at = this.sessionStorageItems.expires_at + expiresAt;
           this.sessionStorageItems.id_token_expires_at = this.sessionStorageItems.id_token_expires_at + expiresAt;
+          /* eslint-enable */
 
           // SAVE TO SESSION STORAGE
           for (const key in this.sessionStorageItems) {
-            if (this.sessionStorageItems.hasOwnProperty(key)) {
+            if (this.sessionStorageItems.hasOwnProperty(key)) { // eslint-disable-line no-prototype-builtins
               const value = (
                 typeof this.sessionStorageItems[key] === 'string'
                 ? this.sessionStorageItems[key]
