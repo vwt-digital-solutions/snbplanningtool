@@ -129,7 +129,7 @@ describe('SnB Planning Tool', () => {
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_name"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);
