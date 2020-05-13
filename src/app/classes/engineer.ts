@@ -5,9 +5,9 @@ export class Engineer {
   id: string;
   name: string;
   skill: string;
-  employee_number: string;
+  employeeNumber: string;
   division: string;
-  business_unit: BusinessUnit;
+  businessUnit: BusinessUnit;
   administration?: string;
   _links?: HALSelfReference;
 
@@ -15,17 +15,17 @@ export class Engineer {
     id: string,
     name: string,
     skill: string,
-    employee_number: string,
+    employeeNumber: string,
     division: string,
-    business_unit: BusinessUnit,
+    businessUnit: BusinessUnit,
     administration?: string,
     _links?: HALSelfReference
   ) {
     this.id = id;
     this.name = name;
-    this.employee_number = employee_number;
+    this.employeeNumber = employeeNumber;
     this.skill = skill;
-    this.business_unit = business_unit;
+    this.businessUnit = businessUnit;
     this.division = division;
     this.administration = administration;
     this._links = _links;

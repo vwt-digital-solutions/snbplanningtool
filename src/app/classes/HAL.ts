@@ -1,5 +1,5 @@
 export interface HALSelfReference {
   self: {
-    href: string
+    href: string;
   };
 }
