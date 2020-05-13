@@ -1,5 +1,5 @@
-import {MapGeometryObject} from './map-geometry-object';
-import {WorkItemPopupComponent} from '../components/map/popup/workitem/work-item-popup.component';
+import { MapGeometryObject } from './map-geometry-object';
+import { WorkItemPopupComponent } from '../components/map/popup/workitem/work-item-popup.component';
 import * as moment from 'moment';
 import * as L from 'leaflet';
 
@@ -29,9 +29,34 @@ export class WorkItem extends MapGeometryObject {
     public street: string,
     public task_type: string,
     public zip: string,
-    public l2_guid: string
+    public l2_guid: string,
+    public sub_order_id?: string
   ) {
     super(geometry);
+  }
+
+  static fromRaw(item: any) {
+    return new WorkItem(
+      item.administration,
+      item.category,
+      item.resolve_before_timestamp,
+      item.stagnation,
+      item.project,
+      item.city,
+      item.description,
+      item.employee_name,
+      item.employee_number,
+      item.end_timestamp,
+      item.geometry,
+      item.project_number,
+      item.start_timestamp,
+      item.status,
+      item.street,
+      item.task_type,
+      item.zip,
+      item.l2_guid,
+      item.sub_order_id
+    );
   }
 
   getMarker() {
@@ -99,11 +124,12 @@ export class WorkItem extends MapGeometryObject {
     return '';
   }
 
-  protected getIconPath(hasCategory= false) {
+  protected getIconPath(hasCategory = false) {
     if (hasCategory) {
       return this.iconPath + '/marker.png';
     }
 
     return this.iconPath + '/work-location.png';
   }
+
 }

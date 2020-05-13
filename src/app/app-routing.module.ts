@@ -7,6 +7,7 @@ import { AuthComponent } from './auth/auth.component';
 import { HomeComponent } from './modules/home/home.component';
 import { CarsComponent } from './modules/cars/cars.component';
 import { WorkComponent } from './modules/work/work.component';
+import { PlanningComponent } from './modules/planning/planning.component';
 
 import { Role } from './models/role';
 
@@ -30,6 +31,12 @@ const routes: Routes = [
     {
       path: 'werk',
       component: WorkComponent,
+      canActivate: [AuthGuard],
+      data: { roles: [Role.Editor, Role.Planner] }
+    },
+    {
+      path: 'planning',
+      component: PlanningComponent,
       canActivate: [AuthGuard],
       data: { roles: [Role.Editor, Role.Planner] }
     },

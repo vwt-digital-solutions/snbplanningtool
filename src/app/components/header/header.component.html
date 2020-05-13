@@ -10,7 +10,13 @@
         <a routerLink="kaart" [routerLinkActive]="['active']">Kaart</a>
         <a routerLink="autos"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Auto's</a>
         <a routerLink="werk" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Werk</a>
-        <a [routerLink]="" class="d-md-block d-sm-none hamburger-menu-link" [class.active]="showSidebar" (click)="onSidebarButtonClicked.emit($event)"><i class="fa fa-bars"></i></a>
+        <a routerLink="planning" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Planning</a>
+        <a class="d-md-block d-sm-none hamburger-menu-link"
+           *ngIf="this.router.url !== '/planning'"
+           [class.active]="showSidebar"
+           (click)="toggleSideBar()">
+          <i class="fa fa-bars"></i>
+        </a>
 
         <div *ngIf="email" ngbDropdown class="d-inline-block">
           <button class="btn" id="dropdownMenu" ngbDropdownToggle>

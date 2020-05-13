@@ -1,0 +1,18 @@
+<div class="row app-planning">
+  <div class="col-6 title">
+    <h1>{{title}}</h1>
+  </div>
+
+  <div class="col-6 info-box">
+    <button (click)="resetFilters()">Reset Filters <i class="fas fa-filter"></i></button>
+    <button (click)="createPlanning()">Genereer Planning <i class="fas fa-calendar-check"></i></button>
+  </div>
+
+   <ag-grid-angular
+      #planningGrid
+      id="planningGrid"
+      class="col ag-theme-balham info-grid"
+      [gridOptions]="planningService.gridOptions"
+      >
+   </ag-grid-angular>
+</div>

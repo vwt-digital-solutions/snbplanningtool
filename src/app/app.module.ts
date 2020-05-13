@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
 import { CarsModule } from './modules/cars/cars.module';
 import { WorkModule } from './modules/work/work.module';
+import { PlanningModule } from './modules/planning/planning.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -46,6 +47,7 @@ import { BusinessUnitInterceptor } from './interceptors/business-unit.intercepto
     HomeModule,
     CarsModule,
     WorkModule,
+    PlanningModule,
     FiltersModule
   ],
   exports: [
