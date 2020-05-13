@@ -18,7 +18,7 @@ export class HeaderComponent {
 
   constructor(
     private oauthService: OAuthService,
-    private router: Router,
+    public router: Router,
     public authRoleService: AuthRoleService
   ) {
     // Hide sidebar on /planning

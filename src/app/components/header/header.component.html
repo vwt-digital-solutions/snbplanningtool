@@ -12,7 +12,7 @@
         <a routerLink="werk" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Werk</a>
         <a routerLink="planning" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Planning</a>
         <a class="d-md-block d-sm-none hamburger-menu-link"
-           *ngIf="this.router.url !== '/planning'"
+           *ngIf="router.url !== '/planning'"
            [class.active]="showSidebar"
            (click)="toggleSideBar()">
           <i class="fa fa-bars"></i>

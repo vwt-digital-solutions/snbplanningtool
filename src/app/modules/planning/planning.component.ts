@@ -9,6 +9,7 @@ import { GridOptions } from 'ag-grid-community';
 })
 export class PlanningComponent implements AfterViewInit {
   @ViewChild('planningGrid') agGrid: GridOptions;
+  gridOptions = this.planningService.gridOptions;
   title = 'Planning';
 
   constructor(
