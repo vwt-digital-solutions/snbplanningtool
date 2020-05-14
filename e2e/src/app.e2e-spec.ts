@@ -85,7 +85,7 @@ describe('SnB Planning Tool', () => {
     expect(clusters).toBeGreaterThan(0);
   });
 
-  it('should show more than 0 location(s)', () => {
+  it('should show more than 0 workItem rows', () => {
     browser.get('/werk');
     browser.sleep(2000);
 
@@ -181,15 +181,7 @@ describe('SnB Planning Tool', () => {
     });
   });
 
-  it('should show more than 0 workItems rows', () => {
-    browser.get('/werk');
-    browser.sleep(20000);
-
-    const carsRows = element.all(by.css('.ag-row')).count();
-    expect(carsRows).toBeGreaterThan(0);
-  });
-
-  it('should show more than 0 nearby cars on the workitem-popup', () => {
+  it('should have more than 0 markers on the map after clicking the work-item link', () => {
 
     browser.get('/werk');
     browser.sleep(5000);
@@ -209,15 +201,9 @@ describe('SnB Planning Tool', () => {
       return elem.isDisplayed();
     });
 
-    displayedMarkers.first().click();
-    browser.sleep(500);
-
-    element.all(by.css('.nearby-cars-link')).first().click();
-    browser.sleep(5000);
-
-    const carsRows = element.all(by.css('.nearby-car')).count();
-
-    expect(carsRows).toBeGreaterThan(0);
+    displayedMarkers.count().then(elements => {
+      expect(elements).toBeGreaterThan(0);
+    });
   });
 
 });
