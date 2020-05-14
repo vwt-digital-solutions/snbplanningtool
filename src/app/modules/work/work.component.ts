@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { throwError } from 'rxjs';
-
-import { ApiService } from 'src/app/services/api.service';
 import { WorkService } from 'src/app/services/work.service';
 
 import { WorkItem } from 'src/app/classes/work-item';
 import {WorkItemProviderService} from '../../services/work-item-provider.service';
+import { GridReadyEvent } from 'ag-grid-community';
 
 @Component({
   selector: 'app-work',
@@ -39,17 +37,17 @@ export class WorkComponent {
 
   }
 
-  onBtExport() {
+  onBtExport(): void {
     this.workService.gridOptions.api.exportDataAsExcel();
   }
 
-  onGridReady(event: any) {
+  onGridReady(event: GridReadyEvent): void {
     this.gridReady = true;
     this.grid = event;
     this.workItemsToGrid();
   }
 
-  workItemsToGrid() {
+  workItemsToGrid(): void {
     if (!this.gridReady) {
       return;
     }
@@ -75,9 +73,5 @@ export class WorkComponent {
 
     this.grid.api.setRowData(rowData);
     this.callProcessing = '';
-  }
-
-  private handleError(error) {
-    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

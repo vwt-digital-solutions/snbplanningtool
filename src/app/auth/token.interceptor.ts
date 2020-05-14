@@ -7,6 +7,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor(public oauthService: OAuthService) {}
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     request = request.clone({

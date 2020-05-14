@@ -35,6 +35,7 @@ describe('ApiService', () => {
       (httpMock: HttpTestingController, apiService: ApiService, envService: EnvService) => {
         const mockCars = { features: [], type: 'FeatureCollection' };
 
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         apiService.apiGet('/cars/locations').subscribe((event: HttpEvent<any>) => {
           switch (event.type) {
             case HttpEventType.Response:

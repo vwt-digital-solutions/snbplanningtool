@@ -42,14 +42,14 @@ export class PlanningService {
           {
             headerName: 'Starttijd',
             field: '_embedded.workitem.start_timestamp',
-            cellRenderer: (data) => {
+            cellRenderer: (data): string => {
                 return moment(data.start_timestamp).format('DD/MM/YYYY HH:mm');
             }
           },
           {
             headerName: 'Eindtijd',
             field: '_embedded.workitem.end_timestamp',
-            cellRenderer: (data) => {
+            cellRenderer: (data): string => {
               return moment(data.end_timestamp).format('DD/MM/YYYY HH:mm');
             }
           },
@@ -79,7 +79,7 @@ export class PlanningService {
   getPlanning(): Observable<PlanningItem[]> {
     return this.apiService.apiGet('/plannings')
       .pipe(
-        map((res: any) => res.items.map(item => PlanningItem.fromRaw(item))),
+        map((res) => res.items.map(item => PlanningItem.fromRaw(item))),
       );
   }
 }

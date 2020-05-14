@@ -45,7 +45,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   public loadingNearbyCars = false;
   public nearbyCarsError = false;
 
-  public downloadLinkedCarDistance() {
+  public downloadLinkedCarDistance(): void {
     this.loadingLinkedCarDistance = true;
     this.changeDectectorRef.detectChanges();
 
@@ -54,7 +54,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
         this.linkedCarDistance = result[0];
         this.loadingLinkedCarDistance = false;
         this.changeDectectorRef.detectChanges();
-      }, error => {
+      }, () => {
         this.linkedCarDistanceError = true;
         this.loadingLinkedCarDistance = false;
         this.changeDectectorRef.detectChanges();
@@ -62,7 +62,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
 
   }
 
-  public downloadNearbyCars() {
+  public downloadNearbyCars(): void {
     this.loadingNearbyCars = true;
     this.changeDectectorRef.detectChanges();
 
@@ -71,16 +71,14 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
       this.loadingNearbyCars = false;
       this.changeDectectorRef.detectChanges();
 
-    }, error => {
+    }, () => {
       this.nearbyCarsError = true;
       this.loadingNearbyCars = false;
       this.changeDectectorRef.detectChanges();
     });
-
-
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if ('start_timestamp' in this.properties) {
       const momentDate = moment(this.properties.start_timestamp);
       this.start_time = momentDate.isValid() ? [momentDate.format('DD-MM-YYYY'), // eslint-disable-line @typescript-eslint/camelcase
@@ -125,7 +123,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     }
   }
 
-  public showNearbyCarAsCustomLayer() {
+  public showNearbyCarAsCustomLayer(): void {
     const title = 'Auto\'s dichtbij werkitem ' + this.properties.l2_guid;
     const items = this.nearbyCars.map(carDistance => carDistance.carLocation);
     items.push(this.properties);
@@ -133,7 +131,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     this.mapService.addCustomLayer(customLayer);
   }
 
-  public showLinkedCarAsCustomLayer() {
+  public showLinkedCarAsCustomLayer(): void {
     const title = 'Afstand monteur ' + this.linkedCar.driver_name + ' en werkitem ' + this.properties.l2_guid;
     const items = [this.linkedCarLocation, this.properties];
 

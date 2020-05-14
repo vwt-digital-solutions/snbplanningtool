@@ -1,11 +1,12 @@
-import {Subject, Observable} from 'rxjs/index';
-import {isNullOrUndefined} from 'util';
-import {NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs/index';
+import { isNullOrUndefined } from 'util';
+import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { getValue } from './json-helper';
 import * as moment from 'moment';
-import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 type featureIdTypes = 'car' | 'work';
+
+/* eslint-disable  @typescript-eslint/no-unused-vars */
 export abstract class Filter {
 
   // The name to display for this filter.
@@ -24,6 +25,7 @@ export abstract class Filter {
 
   inputType = 'input';
 
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   dataChanged = new Subject<{ [name: string]: any}>();
 
   constructor(
@@ -41,7 +43,8 @@ export abstract class Filter {
 
   abstract filterElement(element, index, array): boolean;
 
-  filterList(listToFilter: any[], originalList: any[]): any[] {
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  filterList(listToFilter: any[], _originalList): any[] {
 
     if (this.value === null || this.value === undefined) {
       return listToFilter;
@@ -76,18 +79,18 @@ export class ValueFilter extends Filter {
     this.type = type;
   }
 
-  setValue(newValue) {
+  setValue(newValue): void {
     this.value = newValue;
   }
 
-  dataChange(value) {
+  dataChange(value): void {
     this.value = value;
     this.dataChanged.next({
       [`${this.featureIdentifier}|${this.name}`]: value !== '' ? value : null
     });
   }
 
-  filterElement(element, index, array): boolean {
+  filterElement(element, _index, _array): boolean {
     switch (this.type) {
       case ValueFilterType.contains:
         return (getValue(element, this.field).toLowerCase().indexOf(this.value.toLowerCase()) !== -1);
@@ -111,6 +114,7 @@ export enum ChoiceFilterType {
 
 export class ChoiceFilter extends Filter  {
   type = ChoiceFilterType.single;
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   options: any[];
   icons: { option: string; icon: string };
   inferOptionsFromList = false;
@@ -120,6 +124,7 @@ export class ChoiceFilter extends Filter  {
     name: string,
     field: string,
     type = ChoiceFilterType.single,
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     options: any[] = null,
     defaultValue = null,
     icons = null
@@ -141,7 +146,7 @@ export class ChoiceFilter extends Filter  {
     this.inputType = type.toString();
   }
 
-  setValue(newValue) {
+  setValue(newValue): void {
     if (this.type === ChoiceFilterType.multiple) {
       this.value = Array.isArray(newValue) ? newValue : [newValue];
     }
@@ -151,7 +156,7 @@ export class ChoiceFilter extends Filter  {
     }
   }
 
-  toggleValue(newValue) {
+  toggleValue(newValue): void {
     const index = this.value.indexOf(newValue);
 
     if (index > -1) {
@@ -164,7 +169,6 @@ export class ChoiceFilter extends Filter  {
       [`${this.featureIdentifier}|${this.name}`]: this.value
     });
   }
-
 
   filterList(listToFilter: any[], originalList: any[]): any[] {
     if (this.inferOptionsFromList) {
@@ -183,7 +187,7 @@ export class ChoiceFilter extends Filter  {
     return super.filterList(listToFilter, originalList);
   }
 
-  filterElement(element, index, array): boolean {
+  filterElement(element, _index, _array): boolean {
 
     if (this.value === '' || this.value === undefined || this.value.length === 0) {
       return true;
@@ -218,7 +222,7 @@ export class OffsetFilter extends Filter  {
 
   type: OffsetFilterType = OffsetFilterType.greaterThan;
 
-  filterElement(element, index, array): boolean {
+  filterElement(element, _index, _array): boolean {
     switch (this.type) {
       case OffsetFilterType.greaterThan:
         return getValue(element, this.field) > this.value;
@@ -244,7 +248,7 @@ export class RangeFilter extends Filter  {
 
   inputType = 'range';
 
-  filterElement(element, index, array): boolean {
+  filterElement(element, _index, _array): boolean {
     return getValue(element, this.field) >= this.value[0] && element[this.value] <= this.value[1];
   }
 }
@@ -299,13 +303,13 @@ export class DateFilter extends Filter  {
   // Filter functions.
   ////
 
-  setValue(newValue) {
+  setValue(newValue): void {
     const data = JSON.parse(newValue);
     this.value.fromDate = data.fromDate ? moment(data.fromDate, 'YYYY-MM-DD') : null;
     this.value.toDate = data.toDate ? moment(data.toDate, 'YYYY-MM-DD') : null;
   }
 
-  dateChanged(value: any) {
+  dateChanged(value: any): void {
 
     if (!value) {
       this.value.fromDate = null;
@@ -399,12 +403,12 @@ export class DateFilter extends Filter  {
 
     const year = value.year();
     const month = value.month();
-    const day = value.day();
+    const day = value.date();
 
     const newValue = {
-      year: value.year(),
-      month: value.month() + 1,
-      day: value.date(),
+      year,
+      month: month + 1,
+      day,
     };
 
     return newValue;
@@ -414,7 +418,7 @@ export class DateFilter extends Filter  {
   // Calendar display functions.
   ////
 
-  isHovered(date: NgbDate) {
+  isHovered(date: NgbDate): boolean {
     const fromDate = this.momentToNgbDate(this.value.fromDate);
     const toDate = this.momentToNgbDate(this.value.toDate);
 
@@ -422,18 +426,18 @@ export class DateFilter extends Filter  {
       date.after(fromDate) && date.before(this.hoveredDate);
   }
 
-  isInside(date: NgbDate) {
+  isInside(date: NgbDate): boolean {
     const fromDate = this.momentToNgbDate(this.value.fromDate);
     const toDate = this.momentToNgbDate(this.value.toDate);
 
     return toDate && date.after(fromDate) && date.before(toDate);
   }
 
-  isRange(date: NgbDate) {
+  isRange(date: NgbDate): boolean {
     const fromDate = this.momentToNgbDate(this.value.fromDate);
     const toDate = this.momentToNgbDate(this.value.toDate);
 
-    const  returnValue = date.equals(fromDate) || (toDate && date.equals(toDate))
+    const returnValue = date.equals(fromDate) || (toDate && date.equals(toDate))
       || this.isInside(date) || this.isHovered(date);
 
     return returnValue;
@@ -443,13 +447,13 @@ export class DateFilter extends Filter  {
 export class BooleanFilter extends Filter {
   inputType = 'optional-boolean';
 
-  setValue(newValue) {
+  setValue(newValue): void {
     if (newValue != null) {
       this.value = newValue;
     }
   }
 
-  dataChange(value) {
+  dataChange(value): void {
     this.value = value;
 
     this.dataChanged.next({

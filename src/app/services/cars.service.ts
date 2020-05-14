@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { throwError } from 'rxjs';
 
-import { ApiService } from './api.service';
 import { AuthRoleService } from './auth-role.service';
 import {CarProviderService} from './car-provider.service';
 import { MapGeometryObject } from '../classes/map-geometry-object';
@@ -58,7 +56,7 @@ export class CarsService {
     };
   }
 
-  cellEditorToken(params) {
+  cellEditorToken(params): object {
     const carTokens = this.carProviderService.carsInfoSubject.value;
 
     return {
@@ -67,21 +65,21 @@ export class CarsService {
     };
   }
 
-  cellEditorAdministration(params) {
+  cellEditorAdministration(): object {
     return {
       component: 'agRichSelectCellEditor',
       params: { values: MapGeometryObject.administrations }
     };
   }
 
-  cellEditorBusinessUnit(params) {
+  cellEditorBusinessUnit(): object {
     return {
       component: 'agRichSelectCellEditor',
       params: { values: MapGeometryObject.businessUnits }
     };
   }
 
-  cellEditorDriverSkill(params) {
+  cellEditorDriverSkill(): object {
     const values = ['Metende', 'Lasser', 'Leerling', 'Kraanmachinist', 'Overig', 'NLS', 'Cluster'];
 
     return {
@@ -90,7 +88,7 @@ export class CarsService {
     };
   }
 
-  cellTokenLocator(params) {
+  cellTokenLocator(params): string {
     if (params.value !== '' && !isNullOrUndefined(params.value)) {
       return '<a href="/kaart/' + params.value.replace(/\//g, '-') + '">Bekijk</a>';
     } else {
@@ -98,7 +96,4 @@ export class CarsService {
     }
   }
 
-  private handleError(error) {
-    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
-  }
 }

@@ -10,7 +10,7 @@ export default class CarLocation extends MapGeometryObject {
 
   layer = 'cars';
 
-  getMarker() {
+  getMarker(): L.marker {
     const icon = this.getIcon();
     const marker = L.marker(L.latLng(this.geometry.coordinates[1], this.geometry.coordinates[0]), {
       ...this.options.marker,
@@ -20,7 +20,7 @@ export default class CarLocation extends MapGeometryObject {
     return marker;
   }
 
-  getIcon() {
+  getIcon(): L.Icon | L.divIcon {
     const iconUrl = this.getIconPath();
     let icon;
 
@@ -44,22 +44,18 @@ export default class CarLocation extends MapGeometryObject {
     return icon;
   }
 
-  getComponentClass() {
+  getComponentClass(): typeof CarInfoPopupComponent {
     return CarInfoPopupComponent;
   }
 
-  getPopupOptions() {
+  getPopupOptions(): object {
     return {
       maxWidth: 300,
       minWidth: 200,
     };
   }
 
-  protected getIconPath() {
+  protected getIconPath(): string {
     return this.iconPath + '/car-location.png';
   }
-
-
-
-
 }

@@ -55,7 +55,7 @@ export class AppComponent {
 
   showFilters = true;
 
-  showSidebar(shown: boolean) {
+  showSidebar(shown: boolean): void {
     this.showFilters = shown;
     this.mapService.mapResized.next();
   }

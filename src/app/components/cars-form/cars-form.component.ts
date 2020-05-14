@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { throwError } from 'rxjs';
 
 import { Car } from 'src/app/classes/car';
 
@@ -30,7 +29,7 @@ export class CarsFormComponent implements OnInit {
     private carProviderService: CarProviderService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.carsTokens = this.carProviderService.tokensSubject.value;
 
     this.carProviderService.tokensSubject.subscribe(value => {
@@ -38,8 +37,7 @@ export class CarsFormComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-
+  onSubmit(): void {
     delete this.model.id;
 
     this.buttonSave = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
@@ -54,10 +52,5 @@ export class CarsFormComponent implements OnInit {
     });
 
     this.carProviderService.postCarInfo([this.model]);
-
-  }
-
-  private handleError(error) {
-    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

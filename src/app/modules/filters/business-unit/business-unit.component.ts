@@ -24,12 +24,12 @@ export class BusinessUnitComponent {
     this.renewData();
   }
 
-  clearOldCache() {
+  clearOldCache(): void {
     localStorage.removeItem('carTokens');
     localStorage.removeItem('carInfo');
   }
 
-  renewData() {
+  renewData(): void {
     this.carProviderService.getCars();
     this.carProviderService.getTokens();
     this.carProviderService.getCarLocations();

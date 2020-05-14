@@ -15,9 +15,9 @@ export class PlanningItem {
       engineer: Engineer.fromRaw(engineer),
       workitem: WorkItem.fromRaw(workitem)
     };
-  }
+}
 
-  public static fromRaw(item: any) {
+  public static fromRaw(item): PlanningItem {
     return new PlanningItem(
       item._embedded.engineer,
       item._embedded.workitem

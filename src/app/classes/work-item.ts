@@ -22,7 +22,7 @@ export class WorkItem extends MapGeometryObject {
     public employee_name: string,
     public employee_number: string,
     public end_timestamp: string,
-    public geometry: any,
+    public geometry,
     public project_number: number,
     public start_timestamp: string,
     public status: string,
@@ -35,7 +35,7 @@ export class WorkItem extends MapGeometryObject {
     super(geometry);
   }
 
-  static fromRaw(item: any) {
+  static fromRaw(item): WorkItem {
     return new WorkItem(
       item.administration,
       item.category,
@@ -59,7 +59,7 @@ export class WorkItem extends MapGeometryObject {
     );
   }
 
-  getMarker() {
+  getMarker(): L.marker {
     if (!this.geometry || !this.geometry.coordinates) {
       return null;
     }
@@ -72,7 +72,7 @@ export class WorkItem extends MapGeometryObject {
     return marker;
   }
 
-  getIcon() {
+  getIcon(): L.divIcon {
     const urgencyClass = this.featureUrgencyCSS();
     const category = this.category;
 
@@ -94,11 +94,11 @@ export class WorkItem extends MapGeometryObject {
     }
   }
 
-  getComponentClass() {
+  getComponentClass(): typeof WorkItemPopupComponent {
     return WorkItemPopupComponent;
   }
 
-  getPopupOptions() {
+  getPopupOptions(): object {
     return {
       maxWidth: 600,
       minWidth: 500,
@@ -124,7 +124,7 @@ export class WorkItem extends MapGeometryObject {
     return '';
   }
 
-  protected getIconPath(hasCategory = false) {
+  protected getIconPath(hasCategory = false): string {
     if (hasCategory) {
       return this.iconPath + '/marker.png';
     }

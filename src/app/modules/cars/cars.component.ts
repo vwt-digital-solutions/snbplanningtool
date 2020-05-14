@@ -6,6 +6,7 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
+import { Car } from 'src/app/classes/car';
 
 @Component({
   selector: 'app-cars',
@@ -35,14 +36,14 @@ export class CarsComponent {
     public carProviderService: CarProviderService
   ) { }
 
-  onBtRefresh() {
+  onBtRefresh(): void {
     this.carProviderService.getCars();
   }
-  onBtExport() {
+  onBtExport(): void {
     this.carsService.gridOptions.api.exportDataAsExcel();
   }
 
-  onBtSave() {
+  onBtSave(): void {
     // TODO - Remove that = this
     const that = this; // eslint-disable-line @typescript-eslint/no-this-alias
     this.buttonSaveInner = 'Opslaan <i class="fas fa-sync-alt fa-spin"></i>';
@@ -61,24 +62,24 @@ export class CarsComponent {
     this.carProviderService.postCarInfo(this.editedColumns);
   }
 
-  onCellValueChanged(row) {
+  onCellValueChanged(row): void {
     if (row.oldValue !== row.newValue) {
       let isExisting = false;
 
       this.editedColumns.forEach((item) => {
-        if (item.id === (row as any).data.id) {
-          item = (row as any).data;
+        if (item.id === row.data.id) {
+          item = row.data;
           isExisting = true;
         }
       });
 
       if (!isExisting) {
-        this.editedColumns.push((row as any).data);
+        this.editedColumns.push(row.data);
       }
     }
   }
 
-  setLoading(loading) {
+  setLoading(loading): void {
     if (loading) {
       this.callProcessing = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
     } else {
@@ -86,15 +87,15 @@ export class CarsComponent {
     }
   }
 
-  setCarInfo(items) {
+  setCarInfo(items): void {
     this.grid.api.setRowData(items);
     this.grid.api.sizeColumnsToFit();
   }
 
-  onGridReady(grid: any) {
+  onGridReady(grid): void {
     this.grid = grid;
 
-    this.carProviderService.carsInfoSubject.subscribe((items: any[]) => {
+    this.carProviderService.carsInfoSubject.subscribe((items: Car[]) => {
       this.setCarInfo(items);
     },
       this.handleError);
@@ -105,7 +106,8 @@ export class CarsComponent {
 
   }
 
-  private handleError(error) {
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  private handleError(): any {
     this.buttonSaveInner = 'Er is een fout opgetreden';
     return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }

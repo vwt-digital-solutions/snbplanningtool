@@ -31,7 +31,7 @@ export class Engineer {
     this._links = _links;
   }
 
-  public static fromRaw(item: any) {
+  public static fromRaw(item): Engineer {
     return new Engineer(
       item.id,
       item.driver_name, // !TODO: Migrate to name

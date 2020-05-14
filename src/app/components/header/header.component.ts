@@ -23,7 +23,7 @@ export class HeaderComponent {
   ) {
     // Hide sidebar on /planning
     this.router.events
-      .pipe(filter((event: any) => event instanceof NavigationEnd))
+      .pipe(filter((event: NavigationEnd) => event instanceof NavigationEnd))
       .subscribe(event => {
         if (event.url === '/planning') {
           this.sidebarButtonClicked.emit(false);
@@ -31,28 +31,30 @@ export class HeaderComponent {
       });
   }
 
-  toggleSideBar() {
+  toggleSideBar(): void {
     this.sidebarButtonClicked.emit(!this.showSidebar);
   }
 
-  logout() {
+  logout(): void {
     this.oauthService.logOut();
   }
 
-  get email() {
-    const claims = this.oauthService.getIdentityClaims();
+  get email(): string {
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) {
       return null;
     }
-    return (claims as any)._email;
+    return claims._email;
   }
-  get roles() {
-    const claims = this.oauthService.getIdentityClaims();
+  get roles(): string {
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
     const allRoles = [];
 
-    if (!claims || !(claims as any)._roles) { return null; }
+    if (!claims || !claims._roles) { return null; }
 
-    for (const value of (claims as any)._roles) {
+    for (const value of claims._roles) {
         allRoles.push(value.replace(/^[^.]+./g, ''));
     }
     allRoles.sort();

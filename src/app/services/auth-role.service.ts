@@ -13,20 +13,21 @@ export class AuthRoleService {
     private oauthService: OAuthService
   ) { }
 
-  get hasValidAccessToken() {
+  get hasValidAccessToken(): boolean {
     if (this.oauthService.hasValidAccessToken()) {
       return true;
     }
     return false;
   }
 
-  get isAuthorized() {
-    const claims = this.oauthService.getIdentityClaims();
+  get isAuthorized(): boolean {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
     let isAuthorized = false;
 
-    if (!claims || !(claims as any).roles) { return null; }
+    if (!claims || !claims.roles) { return null; }
 
-    for (const value of (claims as any).roles) {
+    for (const value of claims.roles) {
       if (value === Role.Planner || value === Role.Editor) {
         isAuthorized = true;
       }
@@ -35,13 +36,14 @@ export class AuthRoleService {
     return isAuthorized;
   }
 
-  get isEditor() {
-    const claims = this.oauthService.getIdentityClaims();
+  get isEditor(): boolean {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
     let isAuthorized = false;
 
-    if (!claims || !(claims as any).roles) { return null; }
+    if (!claims || !claims.roles) { return null; }
 
-    for (const value of (claims as any).roles) {
+    for (const value of claims.roles) {
       if (value === Role.Editor) {
         isAuthorized = true;
       }
@@ -50,13 +52,14 @@ export class AuthRoleService {
     return isAuthorized;
   }
 
-  get isPlanner() {
-    const claims = this.oauthService.getIdentityClaims();
+  get isPlanner(): boolean {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
     let isAuthorized = false;
 
-    if (!claims || !(claims as any).roles) { return null; }
+    if (!claims || !claims.roles) { return null; }
 
-    for (const value of (claims as any).roles) {
+    for (const value of claims.roles) {
       if (value === Role.Planner) {
         isAuthorized = true;
       }

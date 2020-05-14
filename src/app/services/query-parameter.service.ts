@@ -10,7 +10,7 @@ export class QueryParameterService {
     private router: Router
   ) {}
 
-  public getRouteParams(url) {
+  public getRouteParams(url): object {
     url = url.split('?').pop();
     const params = new URLSearchParams(url);
     const paramObj = {};
@@ -30,7 +30,7 @@ export class QueryParameterService {
     return paramObj;
   }
 
-  public setRouteParams(queryParams: Params) {
+  public setRouteParams(queryParams: Params): void {
     // The ['.'] is required otherwise the queryParams are not properly updated.
     this.router.navigate(['.'], {
       relativeTo: this.route,

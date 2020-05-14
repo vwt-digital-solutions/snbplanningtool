@@ -13,7 +13,7 @@ export class Helpers {
 
   public resetZoomButton(): L.Control {
     const control = new L.Control({position: 'bottomright'});
-    control.onAdd = (map: L.map) => {
+    control.onAdd = (map: L.map): string => {
       const resetZoom = L.DomUtil.create('a', 'map-ui-element map-btn');
       resetZoom.innerHTML = '<i class="fas fa-home"></i>';
 
@@ -29,7 +29,7 @@ export class Helpers {
 
   public zoomButtons(): L.Control {
     const control = new L.Control({position: 'bottomright'});
-    control.onAdd = (map: L.map) => {
+    control.onAdd = (map: L.map): HTMLElement => {
       const wrapper = L.DomUtil.create('div', 'map-ui-element zoom-btns');
       const zoomIn = L.DomUtil.create('div', 'map-btn');
       const zoomOut = L.DomUtil.create('div', 'map-btn');
@@ -55,7 +55,7 @@ export class Helpers {
 
   public hoverModeSwitch(): L.Control {
     const control = new L.Control({position: 'bottomright'});
-    control.onAdd = () => {
+    control.onAdd = (): HTMLElement => {
       const hovermode = L.DomUtil.create('a', 'map-ui-element map-btn');
       const hovermodeEnabled = this.mapService.config.markerPopupOnHover;
       hovermode.innerHTML = `<i class="fas ${ hovermodeEnabled ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
@@ -81,7 +81,7 @@ export class Helpers {
   // Markers
   ////
 
-  public createMarker(item: MapGeometryObject) {
+  public createMarker(item: MapGeometryObject): L.marker {
     const marker = item.getMarker();
 
     if (!marker) {
@@ -109,7 +109,7 @@ export class Helpers {
           setTimeout(() => marker.closePopup(), 250);
         }
       },
-      click: (event) => {
+      click: () => {
         this.mapService.clickedMarker = true;
         marker.openPopup();
 
@@ -124,7 +124,7 @@ export class Helpers {
   // Icons
   ////
 
-  public createClusterIcon(cluster: any): L.divIcon {
+  public createClusterIcon(cluster): L.divIcon {
     const count = cluster.getChildCount();
     const size = (count + '').length;
 

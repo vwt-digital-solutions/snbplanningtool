@@ -16,16 +16,16 @@ export class PlanningComponent implements AfterViewInit {
     private planningService: PlanningService
   ) { }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.agGrid.api.showNoRowsOverlay();
   }
 
-  resetFilters() {
+  resetFilters(): void {
     this.agGrid.api.setFilterModel(null);
     this.agGrid.api.setSortModel(null);
   }
 
-  createPlanning() {
+  createPlanning(): void {
     this.agGrid.api.showLoadingOverlay();
     this.planningService.getPlanning().subscribe(rowData => {
       this.agGrid.api.setRowData(rowData);
