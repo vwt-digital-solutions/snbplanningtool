@@ -134,8 +134,17 @@ describe('SnB Planning Tool', () => {
     firstRowTokenColumn.getText().then((text) => {
       expect(text[0]).toContain(browser.params.carInfoRow.token);
     });
+
     firstRowDriverColumn.getText().then((text) => {
-      expect(text[0]).toContain('Lasser');
+      expect([
+        'Lasser',
+        'Metende',
+        'Leerling',
+        'Kraanmachinist',
+        'Overig',
+        'NLS',
+        'Cluster'
+      ]).toContain(text[0]);
     });
   });
 
