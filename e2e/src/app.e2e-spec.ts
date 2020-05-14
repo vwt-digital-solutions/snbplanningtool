@@ -87,18 +87,19 @@ describe('SnB Planning Tool', () => {
 
   it('should show more than 0 workItem rows', () => {
     browser.get('/werk');
-    browser.sleep(2000);
-
-    const workRows = element.all(by.css('.ag-row')).count();
-    expect(workRows).toBeGreaterThan(0);
+    const workRows = browser.driver.wait(() => element.all(by.css('.ag-row')).count());
+    workRows.then(rows => {
+      expect(rows).toBeGreaterThan(0);
+    });
   });
 
   it('should show more than 0 carInfo rows', () => {
     browser.get('/autos');
-    browser.sleep(2000);
 
-    const carsRows = element.all(by.css('.ag-row')).count();
-    expect(carsRows).toBeGreaterThan(0);
+    const carRows = browser.driver.wait(() => element.all(by.css('.ag-row')).count());
+    carRows.then(rows => {
+      expect(rows).toBeGreaterThan(0);
+    });
   });
 
   it('should edit first carInfo row to "Lasser"', () => {
