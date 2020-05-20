@@ -1,5 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Ignore Cypress Screenshots
+cypress/screenshots
+cypress.json
+
 # Ignore sast-config
 sast-config
 
