@@ -5,7 +5,7 @@ context('Werk', () => {
   })
 
   it('Should show more than 0 workItem rows', () => {
-    cy.get('.ag-row').should((rows) => {
+    cy.get('.ag-row', { timeout: 60000 }).should((rows) => {
       expect(rows).to.have.length.of.at.least(1)
     })
   })
