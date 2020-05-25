@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import * as L from 'leaflet';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-pop-up',

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import {BehaviorSubject, Subject} from 'rxjs';
-import { map } from 'rxjs/operators';
-import {CustomLayer, Layer} from '../models/layer';
+import {CustomLayer} from '../models/layer';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +21,7 @@ export class MapService {
   refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
   refreshStatusClass = false;
 
-  mapResized = new Subject<any>();
+  mapResized = new Subject<void>();
 
   config = {
     layers: ['cars', 'work'],
@@ -175,7 +174,7 @@ export class MapService {
 
   customLayersSubject = new Subject<CustomLayer>();
 
-  public addCustomLayer(layer: CustomLayer) {
+  public addCustomLayer(layer: CustomLayer): void {
     this.customLayersSubject.next(layer);
   }
 }

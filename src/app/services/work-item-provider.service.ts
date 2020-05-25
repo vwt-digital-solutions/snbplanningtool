@@ -20,8 +20,8 @@ import {WorkItem} from '../classes/work-item';
 })
 export class WorkItemProviderService {
 
-  rawWorkItems: any[]  = [];
-  filteredWorkItems: any[] = [];
+  rawWorkItems: WorkItem[]  = [];
+  filteredWorkItems: WorkItem[] = [];
   loading = true;
 
   workItemsSubject = new BehaviorSubject<any[]>([]);
@@ -72,12 +72,12 @@ export class WorkItemProviderService {
   }
 
   //
-  public getWorkItems() {
+  public getWorkItems(): void {
     this.loading = true;
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/workitems').subscribe(
-      (result: any) => {
+      result => {
         this.rawWorkItems = result.items.map(resultItem =>
           new WorkItem(
             resultItem.administration,
@@ -112,7 +112,7 @@ export class WorkItemProviderService {
     );
   }
 
-  private filterWorkItems() {
+  private filterWorkItems(): void {
     this.filteredWorkItems = this.filterService.filterList(this.rawWorkItems);
     this.workItemsSubject.next(this.filteredWorkItems);
   }

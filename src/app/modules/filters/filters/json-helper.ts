@@ -8,6 +8,8 @@
  * const x = { 'foo': { 'bar': 'baz' } }
  * getValue(x, 'foo.bar') // returns 'baz'
  */
+
+/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
 export function getValue(obj: object, path: string): any {
   return path.replace(/\[/g, '.').replace(/\]/g, '').split('.').reduce((subnode, key) => {
       return (subnode || {})[key];

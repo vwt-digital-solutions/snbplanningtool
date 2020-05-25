@@ -55,9 +55,8 @@ export class AppComponent {
 
   showFilters = true;
 
-  toggleFilters() {
-    this.showFilters = !this.showFilters;
-
+  showSidebar(shown: boolean): void {
+    this.showFilters = shown;
     this.mapService.mapResized.next();
   }
 }

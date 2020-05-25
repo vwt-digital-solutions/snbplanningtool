@@ -25,7 +25,7 @@ export abstract class MapGeometryObject {
     'VWT Operations Zuid Algemeen',
   ];
 
-  constructor(public geometry: any) {}
+  constructor(public geometry) {}
 
   options = {
     marker: {
@@ -42,11 +42,11 @@ export abstract class MapGeometryObject {
 
   public abstract getMarker(): L.marker;
   public abstract getComponentClass();
-  public abstract getPopupOptions(): any;
+  public abstract getPopupOptions();
 
   protected abstract getIcon(): L.divIcon;
 
-  protected getIconPath() {
+  protected getIconPath(): string {
     return this.iconPath + '/marker.png';
   }
 }

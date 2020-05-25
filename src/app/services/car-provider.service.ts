@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, take } from 'rxjs/internal/operators';
 
-import { BehaviorSubject, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, throwError, Observable } from 'rxjs';
 import { AuthRoleService } from './auth-role.service';
 import { ApiService } from './api.service';
 import { QueryParameterService } from './query-parameter.service';
@@ -76,19 +76,19 @@ export class CarProviderService {
   // API methods
   ////
 
-  public getCars() {
+  public getCars(): void {
     if (localStorage.getItem('carInfo')) {
-      const carInfo = JSON.parse(localStorage.getItem('carInfo'));
+      const carInfo: any = JSON.parse(localStorage.getItem('carInfo'));
 
-      if ((carInfo as any).lastUpdated >= (new Date().getTime() - (30 * 60 * 1000))
-        && (carInfo as any).items.length > 0) {
-        this.carsInfoSubject.next((carInfo as any).items);
+      if (carInfo.lastUpdated >= (new Date().getTime() - (30 * 60 * 1000))
+        && carInfo.items.length > 0) {
+        this.carsInfoSubject.next(carInfo.items);
         return;
       }
     }
 
     this.apiService.apiGet('/cars').subscribe(
-      (result: any) => {
+      (result) => {
         const carInfoItems = result.items.map(carInfo => {
           return new Car(carInfo.id,
             carInfo.license_plate,
@@ -119,8 +119,7 @@ export class CarProviderService {
     );
   }
 
-  public getTokens() {
-
+  public getTokens(): void | Observable<any> {
     const carTokens = (JSON.parse(localStorage.getItem('carTokens'))
       ? JSON.parse(localStorage.getItem('carTokens')) : null);
 
@@ -130,12 +129,11 @@ export class CarProviderService {
     }
 
     this.apiService.apiGet('/tokens?assigned=false').subscribe(
-      (result: any)  => {
-        const newCarTokens = new Object();
-        (newCarTokens as any).items = result.items;
-        (newCarTokens as any).lastUpdated = new Date().getTime();
+      result => {
+        const newCarTokens: any = new Object();
+        newCarTokens.items = result.items;
+        newCarTokens.lastUpdated = new Date().getTime();
         localStorage.setItem('carTokens', JSON.stringify(newCarTokens));
-
 
         this.tokensSubject.next(result as Token[]);
       },
@@ -146,12 +144,12 @@ export class CarProviderService {
 
   }
 
-  public getCarLocations() {
+  public getCarLocations(): void {
     this.loadingSubject.next(true);
 
     this.apiService.apiGet('/cars/locations').subscribe(
-      (result: any) => {
-        const featuresList: [any] = result.features;
+      result => {
+        const featuresList = result.features;
 
         this.loadingSubject.next(false);
         this.carsTokenSubject.next(featuresList);
@@ -163,7 +161,7 @@ export class CarProviderService {
     );
   }
 
-  public getCarDistances(workItem: string, cars: string[] = null) {
+  public getCarDistances(workItem: string, cars: string[] = null): Observable<Car> {
 
     let url = '/cars/distances?work_item=' + workItem;
     if (cars) {
@@ -171,7 +169,7 @@ export class CarProviderService {
     }
 
     return this.apiService.apiGet(url).pipe(
-      map((result: any) => {
+      map(result => {
           for (const item of result.items) {
             item.carLocation = this.getCarLocationForToken(item.token);
           }
@@ -181,7 +179,7 @@ export class CarProviderService {
       ));
   }
 
-  public postCarInfo(items: Car[]) {
+  public postCarInfo(items: Car[]): void {
     this.savingSubject.next(true);
 
     items.forEach((item) => {
@@ -209,19 +207,19 @@ export class CarProviderService {
           const carInfo = this.carsInfoSubject.value;
 
           if (newItem) {
-            item = (result as any);
+            item = result;
             carInfo.push(item);
             this.assignToken(item.token);
           } else {
             for (let i = 0; i < items.length; i++) {
-              if (items[i] && items[i].id === (result as any).id) {
+              if (items[i] && items[i].id === result.id) {
                 newRow = items[i];
                 items.splice(i, 1);
               }
             }
 
             for (let i = 0; i < carInfo.length; i++) {
-              if (carInfo[i].id === (newRow as any).id) {
+              if (carInfo[i].id === newRow.id) {
                 carInfo[i] = newRow;
               }
             }
@@ -235,8 +233,6 @@ export class CarProviderService {
           this.carsInfoSubject.next(carInfo);
           this.savingSubject.next(false);
 
-        }, error => {
-          return throwError(error);
         }
       );
     });
@@ -246,11 +242,11 @@ export class CarProviderService {
   // Subject methods
   ////
 
-  public updateCarLocations() {
+  public updateCarLocations(): void {
     const featuresList = this.carsTokenSubject.value || [];
     const carInfo = this.carsInfoSubject.value || [];
 
-    const carLocations = [];
+    const carLocations: CarLocation[] = [];
 
     featuresList.forEach(feature => {
       const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
@@ -267,7 +263,7 @@ export class CarProviderService {
     this.filter(this.rawCarItems);
   }
 
-  public assignToken(token: string) {
+  public assignToken(token: string): void {
     const carTokens = (JSON.parse(localStorage.getItem('carTokens'))
       ? JSON.parse(localStorage.getItem('carTokens')) : null);
 
@@ -276,18 +272,17 @@ export class CarProviderService {
     localStorage.setItem('carTokens', JSON.stringify(carTokens));
 
     this.tokensSubject.next(carTokens.items as Token[]);
-
   }
 
   ////
   // Search methods
   ////
 
-  public getCarWithEmployeeNumber(employeeNumber: string) {
+  public getCarWithEmployeeNumber(employeeNumber: string): Car {
     return this.carsInfoSubject.value.filter(carInfo => carInfo.driver_employee_number === employeeNumber)[0];
   }
 
-  public getCarLocationForToken(token: string) {
+  public getCarLocationForToken(token: string): CarLocation {
     if (!token) {
       return null;
     }
@@ -295,7 +290,7 @@ export class CarProviderService {
     return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
 
-  private filter(listToFilter: any[]) {
+  private filter(listToFilter: Car[]): void {
     this.filteredCarItems = this.filterService.filterList(listToFilter);
     this.carsLocationsSubject.next(this.filteredCarItems);
   }

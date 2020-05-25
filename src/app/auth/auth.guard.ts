@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
 import { OAuthService } from 'angular-oauth2-oidc';
 
@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(route: ActivatedRouteSnapshot): boolean {
     this.oauthService.tryLogin()
       .then(() => {
         if (!this.oauthService.hasValidAccessToken()) {
@@ -20,10 +20,11 @@ export class AuthGuard implements CanActivate {
         }
       });
 
-    const claims = this.oauthService.getIdentityClaims();
-    if (route.data.roles && (claims as any)._roles) {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+    const claims: any = this.oauthService.getIdentityClaims();
+    if (route.data.roles && claims._roles) {
       let isAuthorisedRoute = false;
-      for (const value of (claims as any)._roles) {
+      for (const value of claims._roles) {
         if (route.data.roles.indexOf(value) > -1) {
           isAuthorisedRoute = true;
         }

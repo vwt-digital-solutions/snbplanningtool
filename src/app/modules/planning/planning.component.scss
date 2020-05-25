@@ -1,0 +1,89 @@
+.app-planning {
+	padding-top: 70px;
+	padding-bottom: 20px;
+	height: 100vh;
+	box-sizing: border-box;
+
+	.info-box {
+		text-align: right;
+
+		button {
+			-webkit-appearance: none;
+			padding: 10px;
+			border-radius: 3px;
+			color: #fff;
+			font-family: 'Poppins', sans-serif;
+			text-transform: uppercase;
+			font-weight: 700;
+			font-size: 12px;
+			line-height: 12px;
+			border: none;
+			margin: 0 5px;
+			text-align: center;
+
+			-webkit-transition: all 0.5s;
+
+			background: #008bb8;
+
+			i {
+				margin-left: 5px;
+			}
+
+			&:hover {
+				background: #006f93;
+			}
+			&:disabled {
+				background: #95a5a6;
+				cursor: not-allowed;
+
+				&:hover {
+					background: #95a5a6;
+				}
+			}
+		}
+		span {
+			padding: 11px;
+			color: #95a5a6;
+			font-family: 'Poppins', sans-serif;
+			text-transform: uppercase;
+			font-weight: 700;
+			font-size: 10px;
+			line-height: 10px;
+			margin: 0 5px;
+			text-align: center;
+
+			-webkit-transition: all 0.5s;
+
+			i {
+				margin-left: 5px;
+			}
+		}
+	}
+	.info-grid {
+		margin-top: 20px;
+		height: calc(100% - 32px - 20px);
+	}
+}
+
+:host /deep/ .app-planning {
+	.info-box {
+		button,
+		span {
+			i {
+				margin-left: 5px;
+			}
+		}
+	}
+	.ag-row {
+		a {
+			color: #323232;
+			font-size: 10px;
+			font-weight: 700;
+			text-transform: uppercase;
+			&:hover {
+				color: #008bb8;
+				text-decoration: none;
+			}
+		}
+	}
+}

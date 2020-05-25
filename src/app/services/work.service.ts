@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
 
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
@@ -84,7 +83,7 @@ export class WorkService {
     };
   }
 
-  dateComparator(filterDate, cellValue) {
+  dateComparator(filterDate, cellValue): number {
     if (cellValue == null) { return 0; }
 
     const oldDate = new Date(cellValue).setHours(0, 0, 0, 0);
@@ -99,23 +98,19 @@ export class WorkService {
     }
   }
 
-  dateRenderer(params) {
+  dateRenderer(params): string {
     return (params.value ? formatDate(params.value, 'dd-MM-yyyy hh:mm', 'nl') : '');
   }
 
-  boolRenderer(params) {
+  boolRenderer(params): string {
     return `<input type='checkbox' disabled="true" ${params.value ? 'checked' : ''} />`;
   }
 
-  cellTokenLocator(params) {
+  cellTokenLocator(params): string {
     if (params.data.geometry && params.data.geometry.coordinates.length && params.value !== '') {
       return '<a class="work-item-view-link" href="/kaart/' + params.value + '">Bekijk</a>';
     } else {
       return '-';
     }
-  }
-
-  private handleError(error) {
-    return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
   }
 }

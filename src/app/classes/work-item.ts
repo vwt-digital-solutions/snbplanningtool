@@ -1,5 +1,5 @@
-import {MapGeometryObject} from './map-geometry-object';
-import {WorkItemPopupComponent} from '../components/map/popup/workitem/work-item-popup.component';
+import { MapGeometryObject } from './map-geometry-object';
+import { WorkItemPopupComponent } from '../components/map/popup/workitem/work-item-popup.component';
 import * as moment from 'moment';
 import * as L from 'leaflet';
 
@@ -22,19 +22,44 @@ export class WorkItem extends MapGeometryObject {
     public employee_name: string,
     public employee_number: string,
     public end_timestamp: string,
-    public geometry: any,
+    public geometry,
     public project_number: number,
     public start_timestamp: string,
     public status: string,
     public street: string,
     public task_type: string,
     public zip: string,
-    public l2_guid: string
+    public l2_guid: string,
+    public sub_order_id?: string
   ) {
     super(geometry);
   }
 
-  getMarker() {
+  static fromRaw(item): WorkItem {
+    return new WorkItem(
+      item.administration,
+      item.category,
+      item.resolve_before_timestamp,
+      item.stagnation,
+      item.project,
+      item.city,
+      item.description,
+      item.employee_name,
+      item.employee_number,
+      item.end_timestamp,
+      item.geometry,
+      item.project_number,
+      item.start_timestamp,
+      item.status,
+      item.street,
+      item.task_type,
+      item.zip,
+      item.l2_guid,
+      item.sub_order_id
+    );
+  }
+
+  getMarker(): L.marker {
     if (!this.geometry || !this.geometry.coordinates) {
       return null;
     }
@@ -47,7 +72,7 @@ export class WorkItem extends MapGeometryObject {
     return marker;
   }
 
-  getIcon() {
+  getIcon(): L.divIcon {
     const urgencyClass = this.featureUrgencyCSS();
     const category = this.category;
 
@@ -69,11 +94,11 @@ export class WorkItem extends MapGeometryObject {
     }
   }
 
-  getComponentClass() {
+  getComponentClass(): typeof WorkItemPopupComponent {
     return WorkItemPopupComponent;
   }
 
-  getPopupOptions() {
+  getPopupOptions(): object {
     return {
       maxWidth: 600,
       minWidth: 500,
@@ -99,11 +124,12 @@ export class WorkItem extends MapGeometryObject {
     return '';
   }
 
-  protected getIconPath(hasCategory= false) {
+  protected getIconPath(hasCategory = false): string {
     if (hasCategory) {
       return this.iconPath + '/marker.png';
     }
 
     return this.iconPath + '/work-location.png';
   }
+
 }

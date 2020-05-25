@@ -6,6 +6,5 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./layer-control.component.scss']
 })
 export class LayerControlComponent {
-
-  @Input() layers: any;
+  @Input() layers;
 }

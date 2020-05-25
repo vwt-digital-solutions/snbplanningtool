@@ -1,6 +1,6 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { throwError } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
 
 import { MapService } from 'src/app/services/map.service';
 import { WorkItemProviderService } from 'src/app/services/work-item-provider.service';
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 
 
   // API CALLS
-  private handleError(error) {
+  private handleError(error): Observable<any> {
       if (error.status !== 403) {
         this.mapService.refreshStatusClass = true;
         this.mapService.refreshStatus = 'Er is een fout opgetreden';
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
   // END API CALLS
 
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (params.trackerId) {
         if (params.trackerId.indexOf('vwt') > -1) {

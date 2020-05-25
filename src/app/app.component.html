@@ -1,4 +1,4 @@
-<app-header (onSidebarButtonClicked)="toggleFilters()" [showSidebar]="this.showFilters" *ngIf="this.authRoleService.hasValidAccessToken"></app-header>
+<app-header (sidebarButtonClicked)="showSidebar($event)" [showSidebar]="this.showFilters" *ngIf="this.authRoleService.hasValidAccessToken"></app-header>
 <div class="container-fluid">
   <div class="row">
     <div [class.col-md-9]="this.showFilters"  [class.col-12]="!this.showFilters"  class="col">

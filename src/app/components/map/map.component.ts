@@ -54,7 +54,7 @@ export class MapComponent implements AfterViewInit {
     this.addClusters();
   }
 
-  refreshStatusClasses() {
+  refreshStatusClasses(): object {
     return {
       small: true,
       error: this.mapService.refreshStatusClass
@@ -85,7 +85,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  private addMapLayer(identifier, name, items, removable = false, showRoute = false) {
+  private addMapLayer(identifier, name, items, removable = false, showRoute = false): void {
     const markers = [];
 
     for (const item of items) {
@@ -110,8 +110,8 @@ export class MapComponent implements AfterViewInit {
       layer.identifier = identifier;
       layer.title = name;
       layer.parentElement = this.parentCluster;
-      layer.onRemoveLayer = () => { this.removeMapLayer(layer.identifier); };
-      layer.onToggleLayer = (visible) => { this.toggleMapLayer(layer.identifier, visible); };
+      layer.onRemoveLayer = (): void => { this.removeMapLayer(layer.identifier); };
+      layer.onToggleLayer = (visible): void => { this.toggleMapLayer(layer.identifier, visible); };
       layer.removable = removable;
       this.controlledLayers[identifier] = layer;
     }
@@ -147,7 +147,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  private removeMapLayer(identifier) {
+  private removeMapLayer(identifier): void {
 
     const layer = this.controlledLayers[identifier];
 
@@ -162,7 +162,7 @@ export class MapComponent implements AfterViewInit {
     this.toggleMapLayer('1-cars', true);
   }
 
-  private toggleMapLayer(identifier, visible) {
+  private toggleMapLayer(identifier, visible): void {
     const layer = this.controlledLayers[identifier];
 
     if (layer.visible === visible) {
@@ -230,7 +230,7 @@ export class MapComponent implements AfterViewInit {
     this.mapReady();
   }
 
-  private setActiveMarker() {
+  private setActiveMarker(): void {
     this.mapService.activeTokenId
       .pipe(
         // Get latest features
@@ -258,13 +258,13 @@ export class MapComponent implements AfterViewInit {
     this.mapService.refreshStatus = 'Automatisch vernieuwen (5 min.)';
   }
 
-  private mapReady() {
+  private mapReady(): void {
     if (this.mapService.geoJsonReady.map) {
       this.mapIsReady();
     } else {
       let mapIntervalCount = 0;
       const mapInterval = setInterval(((self) => {
-        return () => {
+        return (): void => {
           if (self.mapService.geoJsonReady.map) {
             clearInterval(mapInterval);
             self.mapIsReady();
@@ -279,7 +279,7 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  private mapIsReady() {
+  private mapIsReady(): void {
     this.mapService.refreshUpdate = Date.now();
     this.mapService.refreshStatus = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
 

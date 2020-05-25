@@ -6,7 +6,7 @@ import { EnvService } from '../services/env.service';
 @Injectable()
 export class BusinessUnitInterceptor implements HttpInterceptor {
   constructor(private env: EnvService) {}
-
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Some other api
     if (!this.apiRequest(request.url)) {
