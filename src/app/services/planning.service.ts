@@ -43,14 +43,16 @@ export class PlanningService {
             headerName: 'Starttijd',
             field: '_embedded.workitem.start_timestamp',
             cellRenderer: (data): string => {
-                return moment(data.start_timestamp).format('DD/MM/YYYY HH:mm');
+              const date = moment(data.value);
+              return date.isValid() ? date.format('DD/MM/YYYY HH:mm') : '-';
             }
           },
           {
             headerName: 'Eindtijd',
             field: '_embedded.workitem.end_timestamp',
             cellRenderer: (data): string => {
-              return moment(data.end_timestamp).format('DD/MM/YYYY HH:mm');
+              const date = moment(data.value);
+              return date.isValid() ? date.format('DD/MM/YYYY HH:mm') : '-';
             }
           },
         ]
