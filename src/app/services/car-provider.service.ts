@@ -163,9 +163,9 @@ export class CarProviderService {
 
   public getCarDistances(workItem: string, cars: string[] = null): Observable<Car> {
 
-    let url = '/cars/distances?work_item=' + workItem;
+    let url = '/workitems/' + workItem + '/distances';
     if (cars) {
-      url = url + '&cars=' + cars.join(',');
+      url = url + '?cars=' + cars.join(',');
     }
 
     return this.apiService.apiGet(url).pipe(
