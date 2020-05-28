@@ -4,7 +4,7 @@ import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { getValue } from './json-helper';
 import * as moment from 'moment';
 
-type featureIdTypes = 'car' | 'work';
+type featureIdTypes = 'engineer' | 'work';
 
 /* eslint-disable  @typescript-eslint/no-unused-vars */
 export abstract class Filter {

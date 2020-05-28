@@ -25,7 +25,7 @@ export class CarsService {
         { headerName: 'Kentekenplaat', field: 'licensePlate', editable: false },
         { headerName: 'Naam', field: 'name', },
         { headerName: 'Medewerkernr.', field: 'employeeNumber'},
-        { headerName: 'Rol bestuurder', field: 'skill', cellEditorSelector: this.cellEditorDriverSkill },
+        { headerName: 'Rol', field: 'skill', cellEditorSelector: this.cellEditorDriverSkill },
         { headerName: 'Afdeling', field: 'business_unit', cellEditorSelector: this.cellEditorBusinessUnit },
         {
           headerName: 'Locatie',

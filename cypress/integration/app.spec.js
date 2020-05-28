@@ -7,7 +7,7 @@ context('App', () => {
   it('Should connect to the API', async () => {
     const requestOptions = {
       method: 'GET',
-      url: Cypress.env('apiUrl') + '/cars',
+      url: Cypress.env('apiUrl') + 'engineers',
       headers: {
         Authorization: 'Bearer ' + Cypress.env('accessToken')
       }

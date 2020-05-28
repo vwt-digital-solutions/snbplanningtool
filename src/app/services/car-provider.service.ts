@@ -35,9 +35,9 @@ export class CarProviderService {
   public filterService = new FilterMap(
     [
       new ChoiceFilter(
-        'car',
+        'engineer',
         'Administratie (klantteam)',
-        'car.administration',
+        'engineer.administration',
         ChoiceFilterType.multiple
       )
     ]
@@ -230,7 +230,7 @@ export class CarProviderService {
     featuresList.forEach(feature => {
       const carLocation = new CarLocation({} as Engineer, feature.properties.token, feature.geometry);
       engineer.forEach(item => {
-        if (item.id === feature.properties.token) {
+        if (item.token === feature.properties.token) {
           carLocation.engineer = item;
         }
       });
