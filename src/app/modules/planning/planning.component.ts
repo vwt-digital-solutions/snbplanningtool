@@ -1,6 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { PlanningService } from 'src/app/services/planning.service';
 import { GridOptions } from 'ag-grid-community';
+import { DataGrid } from 'src/app/classes/datagrid';
 
 @Component({
   selector: 'app-planning',
@@ -9,12 +10,16 @@ import { GridOptions } from 'ag-grid-community';
 })
 export class PlanningComponent implements AfterViewInit {
   @ViewChild('planningGrid') agGrid: GridOptions;
-  gridOptions = this.planningService.gridOptions;
+  gridName = 'planning';
   title = 'Planning';
+
+  gridOptions: GridOptions = DataGrid.GetDefaults(this.gridName);
 
   constructor(
     private planningService: PlanningService
-  ) { }
+  ) {
+    this.gridOptions.columnDefs = this.planningService.colDefs;
+  }
 
   ngAfterViewInit(): void {
     this.agGrid.api.showNoRowsOverlay();
@@ -23,6 +28,10 @@ export class PlanningComponent implements AfterViewInit {
   resetFilters(): void {
     this.agGrid.api.setFilterModel(null);
     this.agGrid.api.setSortModel(null);
+  }
+
+  resetGrid(): void {
+    DataGrid.ClearOptions(this.gridOptions, this.gridName);
   }
 
   createPlanning(): void {
