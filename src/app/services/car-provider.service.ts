@@ -5,7 +5,7 @@ import { BehaviorSubject, Subject, throwError, Observable } from 'rxjs';
 import { AuthRoleService } from './auth-role.service';
 import { ApiService } from './api.service';
 import { QueryParameterService } from './query-parameter.service';
-import { Car } from '../classes/car';
+import { Engineer } from '../classes/engineer';
 
 import { ChoiceFilter, ChoiceFilterType } from '../modules/filters/filters/filters';
 import { FilterMap } from '../modules/filters/filter-map';
@@ -28,7 +28,7 @@ export class CarProviderService {
   private carsTokenSubject = new BehaviorSubject<any[]>([]);
 
   public carsLocationsSubject = new BehaviorSubject<CarLocation[]>([]);
-  public carsInfoSubject = new BehaviorSubject<Car[]>([]);
+  public carsInfoSubject = new BehaviorSubject<Engineer[]>([]);
 
   public tokensSubject = new BehaviorSubject<Token[]>([]);
 
@@ -77,38 +77,29 @@ export class CarProviderService {
   ////
 
   public getCars(): void {
-    if (localStorage.getItem('carInfo')) {
-      const carInfo: any = JSON.parse(localStorage.getItem('carInfo'));
+    if (localStorage.getItem('engineer')) {
+      const engineer: any = JSON.parse(localStorage.getItem('engineer'));
 
-      if (carInfo.lastUpdated >= (new Date().getTime() - (30 * 60 * 1000))
-        && carInfo.items.length > 0) {
-        this.carsInfoSubject.next(carInfo.items);
+      if (engineer.lastUpdated >= (new Date().getTime() - (30 * 60 * 1000))
+        && engineer.items.length > 0) {
+        this.carsInfoSubject.next(engineer.items);
         return;
       }
     }
 
-    this.apiService.apiGet('/cars').subscribe(
+    this.apiService.apiGet('/engineers').subscribe(
       (result) => {
-        const carInfoItems = result.items.map(carInfo => {
-          return new Car(carInfo.id,
-            carInfo.license_plate,
-            carInfo.driver_name,
-            carInfo.driver_skill,
-            carInfo.driver_employee_number,
-            carInfo.business_unit,
-            carInfo.division,
-            carInfo.administration,
-            carInfo.token
-          );
+        const engineerItems = result.items.map(engineer => {
+          return Engineer.fromRaw(engineer._embedded.engineer);
         });
 
         const newCarInfo = {
-          items: carInfoItems,
+          items: engineerItems,
           lastUpdated: new Date().getTime()
         };
 
-        localStorage.setItem('carInfo', JSON.stringify(newCarInfo));
-        this.carsInfoSubject.next(carInfoItems);
+        localStorage.setItem('engineer', JSON.stringify(newCarInfo));
+        this.carsInfoSubject.next(engineerItems);
         this.loadingSubject.next(false);
 
         return newCarInfo;
@@ -161,7 +152,7 @@ export class CarProviderService {
     );
   }
 
-  public getCarDistances(workItem: string, cars: string[] = null): Observable<Car> {
+  public getCarDistances(workItem: string, cars: string[] = null): Observable<Engineer> {
 
     let url = '/workitems/' + workItem + '/distances';
     if (cars) {
@@ -179,37 +170,25 @@ export class CarProviderService {
       ));
   }
 
-  public postCarInfo(items: Car[]): void {
+  public postCarInfo(items: Engineer[]): void {
     this.savingSubject.next(true);
 
     items.forEach((item) => {
       const newItem = item.id == null;
 
       // Clone the item, because we need to remove some fields before posting to the API,
-      // like removing the license_plate.
-      const postInfo = Object.assign({}, item);
-
-      if (postInfo.driver_skill == null) {
-        item.driver_skill = ''; // eslint-disable-line @typescript-eslint/camelcase
-      }
-      if (postInfo.driver_employee_number == null) {
-        item.driver_employee_number = ''; // eslint-disable-line @typescript-eslint/camelcase
-      }
-
-      delete postInfo.license_plate;
-      delete postInfo.driver_name;
-      delete postInfo.business_unit;
-      delete postInfo.division;
+      // like removing the licensePlate.
+      const postInfo = Engineer.toRaw(item);
 
       this.apiService.postCarInfo(postInfo).subscribe(
         result => {
-          let newRow: Car;
-          const carInfo = this.carsInfoSubject.value;
+          let newRow: Engineer;
+          const engineer = this.carsInfoSubject.value;
 
           if (newItem) {
             item = result;
-            carInfo.push(item);
-            this.assignToken(item.token);
+            engineer.push(item);
+            this.assignToken(item.id);
           } else {
             for (let i = 0; i < items.length; i++) {
               if (items[i] && items[i].id === result.id) {
@@ -218,19 +197,19 @@ export class CarProviderService {
               }
             }
 
-            for (let i = 0; i < carInfo.length; i++) {
-              if (carInfo[i].id === newRow.id) {
-                carInfo[i] = newRow;
+            for (let i = 0; i < engineer.length; i++) {
+              if (engineer[i].id === newRow.id) {
+                engineer[i] = newRow;
               }
             }
           }
 
-          const storedCarInfo = JSON.parse(localStorage.getItem('carInfo'));
-          storedCarInfo.items = carInfo;
-          localStorage.setItem('carInfo', JSON.stringify(storedCarInfo));
+          const storedCarInfo = JSON.parse(localStorage.getItem('engineer'));
+          storedCarInfo.items = engineer;
+          localStorage.setItem('engineer', JSON.stringify(storedCarInfo));
 
 
-          this.carsInfoSubject.next(carInfo);
+          this.carsInfoSubject.next(engineer);
           this.savingSubject.next(false);
 
         }
@@ -244,15 +223,15 @@ export class CarProviderService {
 
   public updateCarLocations(): void {
     const featuresList = this.carsTokenSubject.value || [];
-    const carInfo = this.carsInfoSubject.value || [];
+    const engineer = this.carsInfoSubject.value || [];
 
     const carLocations: CarLocation[] = [];
 
     featuresList.forEach(feature => {
-      const carLocation = new CarLocation({} as Car, feature.properties.token, feature.geometry);
-      carInfo.forEach(item => {
-        if (item.token === feature.properties.token) {
-          carLocation.car = item;
+      const carLocation = new CarLocation({} as Engineer, feature.properties.token, feature.geometry);
+      engineer.forEach(item => {
+        if (item.id === feature.properties.token) {
+          carLocation.engineer = item;
         }
       });
 
@@ -278,8 +257,8 @@ export class CarProviderService {
   // Search methods
   ////
 
-  public getCarWithEmployeeNumber(employeeNumber: string): Car {
-    return this.carsInfoSubject.value.filter(carInfo => carInfo.driver_employee_number === employeeNumber)[0];
+  public getCarWithEngineer(employeeNumber: string): Engineer {
+    return this.carsInfoSubject.value.filter(engineer => engineer.employeeNumber === employeeNumber)[0];
   }
 
   public getCarLocationForToken(token: string): CarLocation {
@@ -290,7 +269,7 @@ export class CarProviderService {
     return this.carsLocationsSubject.value.filter(carLocation => carLocation.token === token)[0];
   }
 
-  private filter(listToFilter: Car[]): void {
+  private filter(listToFilter: Engineer[]): void {
     this.filteredCarItems = this.filterService.filterList(listToFilter);
     this.carsLocationsSubject.next(this.filteredCarItems);
   }

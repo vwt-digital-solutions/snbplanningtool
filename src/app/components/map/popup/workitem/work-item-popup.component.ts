@@ -115,7 +115,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
     }
 
     if (this.properties.employee_number) {
-      this.linkedCar = this.carProviderService.getCarWithEmployeeNumber(this.properties.employee_number);
+      this.linkedCar = this.carProviderService.getCarWithEngineer(this.properties.employee_number);
 
       if (this.linkedCar) {
         this.linkedCarLocation = this.carProviderService.getCarLocationForToken(this.linkedCar.token);
@@ -132,7 +132,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   }
 
   public showLinkedCarAsCustomLayer(): void {
-    const title = 'Afstand monteur ' + this.linkedCar.driver_name + ' en werkitem ' + this.properties.l2_guid;
+    const title = 'Afstand monteur ' + this.linkedCar.name + ' en werkitem ' + this.properties.l2_guid;
     const items = [this.linkedCarLocation, this.properties];
 
     const customLayer = new CustomLayer(title, items, true);

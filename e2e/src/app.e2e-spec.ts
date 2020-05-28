@@ -48,7 +48,7 @@ describe('SnB Planning Tool', () => {
   it('should connect to the API', () => {
     const requestOptions = {
       method: 'GET',
-      url: browser.params.apiUrl + '/cars',
+      url: browser.params.apiUrl + '/engineers',
       headers: {
         Authorization: 'Bearer ' + browser.params.login.accessToken
       }
@@ -93,8 +93,8 @@ describe('SnB Planning Tool', () => {
     });
   });
 
-  it('should show more than 0 carInfo rows', () => {
-    browser.get('/autos');
+  it('should show more than 0 engineer rows', () => {
+    browser.get('/monteurs');
 
     const carRows = browser.driver.wait(() => element.all(by.css('.ag-row')).count());
     carRows.then(rows => {
@@ -102,19 +102,19 @@ describe('SnB Planning Tool', () => {
     });
   });
 
-  it('should edit first carInfo row to "Lasser"', () => {
-    browser.get('/autos');
+  it('should edit first engineer row to "Lasser"', () => {
+    browser.get('/monteurs');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
-      browser.params.carInfoRow.token = text[0];
+      browser.params.engineerRow.token = text[0];
     });
     firstRowDriverColumn.getText().then((text) => {
-      browser.params.carInfoRow.driverSkill = text[0];
+      browser.params.engineerRow.driverSkill = text[0];
     });
 
     browser.actions().mouseMove(firstRowDriverColumn);
@@ -130,10 +130,10 @@ describe('SnB Planning Tool', () => {
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
-      expect(text[0]).toContain(browser.params.carInfoRow.token);
+      expect(text[0]).toContain(browser.params.engineerRow.token);
     });
 
     firstRowDriverColumn.getText().then((text) => {
@@ -149,13 +149,13 @@ describe('SnB Planning Tool', () => {
     });
   });
 
-  it('should revert first carInfo row back to original driver_skill', () => {
-    browser.get('/autos');
+  it('should revert first engineer row back to original skill', () => {
+    browser.get('/monteurs');
     browser.sleep(2000);
 
     let firstRow = element.all(by.css('.ag-row:first-child'));
     let firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
+    let firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="skill"]'));
 
     browser.actions().mouseMove(firstRowDriverColumn);
     firstRowDriverColumn.click();
@@ -172,13 +172,13 @@ describe('SnB Planning Tool', () => {
 
     firstRow = element.all(by.css('.ag-row:first-child'));
     firstRowTokenColumn = firstRow.all(by.css('.ag-cell[col-id*="token"]'));
-    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="driver_skill"]'));
+    firstRowDriverColumn = firstRow.all(by.css('.ag-cell[col-id*="skill"]'));
 
     firstRowTokenColumn.getText().then((text) => {
-      expect(text[0]).toContain(browser.params.carInfoRow.token);
+      expect(text[0]).toContain(browser.params.engineerRow.token);
     });
     firstRowDriverColumn.getText().then((text) => {
-      expect(text[0]).toContain(browser.params.carInfoRow.driverName);
+      expect(text[0]).toContain(browser.params.engineerRow.driverName);
     });
   });
 

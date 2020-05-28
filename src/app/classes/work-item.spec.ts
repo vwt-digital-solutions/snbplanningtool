@@ -5,18 +5,22 @@ describe('WorkItem', () => {
     expect(new WorkItem(
       'Amersfoort',
       'A description',
+      '1970-01-01T00:00:00+00:00',
+      true,
+      'Project',
+      'City',
+      'A description',
       'Pietje Puk',
-      '102415',
+      12345,
       '1970-01-01T00:00:00+00:00',
       {},
-      123,
+      15000,
       '1970-01-01T00:00:00+00:00',
-      'in_progress',
-      'Modemweg',
-      'basic',
+      'Te plannen',
+      'Postweg',
+      'Service Koper',
       '1234 AB',
-      'abcd',
-      {}
+      'B20000'
     )).toBeTruthy();
   });
 });

@@ -26,7 +26,7 @@ export class BusinessUnitComponent {
 
   clearOldCache(): void {
     localStorage.removeItem('carTokens');
-    localStorage.removeItem('carInfo');
+    localStorage.removeItem('engineer');
   }
 
   renewData(): void {

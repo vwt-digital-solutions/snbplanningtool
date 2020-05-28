@@ -23,7 +23,7 @@ const routes: Routes = [
       canActivate: [AuthGuard]
     },
     {
-      path: 'autos',
+      path: 'monteurs',
       component: CarsComponent,
       canActivate: [AuthGuard],
       data: { roles: [Role.Editor, Role.Planner] }
@@ -46,7 +46,7 @@ const routes: Routes = [
     },
     {
       path: 'cars',
-      redirectTo: 'autos'
+      redirectTo: 'monteurs'
     },
     {
       path: 'work',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Car } from 'src/app/classes/car';
+import { Engineer } from 'src/app/classes/engineer';
 
 import { CarsService } from 'src/app/services/cars.service';
 import { CarProviderService } from '../../services/car-provider.service';
@@ -14,15 +14,14 @@ import Token from '../../classes/token';
 })
 export class CarsFormComponent implements OnInit {
   title = 'Voeg een nieuwe auto toe';
-  titleEmpty = 'Er zijn geen niet-toegewezen tokens, probeer het later opnieuw.';
-  valueFormat = 'Inclusief streepjes (bv. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
+  titleEmpty = 'Er zijn geen niet-toegewezen kentekens, probeer het later opnieuw.';
   buttonSave = 'Opslaan';
 
   carsTokens: Token[];
   administrations = MapGeometryObject.administrations;
   businessUnits = MapGeometryObject.businessUnits;
 
-  model = new Car(null, '', '', '', '', '', '', '', null);
+  model = new Engineer(null, '', '', '', '', '', null, '', null);
 
   constructor(
     private carsService: CarsService,

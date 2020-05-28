@@ -1,25 +1,25 @@
 <div class="row popup-car">
-  <div class="col-12 item driver_name">
+  <div class="col-12 item name">
     <p>Naam bestuurder</p>
-    <span>{{properties.car.driver_name || '-'}}</span>
+    <span>{{properties.engineer.name || '-'}}</span>
   </div>
-  <div class="col-12 item driver_skill">
+  <div class="col-12 item skill">
     <p>Rol bestuurder</p>
-    <span>{{properties.car.driver_skill || '-'}}</span>
+    <span>{{properties.engineer.skill || '-'}}</span>
   </div>
-  <div class="col-12 item driver_employee_number">
+  <div class="col-12 item employee_number">
     <p>Medewerkernr. bestuurder</p>
-    <span>{{properties.car.driver_employee_number || '-'}}</span>
+    <span>{{properties.engineer.employee_number || '-'}}</span>
   </div>
-  <div class="col-12 item administration" *ngIf="properties.car.administration">
+  <div class="col-12 item administration" *ngIf="properties.engineer.administration">
     <p>Administratie</p>
-    <span>{{properties.car.administration || '-'}}</span>
+    <span>{{properties.engineer.administration || '-'}}</span>
   </div>
-  <div class="col-12 item license_plate">
+  <div class="col-12 item licensePlate">
     <p>Kentekenplaat</p>
     <div class="license-plate license-nl">
-      <span *ngIf="properties.car.license_plate">{{properties.car.license_plate | formatLicensePlate}}</span>
-      <span *ngIf="!properties.car.license_plate">N/B</span>
+      <span *ngIf="properties.engineer.licensePlate">{{properties.engineer.licensePlate | formatLicensePlate}}</span>
+      <span *ngIf="!properties.engineer.licensePlate">N/B</span>
     </div>
   </div>
 </div>

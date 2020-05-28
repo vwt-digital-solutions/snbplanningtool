@@ -34,12 +34,12 @@
       </div>
 
       <div class="form-group">
-        <label for="business_unit">Afdeling<span>&#42;</span></label>
+        <label for="businessUnit">Afdeling<span>&#42;</span></label>
         <select
           class="form-control"
-          id="business_unit"
-          [(ngModel)]="model.business_unit"
-          name="business_unit"
+          id="businessUnit"
+          [(ngModel)]="model.businessUnit"
+          name="businessUnit"
           #administration="ngModel"
           required >
           <option [ngValue]="null" selected disabled hidden>Selecteer een afdeling</option>
@@ -48,21 +48,21 @@
       </div>
 
       <div class="form-group">
-        <label for="driver_name">Naam bestuurder</label>
+        <label for="name">Naam bestuurder</label>
         <input
           type="text"
           class="form-control"
-          id="driver_name"
-          [(ngModel)]="model.driver_name"
-          name="driver_name" >
+          id="name"
+          [(ngModel)]="model.name"
+          name="name" >
       </div>
       <div class="form-group">
-        <label for="driver_skill">Rol bestuurder</label>
+        <label for="skill">Rol bestuurder</label>
         <select
           class="form-control"
-          id="driver_skill"
-          [(ngModel)]="model.driver_skill"
-          name="driver_skill">
+          id="skill"
+          [(ngModel)]="model.skill"
+          name="skill">
           <option value="Metende">Metende</option>
           <option value="Lasser">Lasser</option>
           <option value="Leerling">Leerling</option>
@@ -73,13 +73,13 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="driver_employee_number">Medewerkernummer bestuurder</label>
+        <label for="employee_number">Medewerkernummer bestuurder</label>
         <input
           type="text"
           class="form-control"
-          id="driver_employee_number"
-          [(ngModel)]="model.driver_employee_number"
-          name="driver_employee_number" >
+          id="employee_number"
+          [(ngModel)]="model.employee_number"
+          name="employee_number" >
       </div>
 
       <button (click)="this.carsService.isHidden = true" type="reset" class="btn btn-fail">Annuleren</button>

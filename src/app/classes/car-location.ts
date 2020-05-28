@@ -1,10 +1,10 @@
 import {MapGeometryObject} from './map-geometry-object';
-import {Car} from './car';
+import {Engineer} from './engineer';
 import {CarInfoPopupComponent} from '../components/map/popup/carinfo/car-info-popup.component';
 import * as L from 'leaflet';
 
 export default class CarLocation extends MapGeometryObject {
-  public constructor(public car: Car, public token: string, geometry) {
+  public constructor(public engineer: Engineer, public token: string, geometry) {
     super(geometry);
   }
 
@@ -24,11 +24,11 @@ export default class CarLocation extends MapGeometryObject {
     const iconUrl = this.getIconPath();
     let icon;
 
-    if (this.car && this.car.driver_name) {
+    if (this.engineer && this.engineer.name) {
       icon = new L.divIcon({
         html: `
             <div style="background-image: url(${iconUrl})">
-              <span>${ this.car.driver_name}</span>
+              <span>${ this.engineer.name}</span>
             </div>
           `,
         className: 'div-icon',

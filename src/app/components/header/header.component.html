@@ -8,7 +8,7 @@
     <div class="col-6 navbar-container">
       <div class="navbar">
         <a routerLink="kaart" [routerLinkActive]="['active']">Kaart</a>
-        <a routerLink="autos"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Auto's</a>
+        <a routerLink="monteurs"  [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Monteurs</a>
         <a routerLink="werk" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Werk</a>
         <a routerLink="planning" [routerLinkActive]="['active']" *ngIf="this.authRoleService.isAuthorized">Planning</a>
         <a class="d-md-block d-sm-none hamburger-menu-link"
