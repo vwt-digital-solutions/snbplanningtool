@@ -25,7 +25,7 @@ export class PlanningService {
         headerName: 'Adres',
         children: [
           { headerName: 'Plaats', field: '_embedded.workitem.city' },
-          { headerName: 'Postcode', field: '_embedded.workitem.zip', hide: true },
+          { headerName: 'Postcode', field: '_embedded.workitem.zip' },
           { headerName: 'Straat', field: '_embedded.workitem.street' }
         ]
       },
