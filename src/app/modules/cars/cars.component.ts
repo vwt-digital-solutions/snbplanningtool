@@ -19,7 +19,7 @@ import { Engineer } from 'src/app/classes/engineer';
   ]
 })
 export class CarsComponent {
-  title = 'Auto informatie';
+  title = 'Monteur informatie';
   buttonRevert = 'Zet alle wijzigingen terug';
   buttonExport = 'Exporteren naar Excel';
   buttonNewRow = 'Nieuwe rij toevoegen';

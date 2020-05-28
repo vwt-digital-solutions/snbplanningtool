@@ -124,7 +124,7 @@ export class WorkItemPopupComponent extends PopUpComponent implements OnInit {
   }
 
   public showNearbyCarAsCustomLayer(): void {
-    const title = 'Auto\'s dichtbij werkitem ' + this.properties.l2_guid;
+    const title = 'Monteurs dichtbij werkitem ' + this.properties.l2_guid;
     const items = this.nearbyCars.map(carDistance => carDistance.carLocation);
     items.push(this.properties);
     const customLayer = new CustomLayer(title, items);
