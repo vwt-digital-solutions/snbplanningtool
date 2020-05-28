@@ -1,28 +1,32 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import { CarsFormComponent } from './cars-form.component';
-import { EnvServiceProvider } from 'src/app/services/env.service.provider';
 import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc';
-import { CarsService } from 'src/app/services/cars.service';
 
-describe('CarsFormComponent', () => {
-  let component: CarsFormComponent;
-  let fixture: ComponentFixture<CarsFormComponent>;
+import { AgGridModule } from 'ag-grid-angular';
+import { EnvServiceProvider } from 'src/app/services/env.service.provider';
+
+import { EngineersComponent } from './engineers.component';
+import { EngineerFormComponent } from 'src/app/components/cars-form/engineer-form.component';
+
+describe('CarsComponent', () => {
+  let component: EngineersComponent;
+  let fixture: ComponentFixture<EngineersComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        CarsFormComponent
+        EngineersComponent,
+        EngineerFormComponent
       ],
       imports: [
-        FormsModule,
-        HttpClientModule
+        AgGridModule.withComponents([]),
+        HttpClientModule,
+        FormsModule
       ],
       providers: [
         HttpClient,
-        CarsService,
         EnvServiceProvider,
         UrlHelperService,
         OAuthLogger,
@@ -33,7 +37,7 @@ describe('CarsFormComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CarsFormComponent);
+    fixture = TestBed.createComponent(EngineersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -10,15 +10,15 @@ import { Engineer } from 'src/app/classes/engineer';
 
 @Component({
   selector: 'app-cars',
-  templateUrl: './cars.component.html',
-  styleUrls: ['./cars.component.scss']
+  templateUrl: './engineers.component.html',
+  styleUrls: ['./engineers.component.scss']
 })
 @NgModule({
   imports: [
     CommonModule
   ]
 })
-export class CarsComponent {
+export class EngineersComponent {
   title = 'Monteur informatie';
   buttonRevert = 'Zet alle wijzigingen terug';
   buttonExport = 'Exporteren naar Excel';

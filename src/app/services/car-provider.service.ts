@@ -138,7 +138,7 @@ export class CarProviderService {
   public getCarLocations(): void {
     this.loadingSubject.next(true);
 
-    this.apiService.apiGet('/locations/cars').subscribe(
+    this.apiService.apiGet('/locations/engineers').subscribe(
       result => {
         const featuresList = result.features;
 
@@ -156,7 +156,7 @@ export class CarProviderService {
 
     let url = '/workitems/' + workItem + '/distances';
     if (cars) {
-      url = url + '?cars=' + cars.join(',');
+      url = url + '?engineers=' + cars.join(',');
     }
 
     return this.apiService.apiGet(url).pipe(

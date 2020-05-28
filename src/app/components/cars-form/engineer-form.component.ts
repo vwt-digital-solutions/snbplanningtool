@@ -8,12 +8,12 @@ import { MapGeometryObject } from '../../classes/map-geometry-object';
 import Token from '../../classes/token';
 
 @Component({
-  selector: 'app-cars-form',
-  templateUrl: './cars-form.component.html',
-  styleUrls: ['./cars-form.component.scss']
+  selector: 'app-engineer-form',
+  templateUrl: './engineer-form.component.html',
+  styleUrls: ['./engineer-form.component.scss']
 })
-export class CarsFormComponent implements OnInit {
-  title = 'Voeg een nieuwe auto toe';
+export class EngineerFormComponent implements OnInit {
+  title = 'Voeg een nieuwe monteur toe';
   titleEmpty = 'Er zijn geen niet-toegewezen kentekens, probeer het later opnieuw.';
   buttonSave = 'Opslaan';
 
