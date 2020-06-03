@@ -23,7 +23,7 @@
 
 			-webkit-transition: all 0.5s;
 
-			background: #008bb8;
+			background: var(--theme-color);
 
 			i {
 				margin-left: 5px;
@@ -62,7 +62,18 @@
 	.info-grid {
 		margin-top: 20px;
 		height: calc(100% - 32px - 20px);
-	}
+  }
+
+  .table-row {
+    min-height: 425px;
+  }
+}
+
+h2 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--theme-color);
 }
 
 :host /deep/ .app-planning {
@@ -81,7 +92,7 @@
 			font-weight: 700;
 			text-transform: uppercase;
 			&:hover {
-				color: #008bb8;
+				color: var(--theme-color);
 				text-decoration: none;
 			}
 		}

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlanningItem } from '../classes/planning-item';
 import * as moment from 'moment';
+import { Engineer } from '../classes/engineer';
+import { WorkItem } from '../classes/work-item';
 
 @Injectable({
   providedIn: 'root'
@@ -61,10 +63,16 @@ export class PlanningService {
     private apiService: ApiService,
   ) { }
 
-  getPlanning(): Observable<PlanningItem[]> {
+  getPlanning(): Observable<any> {
     return this.apiService.apiGet('/plannings')
       .pipe(
-        map((res) => res.items.map(item => PlanningItem.fromRaw(item))),
+        map((res: any) => {
+          return {
+            planning: res.items.map(item => PlanningItem.fromRaw(item)),
+            unplannedEngineers: res.unplanned_engineers.map(item => Engineer.fromRaw(item)),
+            unplannedWorkitems: res.unplanned_workitems.map(item => WorkItem.fromRaw(item)),
+          };
+        }),
       );
   }
 }
