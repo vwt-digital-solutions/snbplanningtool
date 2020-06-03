@@ -36,13 +36,13 @@ describe('ApiService', () => {
         const mockCars = { features: [], type: 'FeatureCollection' };
 
         /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
-        apiService.apiGet('/locations/engineers').subscribe((event: HttpEvent<any>) => {
+        apiService.apiGet('/locations/cars').subscribe((event: HttpEvent<any>) => {
           switch (event.type) {
             case HttpEventType.Response:
               expect(event.body).toEqual(mockCars);
           }
         });
-        const mockReq = httpMock.expectOne(envService.apiUrl + '/locations/engineers');
+        const mockReq = httpMock.expectOne(envService.apiUrl + '/locations/cars');
 
         expect(mockReq.cancelled).toBeFalsy();
         expect(mockReq.request.responseType).toEqual('json');

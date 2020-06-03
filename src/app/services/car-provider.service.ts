@@ -138,7 +138,7 @@ export class CarProviderService {
   public getCarLocations(): void {
     this.loadingSubject.next(true);
 
-    this.apiService.apiGet('/locations/engineers').subscribe(
+    this.apiService.apiGet('/locations/cars').subscribe(
       result => {
         const featuresList = result.features;
 
