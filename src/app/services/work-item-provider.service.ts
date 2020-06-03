@@ -10,23 +10,23 @@ import {
   DateFilter,
   ValueFilter
 } from '../modules/filters/filters/filters';
-import {FilterMap} from '../modules/filters/filter-map';
+import { FilterMap } from '../modules/filters/filter-map';
 import { QueryParameterService } from './query-parameter.service';
 import { take } from 'rxjs/operators';
-import {WorkItem} from '../classes/work-item';
+import { WorkItem } from '../classes/work-item';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkItemProviderService {
 
-  rawWorkItems: WorkItem[]  = [];
+  rawWorkItems: WorkItem[] = [];
   filteredWorkItems: WorkItem[] = [];
   loading = true;
 
   workItemsSubject = new BehaviorSubject<any[]>([]);
   loadingSubject = new BehaviorSubject<boolean>(true);
-  errorSubject  = new Subject<any>();
+  errorSubject = new Subject<any>();
 
   public filterService = new FilterMap(
     [
@@ -78,27 +78,16 @@ export class WorkItemProviderService {
 
     this.apiService.apiGet('/workitems').subscribe(
       result => {
-        this.rawWorkItems = result.items.map(resultItem =>
-          new WorkItem(
-            resultItem.administration,
-            resultItem.category,
-            resultItem.resolve_before_timestamp,
-            resultItem.stagnation,
-            resultItem.project,
-            resultItem.city,
-            resultItem.description,
-            resultItem.employee_name,
-            resultItem.employee_number,
-            resultItem.end_timestamp,
-            resultItem.geometry,
-            resultItem.project_number,
-            resultItem.start_timestamp,
-            resultItem.status,
-            resultItem.street,
-            resultItem.task_type,
-            resultItem.zip,
-            resultItem.l2_guid,
-          ));
+        const sortedGuids = this.groupByGuid(result.items);
+
+        this.rawWorkItems = result.items.map(item => {
+          if (Object.prototype.hasOwnProperty.call(sortedGuids, item.l2_guid)) {
+            const subOrderId = sortedGuids[item.l2_guid].findIndex(el => el.sub_order_id === item.sub_order_id) + 1;
+            return this.createNewWorkItem(item, subOrderId);
+          } else {
+            return this.createNewWorkItem(item);
+          }
+        });
 
         this.filterWorkItems();
         this.loading = false;
@@ -115,6 +104,48 @@ export class WorkItemProviderService {
   private filterWorkItems(): void {
     this.filteredWorkItems = this.filterService.filterList(this.rawWorkItems);
     this.workItemsSubject.next(this.filteredWorkItems);
+  }
+
+  private sortBySubOrderId(a, b): number {
+    return (a.sub_order_id > b.sub_order_id) ? 1 : -1;
+  }
+
+  private groupByGuid(items): object {
+    return items.reduce((guidGroups: { [l2guid: string]: object[] }, item) => {
+      if (Object.prototype.hasOwnProperty.call(guidGroups, item.l2_guid)) {
+        // If this ever becomes slow change it out to an object.
+        guidGroups[item.l2_guid].push(item);
+        guidGroups[item.l2_guid] = guidGroups[item.l2_guid].sort(this.sortBySubOrderId);
+      } else {
+        guidGroups[item.l2_guid] = [item];
+      }
+
+      return guidGroups;
+    }, {});
+  }
+
+  private createNewWorkItem(item, suborderId?: string): WorkItem {
+    return new WorkItem(
+      item.administration,
+      item.category,
+      item.resolve_before_timestamp,
+      item.stagnation,
+      item.project,
+      item.city,
+      item.description,
+      item.employee_name,
+      item.employee_number,
+      item.end_timestamp,
+      item.geometry,
+      item.project_number,
+      item.start_timestamp,
+      item.status,
+      item.street,
+      item.task_type,
+      item.zip,
+      item.l2_guid,
+      suborderId
+    );
   }
 }
 

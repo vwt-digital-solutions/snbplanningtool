@@ -4,7 +4,6 @@ import { ColumnState } from 'ag-grid-community/dist/lib/columnController/columnC
 export class DataGrid {
   static GetDefaults(
     gridName: string,
-    showToolPanel = true,
     saveGridState = true
   ): GridOptions {
 
@@ -48,7 +47,6 @@ export class DataGrid {
     };
 
     gridOptions = {
-      showToolPanel,
       defaultColDef: {
         sortable: true,
         filter: true,
