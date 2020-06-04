@@ -32,12 +32,16 @@ export class PlanningComponent implements AfterViewInit {
   ) {
     this.planningGridOptions.columnDefs = this.planningService.colDefs;
     this.unplannedEngineerGridOptions.columnDefs = [
-      { headerName: 'Administratie (klantteam)', field: 'administration', cellEditorSelector: this.carService.cellEditorAdministration },
+      {
+        headerName: 'Administratie (klantteam)',
+        field: 'administration',
+        sort: 'asc',
+      },
       { headerName: 'Kentekenplaat', field: 'licensePlate', editable: false },
       { headerName: 'Naam', field: 'name', },
       { headerName: 'Medewerkernr.', field: 'employeeNumber', hide: true},
-      { headerName: 'Rol', field: 'skill', cellEditorSelector: this.carService.cellEditorDriverSkill },
-      { headerName: 'Afdeling', field: 'business_unit', cellEditorSelector: this.carService.cellEditorBusinessUnit },
+      { headerName: 'Rol', field: 'skill' },
+      { headerName: 'Afdeling', field: 'business_unit' },
       {
         headerName: 'Locatie',
         field: 'token',
@@ -50,7 +54,7 @@ export class PlanningComponent implements AfterViewInit {
       }
     ];
     this.unplannedWorkGridOptions.columnDefs = [
-      { headerName: 'Administratie (klantteam)', field: 'administration', pinned: 'left' },
+      { headerName: 'Administratie (klantteam)', field: 'administration', sort: 'asc', pinned: 'left' },
       { headerName: 'Categorie', pinned: 'left', field: 'category' },
       { headerName: 'Projectnummer', field: 'project_number', hide: true },
       { headerName: 'Project', field: 'project', hide: true },

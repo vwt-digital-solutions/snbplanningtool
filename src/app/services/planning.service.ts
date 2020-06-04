@@ -15,7 +15,7 @@ export class PlanningService {
     {
       headerName: 'Werkorder',
       children: [
-        { headerName: 'Klantteam', field: '_embedded.workitem.administration', pinned: 'left', width: 280 },
+        { headerName: 'Klantteam', field: '_embedded.workitem.administration', sort: 'asc', pinned: 'left', width: 280 },
         { headerName: 'B-nummer', field: '_embedded.workitem.l2_guid', pinned: 'left', width: 150 },
         { headerName: 'Volgnummer', field: '_embedded.workitem.sub_order_id', pinned: 'left', width: 150 },
         { headerName: 'Categorie', field: '_embedded.workitem.category', pinned: 'left', width: 100 },
