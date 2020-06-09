@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { EnvService } from './env.service';
-import { Car } from '../classes/car';
+import { Engineer } from '../classes/engineer';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ApiService {
     return this.httpClient.get(requestUrl);
   }
 
-  postCarInfo(carClass: Car): Observable<Car> {
-    return this.httpClient.post<Car>(`${this.env.apiUrl}/cars`, carClass);
+  postCarInfo(engineer): Observable<Engineer> {
+    return this.httpClient.post<Engineer>(`${this.env.apiUrl}/engineers`, engineer);
   }
 }

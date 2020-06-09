@@ -70,13 +70,13 @@ export class MapComponent implements AfterViewInit {
     });
 
     this.carProvider.carsLocationsSubject.subscribe(items => {
-      this.addMapLayer('1-cars', 'AUTO\'S', items);
+      this.addMapLayer('1-engineers', 'AUTO\'S', items);
     });
 
     this.mapService.customLayersSubject.subscribe(layer => {
       this.addMapLayer('2-customLayer', layer.title, layer.items, true, layer.showRoute);
       this.toggleMapLayer('0-work', false);
-      this.toggleMapLayer('1-cars', false);
+      this.toggleMapLayer('1-engineers', false);
 
       const subGroup = this.controlledLayers['2-customLayer'].subGroup;
 
@@ -159,7 +159,7 @@ export class MapComponent implements AfterViewInit {
     delete this.controlledLayers[identifier];
 
     this.toggleMapLayer('0-work', true);
-    this.toggleMapLayer('1-cars', true);
+    this.toggleMapLayer('1-engineers', true);
   }
 
   private toggleMapLayer(identifier, visible): void {

@@ -155,7 +155,7 @@
 .popup-car,
 .popup-work {
   span:not(.license-plate) {
-    background-color: #008bb8;
+    background-color: var(--theme-color);
     border-radius: 5px;
     display: inline-block;
     color: white;

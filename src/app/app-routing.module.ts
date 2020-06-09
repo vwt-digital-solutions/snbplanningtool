@@ -5,7 +5,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthComponent } from './auth/auth.component';
 
 import { HomeComponent } from './modules/home/home.component';
-import { CarsComponent } from './modules/cars/cars.component';
+import { EngineersComponent } from './modules/engineers/engineers.component';
 import { WorkComponent } from './modules/work/work.component';
 import { PlanningComponent } from './modules/planning/planning.component';
 
@@ -23,8 +23,8 @@ const routes: Routes = [
       canActivate: [AuthGuard]
     },
     {
-      path: 'autos',
-      component: CarsComponent,
+      path: 'monteurs',
+      component: EngineersComponent,
       canActivate: [AuthGuard],
       data: { roles: [Role.Editor, Role.Planner] }
     },
@@ -46,7 +46,7 @@ const routes: Routes = [
     },
     {
       path: 'cars',
-      redirectTo: 'autos'
+      redirectTo: 'monteurs'
     },
     {
       path: 'work',

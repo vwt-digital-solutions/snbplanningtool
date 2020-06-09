@@ -28,7 +28,7 @@
       }
 
       &.export, &.refresh, &.newRow{
-        background: #008BB8;
+        background: var(--theme-color);
       }
       &.save{
         background: #27ae60;
@@ -90,7 +90,7 @@
       font-weight: 700;
       text-transform: uppercase;
       &:hover{
-        color: #008BB8;
+        color: var(--theme-color);
         text-decoration: none;
       }
     }

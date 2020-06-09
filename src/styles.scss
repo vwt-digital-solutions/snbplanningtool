@@ -29,23 +29,26 @@ $fa-font-path: "/assets/fonts/font-awesome";
   font-weight: 300;
 }
 
+:root {
+  --theme-color: #008BB8
+}
 
-body{
+body {
   margin: 0;
 
   font-family: 'Poppins', sans-serif;
 }
 
-h1{
+h1 {
   font-size: 25px;
   margin: 0;
   font-weight: 700;
-  color: #008BB8;
+  color: var(--theme-color);
 }
 
 .btn-primary {
-  background-color: #008BB8;
-  border-color: #008BB8;
+  background-color: var(--theme-color);
+  border-color: var(--theme-color);
 }
 
 // MAP STYLING

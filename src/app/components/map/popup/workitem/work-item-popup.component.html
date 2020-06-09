@@ -94,12 +94,12 @@
       <div *ngIf="linkedCar" class="row align-items-center">
         <div class="col-auto"><img src="/assets/images/car-location.png" /></div>
         <div class="col-auto">
-          <span class="license-plate license-nl" *ngIf="linkedCar.license_plate">
-            {{linkedCar.license_plate | formatLicensePlate}}
+          <span class="license-plate license-nl" *ngIf="linkedCar.licensePlate">
+            {{linkedCar.licensePlate | formatLicensePlate}}
           </span>
-          <span class="license-plate license-nl" *ngIf="!linkedCar.license_plate">N/B</span>
+          <span class="license-plate license-nl" *ngIf="!linkedCar.licensePlate">N/B</span>
         </div>
-        <div class="col">{{ linkedCar.driver_name }} ({{ linkedCar.driver_skill || '-' }})</div>
+        <div class="col">{{ linkedCar.name }} ({{ linkedCar.skill || '-' }})</div>
         <div class="col text-center">
           <a *ngIf="linkedCarLocation && !linkedCarDistance && !loadingLinkedCarDistance"
              href="javascript:void(0)"
@@ -129,11 +129,11 @@
 
     <div *ngIf="shouldShowNearbyCars">
       <hr>
-      <h6 class="text-center">Dichtbijzijnde auto's</h6>
+      <h6 class="text-center">Dichtbijzijnde monteurs</h6>
       <div class="row justify-content-center"
         *ngIf="shouldShowNearbyCars && !nearbyCars && !nearbyCarsError && !loadingNearbyCars">
         <div class="col-auto my-3">
-          <a class="nearby-cars-link" href="javascript:void(0);" (click)="downloadNearbyCars()">Toon auto's in de
+          <a class="nearby-cars-link" href="javascript:void(0);" (click)="downloadNearbyCars()">Toon monteurs in de
             buurt</a>
         </div>
       </div>
@@ -152,10 +152,10 @@
 
       <div class="row align-items-center pt-2 nearby-car" *ngFor="let nearbyCar of nearbyCars">
         <div class="col-auto">
-          <span class="license-plate license-nl" *ngIf="nearbyCar.carLocation.car.license_plate">{{nearbyCar.carLocation.car.license_plate | formatLicensePlate}}</span>
-          <span class="license-plate license-nl" *ngIf="!nearbyCar.carLocation.car.license_plate">N/B</span>
+          <span class="license-plate license-nl" *ngIf="nearbyCar.carLocation.engineer.licensePlate">{{nearbyCar.carLocation.engineer.licensePlate | formatLicensePlate}}</span>
+          <span class="license-plate license-nl" *ngIf="!nearbyCar.carLocation.engineer.licensePlate">N/B</span>
         </div>
-        <div class="col">{{nearbyCar.carLocation.car.driver_name}} <br/> ({{nearbyCar.carLocation.car.driver_skill || '-'}})
+        <div class="col">{{nearbyCar.carLocation.engineer.name}} <br/> ({{nearbyCar.carLocation.engineer.skill || '-'}})
           <br/>
         </div>
         <div class="col text-right">

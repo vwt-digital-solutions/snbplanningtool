@@ -22,10 +22,10 @@ export class CarsService {
       columnDefs: [
         { headerName: 'Token', field: 'token', sort: 'asc', cellEditorSelector: this.cellEditorToken },
         { headerName: 'Administratie (klantteam)', field: 'administration', cellEditorSelector: this.cellEditorAdministration },
-        { headerName: 'Kentekenplaat', field: 'license_plate', editable: false },
-        { headerName: 'Naam bestuurder', field: 'driver_name', },
-        { headerName: 'Medewerkernr. bestuurder', field: 'driver_employee_number'},
-        { headerName: 'Rol bestuurder', field: 'driver_skill', cellEditorSelector: this.cellEditorDriverSkill },
+        { headerName: 'Kentekenplaat', field: 'licensePlate', editable: false },
+        { headerName: 'Naam', field: 'name', },
+        { headerName: 'Medewerkernr.', field: 'employeeNumber'},
+        { headerName: 'Rol', field: 'skill', cellEditorSelector: this.cellEditorDriverSkill },
         { headerName: 'Afdeling', field: 'business_unit', cellEditorSelector: this.cellEditorBusinessUnit },
         {
           headerName: 'Locatie',

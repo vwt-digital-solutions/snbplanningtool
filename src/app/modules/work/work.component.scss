@@ -23,7 +23,7 @@
 
       -webkit-transition: all 0.5s;
 
-      background: #008BB8;
+      background: var(--theme-color);
 
       i{
         margin-left: 5px;
@@ -80,7 +80,7 @@
       font-weight: 700;
       text-transform: uppercase;
       &:hover{
-        color: #008BB8;
+        color: var(--theme-color);
         text-decoration: none;
       }
     }

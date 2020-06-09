@@ -10,7 +10,7 @@ import { TokenInterceptor } from './auth/token.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
-import { CarsModule } from './modules/cars/cars.module';
+import { CarsModule } from './modules/engineers/cars.module';
 import { WorkModule } from './modules/work/work.module';
 import { PlanningModule } from './modules/planning/planning.module';
 

@@ -36,6 +36,7 @@ export class WorkItem extends MapGeometryObject {
   }
 
   static fromRaw(item): WorkItem {
+    const bNumber = item.l2_guid || item.id.substring(0, item.id.indexOf('-')) || item.id;
     return new WorkItem(
       item.administration,
       item.category,
@@ -54,7 +55,7 @@ export class WorkItem extends MapGeometryObject {
       item.street,
       item.task_type,
       item.zip,
-      item.l2_guid,
+      bNumber,
       item.sub_order_id
     );
   }

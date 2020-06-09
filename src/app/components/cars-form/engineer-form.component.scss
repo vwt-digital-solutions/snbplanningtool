@@ -34,7 +34,7 @@
       font-style: italic;
     }
 
-    input#license_plate{
+    input#licensePlate{
       display: table;
       text-transform: uppercase;
       font-size: 20px;
@@ -62,7 +62,7 @@
       }
       button{
         display: table;
-        background: #008BB8;
+        background: var(--theme-color);
         color: white;
 
         &:hover{

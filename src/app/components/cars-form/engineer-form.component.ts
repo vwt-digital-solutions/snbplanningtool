@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Car } from 'src/app/classes/car';
+import { Engineer } from 'src/app/classes/engineer';
 
 import { CarsService } from 'src/app/services/cars.service';
 import { CarProviderService } from '../../services/car-provider.service';
@@ -8,21 +8,20 @@ import { MapGeometryObject } from '../../classes/map-geometry-object';
 import Token from '../../classes/token';
 
 @Component({
-  selector: 'app-cars-form',
-  templateUrl: './cars-form.component.html',
-  styleUrls: ['./cars-form.component.scss']
+  selector: 'app-engineer-form',
+  templateUrl: './engineer-form.component.html',
+  styleUrls: ['./engineer-form.component.scss']
 })
-export class CarsFormComponent implements OnInit {
-  title = 'Voeg een nieuwe auto toe';
-  titleEmpty = 'Er zijn geen niet-toegewezen tokens, probeer het later opnieuw.';
-  valueFormat = 'Inclusief streepjes (bv. <strong>99-XXX-9</strong> or <strong>9-XXX-99</strong>)';
+export class EngineerFormComponent implements OnInit {
+  title = 'Voeg een nieuwe monteur toe';
+  titleEmpty = 'Er zijn geen niet-toegewezen kentekens, probeer het later opnieuw.';
   buttonSave = 'Opslaan';
 
   carsTokens: Token[];
   administrations = MapGeometryObject.administrations;
   businessUnits = MapGeometryObject.businessUnits;
 
-  model = new Car(null, '', '', '', '', '', '', '', null);
+  model = new Engineer(null, '', '', '', '', '', null, '', null);
 
   constructor(
     private carsService: CarsService,

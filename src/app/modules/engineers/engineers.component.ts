@@ -6,20 +6,20 @@ import { AuthRoleService } from 'src/app/services/auth-role.service';
 
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
-import { Car } from 'src/app/classes/car';
+import { Engineer } from 'src/app/classes/engineer';
 
 @Component({
   selector: 'app-cars',
-  templateUrl: './cars.component.html',
-  styleUrls: ['./cars.component.scss']
+  templateUrl: './engineers.component.html',
+  styleUrls: ['./engineers.component.scss']
 })
 @NgModule({
   imports: [
     CommonModule
   ]
 })
-export class CarsComponent {
-  title = 'Auto informatie';
+export class EngineersComponent {
+  title = 'Monteur informatie';
   buttonRevert = 'Zet alle wijzigingen terug';
   buttonExport = 'Exporteren naar Excel';
   buttonNewRow = 'Nieuwe rij toevoegen';
@@ -95,7 +95,7 @@ export class CarsComponent {
   onGridReady(grid): void {
     this.grid = grid;
 
-    this.carProviderService.carsInfoSubject.subscribe((items: Car[]) => {
+    this.carProviderService.carsInfoSubject.subscribe((items: Engineer[]) => {
       this.setCarInfo(items);
     },
       this.handleError);

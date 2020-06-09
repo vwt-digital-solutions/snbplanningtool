@@ -3,7 +3,8 @@ import { WorkService } from 'src/app/services/work.service';
 
 import { WorkItem } from 'src/app/classes/work-item';
 import {WorkItemProviderService} from '../../services/work-item-provider.service';
-import { GridReadyEvent } from 'ag-grid-community';
+import { GridReadyEvent, GridOptions } from 'ag-grid-community';
+import { DataGrid } from 'src/app/classes/datagrid';
 
 @Component({
   selector: 'app-work',
@@ -16,6 +17,8 @@ export class WorkComponent {
   callProcessing: string;
 
   workItems = [];
+  gridName = 'work';
+  gridOptions: GridOptions = DataGrid.GetDefaults(this.gridName);
   gridReady = false;
   grid;
 
@@ -23,6 +26,7 @@ export class WorkComponent {
     public workService: WorkService,
     public workItemProviderService: WorkItemProviderService
   ) {
+    this.gridOptions.columnDefs = this.workService.columnDefs;
 
     this.callProcessing = 'Verwerken <i class="fas fa-sync-alt fa-spin"></i>';
 
@@ -38,7 +42,11 @@ export class WorkComponent {
   }
 
   onBtExport(): void {
-    this.workService.gridOptions.api.exportDataAsExcel();
+    this.gridOptions.api.exportDataAsExcel();
+  }
+
+  resetGrid(): void {
+    DataGrid.ClearOptions(this.gridOptions, this.gridName);
   }
 
   onGridReady(event: GridReadyEvent): void {
@@ -66,7 +74,8 @@ export class WorkComponent {
           data.geometry, data.project_number,
           data.start_timestamp, data.status,
           data.street, data.task_type,
-          data.zip, data.l2_guid
+          data.zip, data.l2_guid,
+          data.sub_order_id
         ));
       }
     }

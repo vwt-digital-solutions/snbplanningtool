@@ -1,6 +1,6 @@
 .header{
   width: 100%;
-  background: #008BB8;
+  background: var(--theme-color);
   color: #FFF;
   position: fixed;
   z-index: 100;
@@ -55,12 +55,12 @@
 
         &:hover{
           background: #e5e5e5;
-          color: #008BB8;
+          color: var(--theme-color);
           cursor: pointer;
         }
         &.active{
           background: #ffffff;
-          color: #008BB8;
+          color: var(--theme-color);
           cursor: pointer;
 
           &:hover{
@@ -81,7 +81,7 @@
         &:hover{
           .dropdown-toggle{
             background: #e5e5e5;
-            color: #008BB8;
+            color: var(--theme-color);
             cursor: pointer;
           }
           & > .dropdown-menu {
@@ -104,7 +104,7 @@
 
           &:hover{
             background: #e5e5e5;
-            color: #008BB8;
+            color: var(--theme-color);
             cursor: pointer;
           }
           &:hover, &:focus, &:active{

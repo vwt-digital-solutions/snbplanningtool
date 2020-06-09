@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { BusinessUnit } from './business-unit';
 import { HALSelfReference } from './HAL';
 
 export class Engineer {
   id: string;
+  token: string;
   name: string;
   skill: string;
   employeeNumber: string;
@@ -13,6 +15,7 @@ export class Engineer {
 
   constructor(
     id: string,
+    token: string,
     name: string,
     skill: string,
     employeeNumber: string,
@@ -22,6 +25,7 @@ export class Engineer {
     _links?: HALSelfReference
   ) {
     this.id = id;
+    this.token = token;
     this.name = name;
     this.employeeNumber = employeeNumber;
     this.skill = skill;
@@ -34,6 +38,7 @@ export class Engineer {
   public static fromRaw(item): Engineer {
     return new Engineer(
       item.id,
+      item.token,
       item.driver_name, // !TODO: Migrate to name
       item.driver_skill, // !TODO: Migrate to skill
       item.driver_employee_number, // !TODO: Migrate to employee_number
@@ -42,5 +47,19 @@ export class Engineer {
       item.administration,
       item._links
     );
+  }
+
+  public static toRaw(engineer: Engineer): object {
+    const item = {
+      id: engineer.id,
+      driver_name : engineer.name,
+      driver_skill : engineer.skill,
+      driver_employee_number : engineer.employeeNumber,
+      business_unit : engineer.businessUnit,
+      administration : engineer.administration,
+      token: engineer.token
+    };
+
+    return item;
   }
 }
