@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 
 import {BehaviorSubject, Subject} from 'rxjs';
 import {CustomLayer} from '../models/layer';
+import {LazyMapsAPILoaderConfigLiteral} from '@agm/core';
+import {ApiService} from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
 
+  public mapConfigComplete = false;
   activeTokenId = new BehaviorSubject<string>(null);
   clickedMarker = false;
 
@@ -176,5 +179,26 @@ export class MapService {
 
   public addCustomLayer(layer: CustomLayer): void {
     this.customLayersSubject.next(layer);
+  }
+}
+
+@Injectable()
+export class MapsConfig implements LazyMapsAPILoaderConfigLiteral {
+  public apiKey: string;
+  public libraries: string[];
+  public language: string;
+  public region: string;
+
+  constructor(private apiService: ApiService, private mapService: MapService
+  ) {
+    this.libraries = ['directions'];
+    this.language = 'nl';
+    this.region = 'NL';
+    this.apiService.getMapConfig().subscribe((response: any) => {
+      this.apiKey = response;
+      this.mapService.mapConfigComplete = true;
+    }, (error: any) => {
+      console.log(error);
+    });
   }
 }

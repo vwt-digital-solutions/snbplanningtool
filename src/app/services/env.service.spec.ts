@@ -23,7 +23,6 @@ describe('EnvService', () => {
     expect(service.apiUrl).toBeDefined();
     expect(service.clientId).toBeDefined();
     expect(service.enableDebug).toBeDefined();
-    expect(service.googleMapsKey).toBeDefined();
     expect(service.issuer).toBeDefined();
     expect(service.loginUrl).toBeDefined();
     expect(service.scope).toBeDefined();

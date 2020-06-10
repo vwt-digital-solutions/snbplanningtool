@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private mapService: MapService,
+    public mapService: MapService,
     private workItemProviderService: WorkItemProviderService,
     private carProviderService: CarProviderService
   ) {
