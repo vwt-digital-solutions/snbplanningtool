@@ -8,17 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  
   <script src="env.js"></script>
-  <script>
-    const mapsScript = document.createElement('script');
-    const url = `https://maps.googleapis.com/maps/api/js?key=${window.__env.googleMapsKey}`;
-    mapsScript.setAttribute('src', url);
-    mapsScript.setAttribute("async", "async");
-    mapsScript.setAttribute("defer", "defer");
-
-    document.head.appendChild(mapsScript);
-  </script>
 </head>
 <body>
   <app-root></app-root>

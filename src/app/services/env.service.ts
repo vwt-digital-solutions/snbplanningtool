@@ -12,9 +12,6 @@ export class EnvService {
   // API url
   public apiUrl = '';
 
-  // Google Maps key
-  public googleMapsKey = '';
-
   // ag-Grid enterprise key
   public agGridKey = '';
 
