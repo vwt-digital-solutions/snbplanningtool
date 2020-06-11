@@ -6,7 +6,7 @@ export class Engineer {
   id: string;
   token: string;
   name: string;
-  skill: string;
+  role: string;
   employeeNumber: string;
   division: string;
   businessUnit: BusinessUnit;
@@ -17,7 +17,7 @@ export class Engineer {
     id: string,
     token: string,
     name: string,
-    skill: string,
+    role: string,
     employeeNumber: string,
     division: string,
     businessUnit: BusinessUnit,
@@ -28,7 +28,7 @@ export class Engineer {
     this.token = token;
     this.name = name;
     this.employeeNumber = employeeNumber;
-    this.skill = skill;
+    this.role = role;
     this.businessUnit = businessUnit;
     this.division = division;
     this.administration = administration;
@@ -39,9 +39,9 @@ export class Engineer {
     return new Engineer(
       item.id,
       item.token,
-      item.driver_name, // !TODO: Migrate to name
-      item.driver_skill, // !TODO: Migrate to skill
-      item.driver_employee_number, // !TODO: Migrate to employee_number
+      item.name,
+      item.role,
+      item.driver_employee_number,
       item.division,
       item.business_unit,
       item.administration,
@@ -52,9 +52,9 @@ export class Engineer {
   public static toRaw(engineer: Engineer): object {
     const item = {
       id: engineer.id,
-      driver_name : engineer.name,
-      driver_skill : engineer.skill,
-      driver_employee_number : engineer.employeeNumber,
+      name : engineer.name,
+      role : engineer.role,
+      employee_number : engineer.employeeNumber,
       business_unit : engineer.businessUnit,
       administration : engineer.administration,
       token: engineer.token

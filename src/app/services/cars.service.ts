@@ -25,7 +25,7 @@ export class CarsService {
         { headerName: 'Kentekenplaat', field: 'licensePlate', editable: false },
         { headerName: 'Naam', field: 'name', },
         { headerName: 'Medewerkernr.', field: 'employeeNumber'},
-        { headerName: 'Rol', field: 'skill', cellEditorSelector: this.cellEditorDriverSkill },
+        { headerName: 'Rol', field: 'role', cellEditorSelector: this.cellEditorDriverRole },
         { headerName: 'Afdeling', field: 'business_unit', cellEditorSelector: this.cellEditorBusinessUnit },
         {
           headerName: 'Locatie',
@@ -79,7 +79,7 @@ export class CarsService {
     };
   }
 
-  cellEditorDriverSkill(): object {
+  cellEditorDriverRole(): object {
     const values = ['Metende', 'Lasser', 'Leerling', 'Kraanmachinist', 'Overig', 'NLS', 'Cluster'];
 
     return {
