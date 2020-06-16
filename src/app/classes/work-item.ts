@@ -30,6 +30,7 @@ export class WorkItem extends MapGeometryObject {
     public task_type: string,
     public zip: string,
     public l2_guid: string,
+    public counter_id: string,
     public sub_order_id?: string
   ) {
     super(geometry);
@@ -56,6 +57,7 @@ export class WorkItem extends MapGeometryObject {
       item.task_type,
       item.zip,
       bNumber,
+      item.counter_id,
       item.sub_order_id
     );
   }
