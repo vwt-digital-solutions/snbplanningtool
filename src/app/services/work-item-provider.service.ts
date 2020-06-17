@@ -78,15 +78,8 @@ export class WorkItemProviderService {
 
     this.apiService.apiGet('/workitems').subscribe(
       result => {
-        const sortedGuids = this.groupByGuid(result.items);
-
         this.rawWorkItems = result.items.map(item => {
-          if (Object.prototype.hasOwnProperty.call(sortedGuids, item.l2_guid)) {
-            const subOrderId = sortedGuids[item.l2_guid].findIndex(el => el.sub_order_id === item.sub_order_id) + 1;
-            return this.createNewWorkItem(item, subOrderId);
-          } else {
             return this.createNewWorkItem(item);
-          }
         });
 
         this.filterWorkItems();
@@ -104,24 +97,6 @@ export class WorkItemProviderService {
   private filterWorkItems(): void {
     this.filteredWorkItems = this.filterService.filterList(this.rawWorkItems);
     this.workItemsSubject.next(this.filteredWorkItems);
-  }
-
-  private sortBySubOrderId(a, b): number {
-    return (a.sub_order_id > b.sub_order_id) ? 1 : -1;
-  }
-
-  private groupByGuid(items): object {
-    return items.reduce((guidGroups: { [l2guid: string]: object[] }, item) => {
-      if (Object.prototype.hasOwnProperty.call(guidGroups, item.l2_guid)) {
-        // If this ever becomes slow change it out to an object.
-        guidGroups[item.l2_guid].push(item);
-        guidGroups[item.l2_guid] = guidGroups[item.l2_guid].sort(this.sortBySubOrderId);
-      } else {
-        guidGroups[item.l2_guid] = [item];
-      }
-
-      return guidGroups;
-    }, {});
   }
 
   private createNewWorkItem(item, suborderId?: string): WorkItem {
@@ -144,7 +119,8 @@ export class WorkItemProviderService {
       item.task_type,
       item.zip,
       item.l2_guid,
-      suborderId
+      item.counter_id,
+      item.sub_order_id
     );
   }
 }
