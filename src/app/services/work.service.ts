@@ -7,6 +7,8 @@ import { formatDate } from '@angular/common';
 export class WorkService {
   columnDefs = [
     { headerName: 'Administratie (klantteam)', field: 'administration', pinned: 'left', width: 200 },
+    { headerName: 'B-nummer', field: 'l2_guid', pinned: 'left', width: 120 },
+    { headerName: 'Volgnummer', field: 'counter_id', pinned: 'left', width: 25 },
     { headerName: 'Status', field: 'status', pinned: 'left', width: 100 },
     { headerName: 'Categorie', field: 'category', width: 100 },
     { headerName: 'Projectnummer', field: 'project_number', width: 100 },

@@ -99,7 +99,7 @@
           </span>
           <span class="license-plate license-nl" *ngIf="!linkedCar.licensePlate">N/B</span>
         </div>
-        <div class="col">{{ linkedCar.name }} ({{ linkedCar.skill || '-' }})</div>
+        <div class="col">{{ linkedCar.name }} ({{ linkedCar.role || '-' }})</div>
         <div class="col text-center">
           <a *ngIf="linkedCarLocation && !linkedCarDistance && !loadingLinkedCarDistance"
              href="javascript:void(0)"
@@ -155,7 +155,7 @@
           <span class="license-plate license-nl" *ngIf="nearbyCar.carLocation.engineer.licensePlate">{{nearbyCar.carLocation.engineer.licensePlate | formatLicensePlate}}</span>
           <span class="license-plate license-nl" *ngIf="!nearbyCar.carLocation.engineer.licensePlate">N/B</span>
         </div>
-        <div class="col">{{nearbyCar.carLocation.engineer.name}} <br/> ({{nearbyCar.carLocation.engineer.skill || '-'}})
+        <div class="col">{{nearbyCar.carLocation.engineer.name}} <br/> ({{nearbyCar.carLocation.engineer.role || '-'}})
           <br/>
         </div>
         <div class="col text-right">

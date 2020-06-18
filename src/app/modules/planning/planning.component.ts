@@ -40,7 +40,7 @@ export class PlanningComponent implements AfterViewInit {
       { headerName: 'Kentekenplaat', field: 'licensePlate', editable: false },
       { headerName: 'Naam', field: 'name', },
       { headerName: 'Medewerkernr.', field: 'employeeNumber', hide: true},
-      { headerName: 'Rol', field: 'skill' },
+      { headerName: 'Rol', field: 'role' },
       { headerName: 'Afdeling', field: 'business_unit' },
       {
         headerName: 'Locatie',
