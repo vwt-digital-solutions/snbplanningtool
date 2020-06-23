@@ -86,13 +86,13 @@ export class WorkService {
   }
 
   cellTokenLocator(params): string {
-    const hasData = Object.prototype.hasOwnProperty.call(params, 'data');
-    if (hasData && Object.prototype.hasOwnProperty.call(params.data, 'geometry')) {
-      if (params.data.geometry.coordinates.length && params.value !== '') {
-        return '<a class="work-item-view-link" href="/kaart/' + params.value + '">Bekijk</a>';
-      }
+    try {
+        if (params.data.geometry.coordinates.length && params.value !== '') {
+          return '<a class="work-item-view-link" href="/kaart/' + params.value + '">Bekijk</a>';
+        }
+        return '-';
+      } catch (error) {
       return '-';
     }
-    return '';
   }
 }
