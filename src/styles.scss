@@ -7,10 +7,10 @@
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
-$fa-font-path: "/assets/fonts/font-awesome";
-@import "/assets/fontawesome/scss/fontawesome.scss";
-@import "/assets/fontawesome/scss/solid.scss";
-@import "/assets/fontawesome/scss/brands.scss";
+$fa-font-path: "./assets/fonts/font-awesome";
+@import "./assets/fontawesome/scss/fontawesome.scss";
+@import "./assets/fontawesome/scss/solid.scss";
+@import "./assets/fontawesome/scss/brands.scss";
 
 @import "~leaflet/dist/leaflet.css";
 @import "~leaflet.markercluster/dist/MarkerCluster.css";
@@ -30,7 +30,8 @@ $fa-font-path: "/assets/fonts/font-awesome";
 }
 
 :root {
-  --theme-color: #008BB8
+  --theme-color: #008BB8;
+  --ddmt-theme-color: #008bb8;
 }
 
 body {

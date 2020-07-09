@@ -13,10 +13,10 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./planning.component.scss']
 })
 export class PlanningComponent implements AfterViewInit {
-  @ViewChild('planning') planningGrid: GridOptions;
-  @ViewChild('unplannedWork') unplannedWorkGrid: GridOptions;
-  @ViewChild('unplannedEngineers') unplannedEngineerGrid: GridOptions;
-  @ViewChild('errorModal') errorModal: any;
+  @ViewChild('planning', { static: true }) planningGrid: GridOptions;
+  @ViewChild('unplannedWork', { static: true }) unplannedWorkGrid: GridOptions;
+  @ViewChild('unplannedEngineers', { static: true }) unplannedEngineerGrid: GridOptions;
+  @ViewChild('errorModal', { static: true }) errorModal: any;
 
   planningGridName = 'planning';
   unplannedWorkGridName = 'unplannedWork';

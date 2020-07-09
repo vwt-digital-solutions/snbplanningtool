@@ -1,25 +1,15 @@
-<div class="container">
-  <div class="row app-cars">
-    <app-engineer-form *ngIf="this.authRoleService.isEditor && !this.carsService.isHidden"></app-engineer-form>
-
-    <div [ngClass]="['col-4', 'title']">
-      <h1>{{title}}</h1>
-    </div>
-
-
-    <div [ngClass]="['col-8', 'info-box']">
-      <span *ngIf="callProcessing" [ngClass]="['call-processing']" [innerHTML]="callProcessing"></span>
-      <button [ngClass]="['export']" (click)="onBtExport()" title="{{buttonExport}}">Exporteren <i class="fas fa-file-download"></i></button>
-      <button [ngClass]="['newRow']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length > 0 ? true : null" (click)="this.carsService.isHidden = false" title="{{buttonNewRow}}">Nieuw <i class="fas fa-plus"></i></button>
-      <button [ngClass]="['refresh']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length <= 0 ? true : null" (click)="onBtRefresh()" title="{{buttonRevert}}">Herstel <i class="fas fa-sync-alt"></i></button>
-      <button [ngClass]="['save']" *ngIf="this.authRoleService.isEditor" [attr.disabled]="editedColumns.length <= 0 ? true : null" (click)="onBtSave()" title="{{buttonSave}}" [innerHTML]="buttonSaveInner"></button>
-    </div>
-
-    <ag-grid-angular
-      [ngClass]="['col-12', 'ag-theme-balham', 'info-grid']"
-      [gridOptions]="this.carsService.gridOptions"
-      (gridReady)="onGridReady($event)"
-      (cellValueChanged)="onCellValueChanged($event)" >
-    </ag-grid-angular>
+<div class="app-cars">
+  <div class="title">
+    <h1>{{title}}</h1>
   </div>
+
+  <!-- [authentication]="oauthService.getAccessToken()" -->
+  <dat-ddmt-grid
+    theme="ag-theme-balham"
+    class="info-grid"
+    apiUrl="https://dynamic-data-manipulation-api-xw2dwxklaq-ew.a.run.app"
+    entityName="Engineer"
+    [agGridAPIKey]="env.agGridKey"
+    gridName="test">
+  </dat-ddmt-grid>
 </div>

@@ -25,7 +25,7 @@ export class HeaderComponent {
     this.router.events
       .pipe(filter((event: NavigationEnd) => event instanceof NavigationEnd))
       .subscribe(event => {
-        if (event.url === '/planning') {
+        if (['/planning', '/monteurs'].includes(event.url)) {
           this.sidebarButtonClicked.emit(false);
         }
       });
