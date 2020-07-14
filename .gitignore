@@ -4,9 +4,6 @@
 cypress/screenshots
 cypress.json
 
-# Ignore sast-config
-sast-config
-
 # compiled output
 /dist
 /tmp
