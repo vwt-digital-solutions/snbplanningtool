@@ -5,6 +5,7 @@ export class EnvService {
   // Azure AD
   public loginUrl = '';
   public logoutUrl = '';
+  public discoveryUrl = '';
   public clientId = '';
   public scope = '';
   public issuer = '';

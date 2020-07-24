@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
+import localeNl from '@angular/common/locales/nl';
+import { Loader } from 'google-maps';
 
-import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { EnvService } from './services/env.service';
 import { AuthRoleService } from './services/auth-role.service';
 
 import { LicenseManager } from 'ag-grid-enterprise';
 
 import { registerLocaleData } from '@angular/common';
-import localeNl from '@angular/common/locales/nl';
-import {MapService} from './services/map.service';
+import { MapService } from './services/map.service';
 import { QueryParameterService } from './services/query-parameter.service';
+import { ApiService } from './services/api.service';
 
 registerLocaleData(localeNl);
 
@@ -20,6 +22,7 @@ registerLocaleData(localeNl);
 export class AppComponent {
   constructor(
     private env: EnvService,
+    private api: ApiService,
     private oauthService: OAuthService,
     private queryParamService: QueryParameterService,
     public authRoleService: AuthRoleService,
@@ -30,20 +33,25 @@ export class AppComponent {
       sessionStorage.setItem('url', window.location.href);
     }
 
+    this.loadGoogleMaps();
     LicenseManager.setLicenseKey(env.agGridKey);
 
-    const config = new AuthConfig();
-    config.loginUrl = env.loginUrl;
-    config.redirectUri = window.location.origin + '/index.html';
-    config.logoutUrl = env.logoutUrl;
-    config.clientId = env.clientId;
-    config.scope = env.scope;
-    config.issuer = env.issuer;
-    config.silentRefreshRedirectUri = window.location.origin + '/silent-refresh.html';
+    this.oauthService.configure({
+      loginUrl: this.env.loginUrl,
+      logoutUrl: this.env.logoutUrl,
+      redirectUri: window.location.origin + '/index.html',
+      clientId: this.env.clientId,
+      scope: this.env.scope,
+      issuer: this.env.issuer,
+      silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+      strictDiscoveryDocumentValidation: false,
+    });
 
-    this.oauthService.configure(config);
-    this.oauthService.setupAutomaticSilentRefresh();
-    this.oauthService.tryLogin({});
+    this.oauthService.loadDiscoveryDocument(this.env.discoveryUrl)
+      .then(doc => {
+        this.oauthService.setupAutomaticSilentRefresh();
+        this.oauthService.tryLogin({});
+      });
 
     // Load our saved URL
     const savedURL = sessionStorage.getItem('url');
@@ -58,5 +66,13 @@ export class AppComponent {
   showSidebar(shown: boolean): void {
     this.showFilters = shown;
     this.mapService.mapResized.next();
+  }
+
+  loadGoogleMaps(): void {
+    this.api.getMapConfig().subscribe(async (key) => {
+      const loader = new Loader(key);
+      const google = await loader.load();
+      this.mapService.mapConfigComplete.next(true);
+    });
   }
 }

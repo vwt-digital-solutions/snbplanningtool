@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
     private workItemProviderService: WorkItemProviderService,
     private carProviderService: CarProviderService
   ) {
-
     this.workItemProviderService.loadingSubject.subscribe(value => {
       this.mapService.geoJsonReady.work = !value;
 
@@ -45,12 +44,12 @@ export class HomeComponent implements OnInit {
 
   // API CALLS
   private handleError(error): Observable<any> {
-      if (error.status !== 403) {
-        this.mapService.refreshStatusClass = true;
-        this.mapService.refreshStatus = 'Er is een fout opgetreden';
-        return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
-      }
+    if (error.status !== 403) {
+      this.mapService.refreshStatusClass = true;
+      this.mapService.refreshStatus = 'Er is een fout opgetreden';
+      return throwError('Er is een fout opgetreden, probeer het later opnieuw.');
     }
+  }
   // END API CALLS
 
 
