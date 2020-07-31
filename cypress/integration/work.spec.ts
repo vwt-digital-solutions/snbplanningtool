@@ -5,6 +5,7 @@ context('Werk', () => {
   });
 
   it('Should show more than 0 workItem rows', () => {
+    cy.wait(10000);
     cy.get('.ag-row').should((rows) => {
       expect(rows).to.have.length.of.at.least(1);
     });
