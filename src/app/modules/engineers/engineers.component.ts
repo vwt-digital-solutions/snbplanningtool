@@ -1,22 +1,15 @@
-import { Component, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { throwError } from 'rxjs';
-
-import { AuthRoleService } from 'src/app/services/auth-role.service';
 
 import { CarsService } from 'src/app/services/cars.service';
 import {CarProviderService} from '../../services/car-provider.service';
 import { Engineer } from 'src/app/classes/engineer';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
   selector: 'app-cars',
   templateUrl: './engineers.component.html',
   styleUrls: ['./engineers.component.scss']
-})
-@NgModule({
-  imports: [
-    CommonModule
-  ]
 })
 export class EngineersComponent {
   title = 'Monteur informatie';
@@ -31,9 +24,9 @@ export class EngineersComponent {
   grid = null;
 
   constructor(
-    public authRoleService: AuthRoleService,
     public carsService: CarsService,
-    public carProviderService: CarProviderService
+    public carProviderService: CarProviderService,
+    public env: EnvService
   ) { }
 
   onBtRefresh(): void {

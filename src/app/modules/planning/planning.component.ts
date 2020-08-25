@@ -5,21 +5,26 @@ import { DataGrid } from 'src/app/classes/datagrid';
 import { WorkService } from 'src/app/services/work.service';
 import { CarsService } from 'src/app/services/cars.service';
 
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-planning',
   templateUrl: './planning.component.html',
   styleUrls: ['./planning.component.scss']
 })
 export class PlanningComponent implements AfterViewInit {
-  @ViewChild('planning') planningGrid: GridOptions;
-  @ViewChild('unplannedWork') unplannedWorkGrid: GridOptions;
-  @ViewChild('unplannedEngineers') unplannedEngineerGrid: GridOptions;
+  @ViewChild('planning', { static: true }) planningGrid: GridOptions;
+  @ViewChild('unplannedWork', { static: true }) unplannedWorkGrid: GridOptions;
+  @ViewChild('unplannedEngineers', { static: true }) unplannedEngineerGrid: GridOptions;
+  @ViewChild('errorModal', { static: true }) errorModal: any;
 
   planningGridName = 'planning';
   unplannedWorkGridName = 'unplannedWork';
   unplannedEngineerGridName = 'unplannedEngineers';
 
   title = 'Planning';
+
+  errorMessage = '';
 
   planningGridOptions: GridOptions = DataGrid.GetDefaults(this.planningGridName);
   unplannedWorkGridOptions: GridOptions = DataGrid.GetDefaults(this.unplannedWorkGridName);
@@ -28,7 +33,8 @@ export class PlanningComponent implements AfterViewInit {
   constructor(
     private planningService: PlanningService,
     private workService: WorkService,
-    private carService: CarsService
+    private carService: CarsService,
+    private modalService: NgbModal
   ) {
     this.planningGridOptions.columnDefs = this.planningService.colDefs;
     this.unplannedEngineerGridOptions.columnDefs = [
@@ -109,19 +115,28 @@ export class PlanningComponent implements AfterViewInit {
   }
 
   createPlanning(): void {
+
     this.planningGrid.api.showLoadingOverlay();
     this.unplannedWorkGrid.api.showLoadingOverlay();
     this.unplannedEngineerGrid.api.showLoadingOverlay();
 
     this.planningService.getPlanning().subscribe(rowData => {
-      this.planningGrid.api.setRowData(rowData.planning);
       this.planningGrid.api.hideOverlay();
-
-      this.unplannedEngineerGrid.api.setRowData(rowData.unplannedEngineers);
       this.unplannedEngineerGrid.api.hideOverlay();
-
-      this.unplannedWorkGrid.api.setRowData(rowData.unplannedWorkitems);
       this.unplannedWorkGrid.api.hideOverlay();
-    });
+
+      this.planningGrid.api.setRowData(rowData.planning);
+      this.unplannedEngineerGrid.api.setRowData(rowData.unplannedEngineers);
+      this.unplannedWorkGrid.api.setRowData(rowData.unplannedWorkitems);
+    }, response => {
+        this.planningGrid.api.hideOverlay();
+        this.unplannedEngineerGrid.api.hideOverlay();
+        this.unplannedWorkGrid.api.hideOverlay();
+
+        this.errorMessage = response.error.detail;
+
+        this.modalService.open(this.errorModal);
+    }
+    );
   }
 }

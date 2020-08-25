@@ -4,13 +4,12 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, OAuthModule } from 'angular-oauth2-oidc';
 import { AuthGuard } from './auth/auth.guard';
 import { TokenInterceptor } from './auth/token.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
-import { CarsModule } from './modules/engineers/cars.module';
 import { WorkModule } from './modules/work/work.module';
 import { PlanningModule } from './modules/planning/planning.module';
 
@@ -26,6 +25,7 @@ import { PopUpComponent } from './components/map/popup/popup';
 import { TokenURLPipe } from './pipes/TokenURLPipe';
 import { FormatLicensePlatePipe } from './pipes/LicensePlatePipe';
 import { BusinessUnitInterceptor } from './interceptors/business-unit.interceptor';
+import { EngineersModule } from './modules/engineers/engineers.module';
 
 @NgModule({
   declarations: [
@@ -45,10 +45,10 @@ import { BusinessUnitInterceptor } from './interceptors/business-unit.intercepto
     AppRoutingModule,
     NgbModule,
     HomeModule,
-    CarsModule,
     WorkModule,
     PlanningModule,
-    FiltersModule
+    FiltersModule,
+    EngineersModule
   ],
   exports: [
     AppComponent,

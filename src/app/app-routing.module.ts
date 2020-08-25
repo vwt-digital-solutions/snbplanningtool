@@ -5,7 +5,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthComponent } from './auth/auth.component';
 
 import { HomeComponent } from './modules/home/home.component';
-import { EngineersComponent } from './modules/engineers/engineers.component';
+import { EngineersComponent } from './modules/engineers/engineers.module';
 import { WorkComponent } from './modules/work/work.component';
 import { PlanningComponent } from './modules/planning/planning.component';
 
@@ -45,7 +45,7 @@ const routes: Routes = [
       redirectTo: 'kaart'
     },
     {
-      path: 'cars',
+      path: 'engineers',
       redirectTo: 'monteurs'
     },
     {

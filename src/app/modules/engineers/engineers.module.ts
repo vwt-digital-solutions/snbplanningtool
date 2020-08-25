@@ -3,15 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { EngineersComponent } from './engineers.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { DDMTLibModule } from '@vwt-digital/ddmt-lib';
 
 import { EngineerFormComponent } from 'src/app/components/cars-form/engineer-form.component';
 import { FormsModule } from '@angular/forms';
+
+export { EngineersComponent } from './engineers.component';
 
 @NgModule({
   imports: [
     CommonModule,
     AgGridModule.withComponents([]),
-    FormsModule
+    FormsModule,
+    DDMTLibModule
   ],
   declarations: [
     EngineersComponent,
@@ -24,4 +28,4 @@ import { FormsModule } from '@angular/forms';
   ],
   bootstrap: [EngineersComponent]
 })
-export class CarsModule { }
+export class EngineersModule { }

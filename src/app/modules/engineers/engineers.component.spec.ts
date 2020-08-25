@@ -7,7 +7,7 @@ import { UrlHelperService, OAuthLogger, OAuthService } from 'angular-oauth2-oidc
 import { AgGridModule } from 'ag-grid-angular';
 import { EnvServiceProvider } from 'src/app/services/env.service.provider';
 
-import { EngineersComponent } from './engineers.component';
+import { EngineersComponent } from './engineers.module';
 import { EngineerFormComponent } from 'src/app/components/cars-form/engineer-form.component';
 
 describe('CarsComponent', () => {
