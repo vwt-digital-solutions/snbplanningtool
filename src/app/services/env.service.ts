@@ -12,6 +12,7 @@ export class EnvService {
 
   // API url
   public apiUrl = '';
+  public ddmApiUrl = '';
 
   // ag-Grid enterprise key
   public agGridKey = '';

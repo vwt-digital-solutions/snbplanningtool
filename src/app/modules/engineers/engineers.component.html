@@ -6,8 +6,8 @@
   <dat-ddmt-grid
     theme="ag-theme-balham"
     class="info-grid"
-    apiUrl="https://dynamic-data-manipulation-api-xw2dwxklaq-ew.a.run.app"
     entityName="Engineer"
+    [apiUrl]="env.ddmApiUrl"
     [agGridAPIKey]="env.agGridKey"
     gridName="test">
   </dat-ddmt-grid>
