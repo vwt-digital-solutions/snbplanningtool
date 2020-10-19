@@ -21,6 +21,7 @@ describe('EnvService', () => {
     const service: EnvService = TestBed.get(EnvService);
 
     expect(service.apiUrl).toBeDefined();
+    expect(service.ddmApiUrl).toBeDefined();
     expect(service.clientId).toBeDefined();
     expect(service.enableDebug).toBeDefined();
     expect(service.issuer).toBeDefined();
